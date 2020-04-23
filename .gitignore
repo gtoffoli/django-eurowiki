@@ -3,6 +3,7 @@ google_analytics.html
 *Copia.py
 *.key
 *.pem
+.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
