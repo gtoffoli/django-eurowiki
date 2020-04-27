@@ -1,0 +1,20 @@
+{% extends "eurowiki_base.html" %}
+{% load staticfiles i18n %}
+
+{% block head_title %}{% trans "Literal statement" %}{% endblock head_title %}
+
+{% block body_class %}literal_statement{% endblock %}
+{% block body_base %}
+<div class="panel">
+    <div class="panel-heading-c0">
+        <h2 style="margin: 0; padding: 2px; text-align: center;">{% trans "Literal statement" %}</h2>
+    </div>
+
+	<form action="/literal_statement/edit/" method="post">
+	    {% csrf_token %}
+	    {{ form.as_p }}
+	    <input type="submit" value="Submit">
+	</form>
+
+</div>
+{% endblock %}
