@@ -1,22 +1,106 @@
-{% load staticfiles i18n %}
+﻿{% load static i18n %}
+{# load menu #}
+{# generate_menu #}
+
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
-  <head>
-    <meta charset="utf-8">
-    {% block languages %}
-    {% endblock %}
-    <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
-    {% comment %}<link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">{% endcomment %}
-    <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
-    <link href='{{ PROTOCOL }}://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
-    <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
-    <script src="https://use.fontawesome.com/d391635073.js"></script>
-    <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
-  </head>
+    <head>
+        {# include 'google_analytics.html' #}
+        <meta charset="utf-8">
+        <title>{% block head_title_base %}{% block head_title %}{% endblock head_title %}{% endblock head_title_base %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
 
-  <body style="margin: 0; padding: 0;">
-  {% block body_base %}
+{% comment %}
+        <link rel="canonical" href="{{ CANONICAL }}">
+{% endcomment %}
 
-  {% endblock %}
-  </body>
+        {% block languages %}
+        {% endblock languages %}
+    
+        {% block meta %}
+        {% endblock meta %}
+    
+        {% block viewport %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% endblock viewport %}
+
+        <link rel="shortcut icon" href="{% static "eurowiki/img/favicon.ico" %}" type="image/x-icon">
+        <link rel="apple-touch-icon" href="{% static "eurowiki/img/eurowiki_icon.png" %}" type="image/png">
+
+        {% block style_head_base %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!--link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'-->
+        <link rel="stylesheet" href="{% static "eurowiki/css/eurowiki.css" %}">
+        {% block extra_style_head %}{% endblock extra_style_head %}
+        {% endblock style_head_base %}
+
+        {% block script_head_base %}
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://use.fontawesome.com/d391635073.js"></script>
+        {% block extra_script_head %}{% endblock extra_script_head %}
+        {% endblock script_head_base %}
+
+        {% block extra_head_base %}
+        {% block extra_head %}{% endblock extra_head %}
+        {% endblock extra_head_base %}
+    </head>
+
+    <body class="{% block body_class %}{% endblock body_class %}" id="{% block body_id %}{% endblock body_id %}" style="cursor:default">
+
+        <div class="{% block wrapper_class %}wrapper{% endblock wrapper_class %}">
+            {% block topbar_base %}
+            <header>
+                <div>LOGO</div>
+            </header>
+            {% block login_model %}{# include "_login_model.html" #}{% endblock login_model %}
+            {% endblock topbar_base %}
+
+            {% block body_base %}
+            <section id="content_body">
+                <div class="container-fluid">
+                    {% block body %}{% endblock body %}
+                </div>
+            </section>
+            {% endblock body_base %}
+        </div>
+    
+        {% block footer_base %}
+        <footer class="footer-fixed">
+            <div class="container-fluid">
+                <p>FOOTER</p>
+            {% block footer %}
+            {% endblock footer %}
+            </div>
+        </footer>
+        {% endblock footer_base %}
+
+        {% block script_style_base %}
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+{% comment %}
+      <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script -->
+      <script type="text/javascript">
+        $(document).ready(function() {
+          if ($('#navigation_autocomplete').length > 0) {
+            $('#navigation_autocomplete').yourlabsAutocomplete({
+              url: '{% url 'navigation_autocomplete' %}',
+              choiceSelector: 'a',
+              minimumCharacters: 3,
+              placeholder: '{% trans "Search ... (enter at least 3 characters)" %}',
+            }).input.bind('selectChoice', function(e, choice, autocomplete) {
+             document.location.href = choice.attr('href');
+            });
+          }
+        });
+      </script>
+{% endcomment %}
+
+        {% block extra_script_style %}{% endblock extra_script_style %}
+        {% endblock script_style_base %}
+
+        {% block extra_body_base %}
+        {% block extra_body %}{% endblock extra_body %}
+        {% endblock extra_body_base %}
+    </body>
 </html>

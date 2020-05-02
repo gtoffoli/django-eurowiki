@@ -1,6 +1,8 @@
 private.py
 google_analytics.html
-*Copia.py
+*Copia.*
+*.bak
+*.old
 *.key
 *.pem
 .*

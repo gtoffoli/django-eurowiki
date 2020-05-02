@@ -1,15 +1,12 @@
 {% extends "eurowiki_base.html" %}
-{% load staticfiles i18n %}
+{% load static i18n %}
 
 {% block head_title %}{% trans "Namespaces" %}{% endblock head_title %}
 
-{% block body_class %}namespaces{% endblock %}
-{% block body_base %}
-<div class="panel">
-    <div class="panel-heading-c0">
-        <h2 style="margin: 0; padding: 2px; text-align: center;">{% trans "Namespaces" %}</h2>
-    </div>
-    <table class="table table-responsive table-bordered table-striped">
+{% block body_class %}namespaces{% endblock body_class %}
+{% block body %}
+    <h2 class="text-center">{% trans "Namespaces" %}</h2>
+    <table class="table table-responsive table-striped">
     <thead>
     	<tr><th>store</th><th>prefix</th><th>URI</th></tr>
     </thead>
@@ -23,5 +20,5 @@
     	{% endfor %}
     </tbody>
     </table>
-</div>
-{% endblock %}
+
+{% endblock body %}
