@@ -109,7 +109,7 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
-                 'django.template.context_processors.tz',
+                'django.template.context_processors.tz',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'eurowiki.context_processors.processor',
@@ -117,6 +117,12 @@ TEMPLATES = [
         },
     },
 ]
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 WSGI_APPLICATION = 'eurowiki.wsgi.application'
 
@@ -182,6 +188,13 @@ TIME_ZONE = 'Europe/Rome'
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+if IS_LINUX:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'eurowiki/static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SITE_ID = 1
 SITE_NAME = 'EuroIdentities'

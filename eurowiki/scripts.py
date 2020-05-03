@@ -1,4 +1,6 @@
 import time
+import json
+import pprint
 from wikidata.client import Client
 from SPARQLWrapper import SPARQLWrapper, JSON
 
@@ -7,8 +9,19 @@ wikidata_sparql_endpoint = 'https://query.wikidata.org/sparql'
 
 SLEEP_TIME = 10 # seconds
 
-MEMBER_OF = "P463"
-EU = "Q458"
+EU = 'Q458'
+MEMBER_OF = 'P463'
+NATIONAL_ANTHEM = 'Q23691'
+HAS_NATIONAL_ANTHEM = 'P85'
+OF = 'P642'
+NATIONAL_FLAG = 'Q186516'
+MONUMENT = 'Q4989906'
+NATIONAL_SYMBOL = 'Q1128637'
+NATIONAL_DAY = 'Q57598'
+NATIONAL_MOTTO = 'Q29654714'
+MUSIC_BY = 'P86'
+TEXT_BY = 'P676'
+
 Italy = "Q38"
 country_id = Italy
 
@@ -55,13 +68,31 @@ def api_explore_country(country_id=country_id):
 def sparql_eu_countries():
     sparql = SPARQLWrapper(wikidata_sparql_endpoint)
     sparql.setQuery("""
-        SELECT ?country ?countryLabel WHERE
+        SELECT ?countryLabel ?anthemLabel ?anthem_text_authorLabel ?anthem_music_authorLabel WHERE
         {{
-            ?country wdt:{} wd:{}.
+            ?country wdt:{} wd:{} .
+            ?country wdt:{} ?anthem .
+            OPTIONAL {{ ?anthem wdt:{} ?anthem_text_author . }}
+            OPTIONAL {{ ?anthem wdt:{} ?anthem_music_author . }}
             SERVICE wikibase:label {{ bd:serviceParam wikibase:language "it". }}
         }}
         ORDER BY ASC(?countryLabel)
-    """.format(MEMBER_OF, EU))
+    """.format(MEMBER_OF, EU, HAS_NATIONAL_ANTHEM, TEXT_BY, MUSIC_BY ))
     sparql.setReturnFormat(JSON)
     return sparql.query().convert()
 
+"""
+pp = pprint.PrettyPrinter(indent=2, compact=True)
+eucc = sparql_eu_countries()
+pp.pprint(eucc)
+
+        SELECT ?countryLabel ?anthemLabel ?anthem_text_authorLabel ?anthem_music_authorLabel WHERE
+        {
+            ?country wdt:P463 wd:Q458 .
+            ?country wdt:P85 ?anthem .
+            OPTIONAL { ?anthem wdt:P676 ?anthem_text_author . }
+            OPTIONAL { ?anthem wdt:P86 ?anthem_music_author . }
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "it,en". }
+        }
+        ORDER BY ASC(?countryLabel)
+"""
