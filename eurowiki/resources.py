@@ -5,11 +5,11 @@ Should include only terminology and the core of top-level items.
 """
 
 # this dictionary should allow to derive sources from namespace prefix
-EXTERNAL_SOURCES = {
-  "wikidata": [
-    "wd", # wikidata items
-    "p", # wikidata property types
-  ],
+WIKIDATA_BASE = 'http://www.wikidata.org'
+RDF_PREFIXES = {
+    "wd": '{}/{}'.format(WIKIDATA_BASE, 'entity/'), # wikidata items
+    "wdt": '{}/{}'.format(WIKIDATA_BASE, 'prop/direct/'), # wikidata property "truthy"
+    "p": '{}/{}'.format(WIKIDATA_BASE, 'prop/'), # wikidata property type
 }
 
 # this dictionary should allow to compute URIs, based on prefix to namespace mapping
