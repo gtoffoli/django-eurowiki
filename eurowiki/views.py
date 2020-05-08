@@ -10,6 +10,32 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import NamedGraphForm, NamespaceModelForm, URIStatementForm, LiteralStatementForm
 
+from django.conf import settings
+def friend_uri(uri, append_label=True, lang='en'):
+    for short, long in settings.RDF_PREFIX_ITEMS:
+        if uri.startswith(long):
+            code = uri[len(long):]
+            uri = '{}:{}'.format(short, code)
+            break
+    label = ''
+    if append_label:
+        if code[0] == 'Q':
+            labels = settings.EU_COUNTRY_LABELS.get(code, {})
+            if not labels:
+                labels = settings.OTHER_ITEM_LABELS.get(code, {})
+            if labels:
+                label = labels[lang]
+        elif code[0] == 'P':
+            labels = settings.PREDICATE_LABELS.get(code, {})
+            if labels:
+                label = labels[lang]
+    if label:
+        uri = '{} ({})'.format(uri, label)
+    return uri
+
+def friend_graph(context):
+    return str(context).split('.')[-2]
+
 def list_stores(request):
     stores = Store.objects.all()
     return render(request, 'list_stores.html', {'stores': stores})
@@ -23,8 +49,10 @@ def list_namespaces(request):
     return render(request, 'list_namespaces.html', {'namespaces': namespaces})
 
 def list_uri_statements(request):
-    uri_statements = URIStatement.objects.all()
-    return render(request, 'list_uri_statements.html', {'uri_statements': uri_statements})
+    uri_statements = URIStatement.objects.all().order_by('context', 'subject', 'predicate')
+    statement_dicts = [{'graph': friend_graph(s.context), 'subject': friend_uri(s.subject), 'predicate': friend_uri(s.predicate), 'object': friend_uri(s.object)}
+                       for s in uri_statements]
+    return render(request, 'list_uri_statements.html', {'statement_dicts': statement_dicts})
 
 def list_literal_statements(request):
     literal_statements = LiteralStatement.objects.all()

@@ -11,75 +11,82 @@ RDF_PREFIXES = {
     "wdt": '{}/{}'.format(WIKIDATA_BASE, 'prop/direct/'), # wikidata property "truthy"
     "p": '{}/{}'.format(WIKIDATA_BASE, 'prop/'), # wikidata property type
 }
+RDF_PREFIX_ITEMS = RDF_PREFIXES.items()
+
+EU = 'Q458'
+EU_LABELS = {'en': 'European Union', 'it': 'Unione Europea'}
+
+from collections import OrderedDict
+EU_COUNTRY_LABELS = OrderedDict([
+    ('Q40', {'en': 'Austria', 'it': 'Austria',}), # Austria
+    ('Q29', {'en': 'Spain', 'it': 'Spagna',}), # Spain
+    ('Q31', {'en': 'Belgium', 'it': 'Belgio',}), # Belgium
+    ('Q219', {'en': 'Bulgaria', 'it': 'Bulgaria',}), # Bulgaria
+    ('Q224', {'en': 'Croatia', 'it': 'Croazia',}), # Croatia
+    ('Q229', {'en': 'Republic of Cyprus', 'it': 'Cipro',}), # Republic of Cyprus
+    ('Q213', {'en': 'Czech Republic', 'it': 'Repubblica Ceca',}), # Czech Republic
+    ('Q35', {'en': 'Denmark', 'it': 'Danimarca',}), # Denmark
+    ('Q191', {'en': 'Estonia', 'it': 'Estonia',}), # Estonia
+    ('Q33', {'en': 'Finland', 'it': 'Finlandia',}), # Finland
+    ('Q142', {'en': 'France', 'it': 'Francia',}), # France
+    ('Q183', {'en': 'Germany', 'it': 'Germania',}), # Germany
+    ('Q41', {'en': 'Greece', 'it': 'Grecia',}), # Greece
+    ('Q27', {'en': 'Ireland', 'it': 'Irlanda',}), # Ireland
+    ('Q38', {'en': 'Italy', 'it': 'Italia',}), # Italy
+    ('Q211', {'en': 'Latvia', 'it': 'Lettonia',}), # Latvia
+    ('Q37', {'en': 'Lithuania', 'it': 'Lituania',}), # Lithuania
+    ('Q32', {'en': 'Luxembourg', 'it': 'Lussemburgo',}), # Luxembourg
+    ('Q233', {'en': 'Malta', 'it': 'Malta',}), # Malta
+    ('Q55', {'en': 'Netherlands', 'it': 'Paesi Bassi',}), # Netherlands
+    ('Q29999', {'en': 'Kingdom of Netherlands', 'it': 'Paesi Bassi',}), # Kingdom of Netherlands
+    ('Q36', {'en': 'Poland', 'it': 'Polonia',}), # Poland
+    ('Q45', {'en': 'Portugal', 'it': 'Portogallo',}), # Portugal
+    ('Q218', {'en': 'Romania', 'it': 'Romania',}), # Romania
+    ('Q214', {'en': 'Slovakia', 'it': 'Slovacchia',}), # Slovakia
+    ('Q215', {'en': 'Slovenia', 'it': 'Slovenia',}), # Slovenia
+    ('Q34', {'en': 'Sweden', 'it': 'Svezia',}), # Sweden
+    ('Q28', {'en': 'Hungary', 'it': 'Ungheria',}), #  (member of Q458)
+    ('Q145', {'en': 'United Kingdom', 'it': 'Regno Unito',}), #
+])
+
+OTHER_ITEM_LABELS = {
+    'Q458': {'en': 'European Union', 'it': 'Unione Europea'},
+    'Q3624078': {'en': 'sovereign state', 'it': 'stato sovrano',},
+    'Q23691': {'en': 'national anthem', 'it': 'inno nazionale',},
+    'Q186516': {'en': 'national flag', 'it': 'bandiera nazionale',},
+    'Q1128637': {'en': 'national symbol', 'it': 'simbolo nazionale',},
+    'Q57598': {'en': 'national day', 'it': 'festa nazionale',},
+    'Q29654714': {'en': 'national motto', 'it': 'motto nazionale',},
+    'Q1079693': {'en': 'national emblem', 'it': 'stemma nazionale',},
+}
+
+PREDICATE_LABELS = {
+    'P279': {'en': 'subclass of', 'it': 'sottoclasse di',}, # subclass of
+    'P31': {'en': 'instance of', 'it': 'istanza di',}, # instance of
+    'P361': {'en': 'part of', 'it': 'parte di',}, # part of
+    'P463': {'en': 'member of', 'it': 'membro di',}, # member of
+    'P17': {'en': 'country', 'it': 'paese',}, # country
+    'P642': {'en': 'refers to', 'it': 'relativo a',}, # of (refers to)
+    'P86': {'en': 'music composer', 'it': 'compositore',}, # composer (its music author)
+    'P676': {'en': 'text author', 'it': 'autore del testo',}, # lyrics by (its text author)
+    'P495': {'en': 'country of origin', 'it': 'paese di origine',}, # country of origin
+    'P580': {'en': 'start date', 'it': 'data di inizio',}, # start time (of validity of a property assertion)
+    'P582': {'en': 'end date', 'it': 'data di fine',}, # end time (of validity of a property assertion)
+}
 
 # this dictionary should allow to compute URIs, based on prefix to namespace mapping
-EXTERNAL_RESOURCES = {
+OTHER_EXTERNAL_RESOURCES = {
   "wd": [
+    # miscellaneous concepts
     'Q205892', # calendar date
     'Q6256', # country
     'Q4989906', # monument
     'Q811979', # architectural structure
-
-    'Q1128637', # national symbol
     'Q7148059', # patriotic song
-    'Q186516', # national flag (subclass of Q1128637)
-    'Q23691', # national anthem (subclass of Q1128637 and of Q7148059)
-    'Q57598', # national day (subclass of Q1128637 and Q205892)
-    'Q29654714', # national motto (subclass of Q1128637)
-
-    'Q458', # European Union
-
-    'Q28', # Hungary (member of Q458)
-    'Q29', # Spain
-    'Q31', # Belgium
-    'Q32', # Luxembourg
-    'Q33', # Finland
-    'Q34', # Sweden
-    'Q35', # Denmark
-    'Q36', # Poland
-    'Q37', # Lithuania
-    'Q38', # Italy
-    'Q40', # Austria
-    'Q41', # Greece
-    'Q45', # Portugal
-    'Q142', # France
-    'Q183', # Germany
-    'Q191', # Estonia
-    'Q211', # Latvia
-    'Q213', # Czech Republic
-    'Q214', # Slovakia
-    'Q215', # Slovenia
-    'Q218', # Romania
-    'Q219', # Bulgaria
-    'Q224', # Croatia
-    'Q229', # Republic of Cyprus
-    'Q233', # Malta
-    'Q22890', # Ireland
-    'Q29999', # Netherlands
-
-    # some examples:
+    # some instances:
     'Q187', # Inno di Mameli (instance of Q23691, of Q38)
     'Q41180', # La Marseillaise (instance of Q23691, - P642 Q142)
     'Q326724', # Bastille Day (instance of Q57598, - P17 Q142)
     'Q506234', # Altare della Patria (instance of Q4989906 and Q1128637, - P17 Q38)
   ],
-  "p": [
-    'P279', # subclass of
-    'P31', # instance of
-    'P361', # part of
-
-    'P463', # member of
-
-    'P17', # country
-    'P642', # of (refers to)
-    'P86', # composer (its music author)
-    'P676', # lyrics by (its text author)
-    'P495', # country of origin
-
-    'P580', # start time (of validity of a property assertion)
-    'P582', # end time (of validity of a property assertion)
-
-
-  ]
-  
 }

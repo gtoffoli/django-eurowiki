@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^namespace/new/$', views.editNamespaceModel.as_view(), name='namespace_model_new'),
     url(r'^namespace/(?P<namespace_id>[\d-]+)/edit/$', views.editNamespaceModel.as_view(), name='namespace_model_edit'),
 
+    url(r'^uri_statements/$', views.list_uri_statements, name='list_uri_statements'),
     url(r'^uri_statement/(?P<statement_id>[\d-]+)/$', views.view_uri_statement, name='uri_statement'),
     url(r'^uri_statement/new/$', views.editURIStatement.as_view(), name='uri_statement_new'),
     url(r'^uri_statement/(?P<statement_id>[\d-]+)/edit/$', views.editURIStatement.as_view(), name='uri_statement_edit'),
