@@ -1,0 +1,25 @@
+{% extends "eurowiki_base.html" %}
+{% load static i18n %}
+
+{% block head_title %}{% trans "Literal statements" %}{% endblock head_title %}
+
+{% block body_class %}literalstatements{% endblock body_class %}
+{% block body %}
+    <h2 class="text-center">{% trans "Literal statements" %}</h2>
+    <table class="table table-responsive table-striped">
+    <thead>
+    	<tr><th>named graph</th><th>subject</th><th>predicate</th><th>object</th></tr>
+    </thead>
+    <tbody>
+		{% for dict in statement_dicts %}
+    	<tr>
+    		<td>{{ dict.graph}}</td>
+    		<td>{{ dict.subject}}</td>
+    		<td>{{ dict.predicate}}</td>
+    		<td>{{ dict.object}}</td>
+    	</tr>
+    	{% endfor %}
+    </tbody>
+    </table>
+
+{% endblock body %}

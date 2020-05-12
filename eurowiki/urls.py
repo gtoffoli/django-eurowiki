@@ -31,11 +31,12 @@ urlpatterns = [
     url(r'^namespace/new/$', views.editNamespaceModel.as_view(), name='namespace_model_new'),
     url(r'^namespace/(?P<namespace_id>[\d-]+)/edit/$', views.editNamespaceModel.as_view(), name='namespace_model_edit'),
 
+    url(r'^statements/$', views.list_statements, name='list_statements'),
     url(r'^uri_statements/$', views.list_uri_statements, name='list_uri_statements'),
     url(r'^uri_statement/(?P<statement_id>[\d-]+)/$', views.view_uri_statement, name='uri_statement'),
     url(r'^uri_statement/new/$', views.editURIStatement.as_view(), name='uri_statement_new'),
     url(r'^uri_statement/(?P<statement_id>[\d-]+)/edit/$', views.editURIStatement.as_view(), name='uri_statement_edit'),
-
+    url(r'^literal_statements/$', views.list_literal_statements, name='list_literal_statements'),
     url(r'^literal_statement/(?P<statement_id>[\d-]+)/$', views.view_literal_statement, name='literal_statement'),
     url(r'^literal_statement/new/$', views.editLiteralStatement.as_view(), name='literal_statement_new'),
     url(r'^literal_statement/(?P<statement_id>[\d-]+)/edit/$', views.editLiteralStatement.as_view(), name='literal_statement_edit'),

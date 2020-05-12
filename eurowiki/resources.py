@@ -7,6 +7,7 @@ Should include only terminology and the core of top-level items.
 # this dictionary should allow to derive sources from namespace prefix
 WIKIDATA_BASE = 'http://www.wikidata.org'
 RDF_PREFIXES = {
+    "rdfs": 'http://www.w3.org/2000/01/rdf-schema#',
     "wd": '{}/{}'.format(WIKIDATA_BASE, 'entity/'), # wikidata items
     "wdt": '{}/{}'.format(WIKIDATA_BASE, 'prop/direct/'), # wikidata property "truthy"
     "p": '{}/{}'.format(WIKIDATA_BASE, 'prop/'), # wikidata property type
@@ -60,19 +61,28 @@ OTHER_ITEM_LABELS = {
     'Q1079693': {'en': 'national emblem', 'it': 'stemma nazionale',},
 }
 
-PREDICATE_LABELS = {
-    'P279': {'en': 'subclass of', 'it': 'sottoclasse di',}, # subclass of
-    'P31': {'en': 'instance of', 'it': 'istanza di',}, # instance of
-    'P361': {'en': 'part of', 'it': 'parte di',}, # part of
-    'P463': {'en': 'member of', 'it': 'membro di',}, # member of
-    'P17': {'en': 'country', 'it': 'paese',}, # country
-    'P642': {'en': 'refers to', 'it': 'relativo a',}, # of (refers to)
-    'P86': {'en': 'music composer', 'it': 'compositore',}, # composer (its music author)
-    'P676': {'en': 'text author', 'it': 'autore del testo',}, # lyrics by (its text author)
-    'P495': {'en': 'country of origin', 'it': 'paese di origine',}, # country of origin
-    'P580': {'en': 'start date', 'it': 'data di inizio',}, # start time (of validity of a property assertion)
-    'P582': {'en': 'end date', 'it': 'data di fine',}, # end time (of validity of a property assertion)
-}
+PREDICATE_LABELS =  OrderedDict([
+    ('P279', {'en': 'subclass of', 'it': 'sottoclasse di',}), # subclass of
+    ('P31', {'en': 'instance of', 'it': 'istanza di',}), # instance of
+    ('P361', {'en': 'Part of', 'it': 'Parte di',}), # part of
+    ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
+    ('P17', {'en': 'country', 'it': 'paese',}), # country
+    ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
+
+    ('P85', {'en': 'national anthem', 'it': 'inno nazionale',}), # national anthem (of country)
+    ('P163', {'en': 'national flag', 'it': 'bandiera nazionale',}), # 
+    ('P237', {'en': 'coat of arms', 'it': 'descrizione dello stemma',}), # description of emblem
+    ('P1541', {'en': 'motto text', 'it': 'testo del motto',}), # motto text (of country)
+    ('P1546', {'en': 'national motto', 'it': 'motto nazionale',}), # motto (of country)
+    ('P832', {'en': 'public holiday', 'it': 'festa nazionale',}),
+    ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
+    ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
+
+    ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
+    ('P580', {'en': 'start date', 'it': 'data di inizio',}), # start time (of validity of a property assertion)
+    ('P582', {'en': 'end date', 'it': 'data di fine',}), # end time (of validity of a property assertion)
+])
+ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
 # this dictionary should allow to compute URIs, based on prefix to namespace mapping
 OTHER_EXTERNAL_RESOURCES = {
