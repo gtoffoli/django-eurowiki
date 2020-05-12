@@ -15,11 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url
-from eurowiki import views
+from django.conf.urls import include, url
+from eurowiki import views, search_indexes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^accounts/', include('allauth.urls')),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
+
+    
+    
     url(r'^$', views.list_namespaces, name='homepage'),
 
     url(r'^named_graph/(?P<namespace_id>[\d-]+)/$', views.view_named_graph, name='named_graph'),

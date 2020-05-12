@@ -1,1 +1,164 @@
 ﻿/* eurowiki.css */
+
+/* MAIN NAVBAR */
+
+.ew-navbar {
+  min-height: 4rem;
+  background-color: #003399;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+}
+@media (max-width: 991.98px) {
+  .ew-navbar {
+    padding-right: .5rem;
+    padding-left: .5rem;
+  }
+  .ew-navbar .navbar-nav-scroll {
+    max-width: 100%;
+    height: 2.5rem;
+    margin-top: 0;
+    overflow: hidden;
+  }
+  .ew-navbar .navbar-nav-scroll .navbar-nav {
+    padding-bottom: 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    webkit-overflow-scrolling: touch;
+  }
+}
+@media (min-width: 768px) {
+  .ew-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1071;
+  }
+}
+.ew-navbar .navbar-nav .nav-item {
+  padding-right: .5rem;
+  padding-left: .5rem;
+}
+.ew-navbar .navbar-nav .nav-link {
+  color: #5189FF;
+  padding-right: 0;
+  padding-left: 0;
+}
+.ew-navbar .navbar-nav .nav-link:active,
+.ew-navbar .navbar-nav .nav-link:hover {
+  color: white;
+  background-color: transparent;
+}
+.ew-navbar .navbar-nav .nav-link:active {
+  font-weight: 600;
+}
+.navbar-dark .navbar-brand {
+  color: #FFCC00;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+.navbar-dark .navbar-brand:hover,
+.navbar-dark .navbar-brand:focus {
+  color: #FFCC00;
+}
+.ew-navbar select.form-control {
+  color: #003399;
+  background-color: #E3E3E3;
+  border: none;
+  cursor: pointer;
+  height: auto;
+}
+.ew-navbar select.form-control:focus,
+.ew-navbar select.form-control:hover {
+  box-shadow: none;
+}
+.ew-navbar .btn-ew-login {
+    font-weight: 600;
+    color: #E3E3E3;
+    border: none;
+}
+.ew-navbar .btn-ew-login:hover,
+.ew-navbar .btn-ew-login:active {
+    color: #fff;
+    border: none;
+  }
+
+/* SIDEBAR LEFT */
+
+.ew-sidebar {
+  order: 0;
+  background-color: #F7F7F7; /* rgba(230, 238, 255, .5);*/
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+@media (min-width: 768px) {
+  .ew-sidebar {
+    position: sticky;
+    top: 4.1rem;
+    z-index: 1000;
+    height: calc(100vh - 4.1rem);
+    border-right: 1px solid rgba(0, 0, 0, .1);
+    overflow-y: auto;
+  }
+}
+.ew-sidebar .nav {
+    display: block;
+}
+.ew-sidebar .nav > li > a {
+  display: block;
+  padding: .25rem 1.5rem .25rem 0;
+  /*font-size: 90%;*/
+  color: rgba(0, 0, 0, .65);
+}
+.ew-sidebar .nav > li > a:hover {
+  color: rgba(0, 0, 0, .85);
+  text-decoration: none;
+  background-color: transparent;
+}
+.ew-sidebar .nav > .active > a,
+.ew-sidebar .nav > .active:hover > a {
+  font-weight: 600;
+  color: rgba(0, 0, 0, .85);
+  background-color: transparent;
+}
+.ew-search {
+  position: relative;
+  padding: 1rem 15px;
+  margin-right: -15px;
+  margin-left: -15px;
+  border-bottom: 1px solid rgba(0, 0, 0, .05);
+}
+.ew-search .form-control:focus {
+    border-color: #003399;
+    box-shadow: 0 0 0 3px rgba(0, 51, 153, .25);
+  }
+.ew-search-docs-toggle {
+    line-height: 1;
+    color: #212529;
+}
+.ew-search .btn-link,
+.ew-search .btn-link:hover {
+    color: #60676e;
+}
+@media (min-width: 768px) {
+.ew-sidebar .collapse:not(.show) {
+  display: block;
+}}
+
+.yourlabs-autocomplete {
+	position: absolute;
+	z-index:1001;
+	background:white;
+	border: 1px solid white;
+	top: 110% !important;
+	left: 0;
+	font-size: 90%;
+	padding: 0.1rem 0 0.1rem 0;
+	border-radius:3px;
+	border: 1px solid rgba(0,0,0,.1);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
+	width:100%;
+}
+
+/* main content */
+
+.ew-content {
+    order: 1;
+}

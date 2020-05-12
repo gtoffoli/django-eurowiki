@@ -36,6 +36,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'haystack',
     'suit',
     # Django
     'django.contrib.admin',
@@ -53,9 +54,9 @@ INSTALLED_APPS = [
     'hierarchical_auth',
     'allauth',
     'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.facebook',
-    # 'allauth.socialaccount.providers.linkedin_oauth2',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.linkedin_oauth2',
     'django_dag',
     'django_messages',
     'queryset_sequence',
@@ -78,6 +79,7 @@ INSTALLED_APPS = [
     'actstream',
 	# ...
     'rdflib_django',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -144,6 +146,24 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory" # "optional"
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True # False
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none" # ACCOUNT_EMAIL_VERIFICATION
 
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'VERSION': 'v2.12',
+    },
+    'linkedin_oauth2': { # added 180826
+        'SCOPE': [
+            'r_emailaddress',
+            'r_basicprofile',
+        ],
+        'PROFILE_FIELDS': [
+            'id',
+            'first-name',
+            'last-name',
+            'email-address',
+        ],
+    },
+}
+
 # --------- HIERARCHICAL GROUPS ----------------
 AUTHENTICATION_BACKENDS = (
     'hierarchical_auth.backends.HierarchicalModelBackend',
@@ -172,7 +192,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
+LANGUAGES = (
+    (u'en', u'English'),
+    #(u'it', u'Italiano'),
+)
 
 TIME_ZONE = 'UTC'
 
@@ -199,10 +223,73 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SITE_ID = 1
 SITE_NAME = 'EuroIdentities'
 
+PROJECT_ROOT = os.path.dirname(__file__)
+PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
+
+USE_HAYSTACK = True
+SEARCH_BACKEND = "whoosh"
+if SEARCH_BACKEND == 'whoosh':
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+            'PATH': os.path.join(PARENT_ROOT, 'whoosh_index'),
+        },
+    }
+
 # Number of seconds of inactivity before a user is marked offline
 USER_ONLINE_TIMEOUT = 300
 # Number of seconds that we will keep track of inactive users for before 
 # their last seen is removed from the cache
 USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'schema': "html5",
+    'resize' : "both",
+    'height': 350,
+    'branding': False,
+    # 'plugins': "advlist charmap textcolor colorpicker table link anchor image media visualblocks code fullscreen preview",
+    'plugins': "paste lists advlist charmap textcolor colorpicker table link anchor image visualblocks code fullscreen preview",
+    # 'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image media | cut copy paste removeformat | visualblocks code fullscreen preview',
+    'toolbar': 'undo redo | formatselect styleselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image | cut copy paste removeformat | visualblocks code fullscreen preview',
+    'content_css' : os.path.join(STATIC_URL,"tinymce/mycontent.css"),
+    'style_formats': [
+      {'title': '10px', 'inline': 'span', 'styles': {'font-size': '10px'}},
+      {'title': '11px', 'inline': 'span', 'styles': {'font-size': '11px'}},
+      {'title': '12px', 'inline': 'span', 'styles': {'font-size': '12px'}},
+      {'title': '13px', 'inline': 'span', 'styles': {'font-size': '13px'}},
+      {'title': '14px', 'inline': 'span', 'styles': {'font-size': '14px'}},
+      {'title': '15px', 'inline': 'span', 'styles': {'font-size': '15px'}},
+      {'title': '16px', 'inline': 'span', 'styles': {'font-size': '16px'}},
+      {'title': '17px', 'inline': 'span', 'styles': {'font-size': '17px'}},
+      {'title': '18px', 'inline': 'span', 'styles': {'font-size': '18px'}},
+      {'title': 'clear floats', 'block': 'div', 'styles': {'clear': 'both'}},
+    ],
+    'plugin_preview_width' : 800,
+    'plugin_preview_height' : 600,
+    'advlist_class_list' : [
+        {'title': 'select', 'value': ''},
+        {'title': 'image responsive', 'value': 'img-responsive-basic center-block'},
+        {'title': 'image responsive left', 'value': 'img-responsive-basic pull-left'},
+        {'title': 'image responsive right', 'value': 'img-responsive-basic pull-right'}],
+    'image_advtab' : True,
+    'image_caption': False,
+    'image_class_list' : [
+        {'title': 'select', 'value': ''},
+        {'title': 'image responsive', 'value': 'img-responsive-basic center-block'},
+        {'title': 'image responsive left', 'value': 'img-responsive-basic pull-left marginR10'},
+        {'title': 'image responsive right', 'value': 'img-responsive-basic pull-right marginL10'}],
+    'paste_data_images': True,
+    'table_class_list': [
+        {'title': 'select', 'value': ''},
+        {'title': 'table responsive', 'value': 'table-responsive'},
+        {'title': 'table responsive width 100%', 'value': 'table-responsive width-full'},],
+    'file_browser_callback_types': 'image',
+    'paste_as_text': True,
+    # URL settings
+    # 'convert_urls' : False,
+    'relative_urls' : False,
+}
 
 from eurowiki.resources import * # EXTERNAL_SOURCES an EXTERNAL_RESOURCES, complementing rdflib store

@@ -6,7 +6,8 @@
 {% block body_class %}namespaces{% endblock body_class %}
 {% block body %}
     <h2 class="text-center">{% trans "Namespaces" %}</h2>
-    <table class="table table-responsive table-striped">
+    <div class="table-responsive">
+    <table class="table table-striped">
     <thead>
     	<tr><th>store</th><th>prefix</th><th>URI</th></tr>
     </thead>
@@ -20,5 +21,5 @@
     	{% endfor %}
     </tbody>
     </table>
-
+    </div>
 {% endblock body %}

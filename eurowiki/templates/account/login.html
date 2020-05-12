@@ -1,0 +1,62 @@
+{% extends "eurowiki_base.html" %}
+
+{% load i18n static %}
+{% load account socialaccount %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block extra_style_head %}
+<style>	
+ul.socialaccount_providers {
+  padding-left: 0;
+  list-style: none;
+  font-weight: 600;
+}
+ul.socialaccount_providers > li {
+  display: inline-block;
+}
+ul.socialaccount_providers > li:after {
+  content: '|';
+}
+ul.socialaccount_providers > li:last-child:after {
+  content: '';
+}
+a:hover {
+    text-decoration: none;
+}
+</style>
+{% endblock extra_style_head %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center"><h2>{% trans "Sign In" %}</h2></div>
+
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+<div class="d-flex justify-content-center align-items-center">
+    <p>{% blocktrans with site.name as site_name %}Please sign in with one
+    of your existing third party accounts:{% endblocktrans %}</p>
+</div>
+<div class="d-flex justify-content-center align-items-center">
+    <ul class="socialaccount_providers">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+               
+    </ul>
+</div>
+<div class="d-flex justify-content-center align-items-center">{% trans 'or'|upper %}</div>
+{% endif %}
+<div class="d-flex justify-content-center align-items-center">
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <div class="form-group">
+        <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+        </div>
+        <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+    </form>
+</div>
+{% endblock body %}

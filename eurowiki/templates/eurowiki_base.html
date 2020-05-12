@@ -29,7 +29,6 @@
         {% block style_head_base %}
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!--link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'-->
         <link rel="stylesheet" href="{% static "eurowiki/css/eurowiki.css" %}">
         {% block extra_style_head %}{% endblock extra_style_head %}
         {% endblock style_head_base %}
@@ -46,56 +45,104 @@
     </head>
 
     <body class="{% block body_class %}{% endblock body_class %}" id="{% block body_id %}{% endblock body_id %}" style="cursor:default">
-
-        <div class="{% block wrapper_class %}wrapper{% endblock wrapper_class %}">
-            {% block topbar_base %}
-            <header>
-                <div>LOGO</div>
-            </header>
-            {% block login_model %}{# include "_login_model.html" #}{% endblock login_model %}
-            {% endblock topbar_base %}
-
-            {% block body_base %}
-            <section id="content_body">
-                <div class="container-fluid">
-                    {% block body %}{% endblock body %}
-                </div>
-            </section>
-            {% endblock body_base %}
-        </div>
-    
-        {% block footer_base %}
-        <footer class="footer-fixed">
-            <div class="container-fluid">
-                <p>FOOTER</p>
-            {% block footer %}
-            {% endblock footer %}
+        {% block topbar_base %}
+        <header class="navbar navbar-expand navbar-dark flex-column flex-md-row ew-navbar">
+            <a class="navbar-brand mr-0 mr-md-2 p-0 pb-md-1" href="/" title="{{ site_name }}">{{ site_name }}</a>
+            <div class="navbar-nav-scroll">
+                <ul class="navbar-nav flex-row">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %} active {% endif %}" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/uri_statements/' %} active {% endif %}" href="/uri_statements/">Uri statements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/literal_statements/' %} active {% endif %}" href="/literal_statements/">Literal statements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/statements/' %} active {% endif %}" href="/statements/">statements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/uri_statement/new/' %} active {% endif %}" href="/uri_statement/new">edit statement</a>
+                    </li>
+                </ul>
             </div>
-        </footer>
-        {% endblock footer_base %}
+            <ul class="navbar-nav ml-md-auto">
+                <li class="nav-item">
+                    <form action="/i18n/setlang/" method="post">{% csrf_token %}
+                        <input type="hidden" name="next" value="{{ path_no_language }}">
+                        <select name="language" onchange='this.form.submit()' class="form-control">
+                        {% for lang in LANGUAGES %}
+                            <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.1 }}</option>
+                        {% endfor %}
+                        </select>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <div class="mb-0">
+                        <form method="post" action="{% url 'account_logout' %}">
+                            <div style="color:white">{{ user.get_display_name }}</div>
+                            {% csrf_token %}
+                            {% if redirect_field_value %}
+                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+                            {% endif %}
+                            <button type="submit" class="btn btn-ew-login mb-0 p-0" title="{% trans "Log out" %}">{% trans "Log out" %} <span class="fa fa-sign-out" aria-hidden="true"></span></button>
+                        </form>
+                     </div> 
+                    {% else %}
+                        <a class="btn btn-ew-login mb-0" href="{% url 'account_login' %}?next={{ request.path }}">{% trans 'Log in' %} <i class="fa fa-sign-in" aria-hidden="true"></i></a>
+                    {% endif %}
+                </li>
+            </ul>
+            
+        </header>
+        {% endblock topbar_base %}
+        {% block body_base %}
+        <div class="container-fluid">
+            <div class="row flex-xl-nowrap">
+                <div class="col-12 col-md-3 col-xl-2 ew-sidebar">
+                    <form role="search" class="ew-search d-flex align-items-center">
+                        <span class="" style="position: relative; width:100%; display: inline-block; direction: ltr;">
+                              <input class="form-control" size="32" type="text" style="font-size:90%" name="q" id="navigation_autocomplete">
+                        </span>
+                        <button class="btn btn-link ew-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
+                    </form>
+                    <nav class="ew-links collapse" id="ew-menu-nav">
+                        <ul class="nav">
+                            <li><a href="#" class="">France</a></li>
+                            <li><a href="#" class="">Germany</a></li>
+                            <li><a href="#" class="">Italy</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <main class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-4 ew-content" role="main">
+                    {% block body %}{% endblock body %}
+                </main>
+            </div>
+        </div>
+        {% endblock body_base %}
+    
+
 
         {% block script_style_base %}
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-{% comment %}
-      <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script -->
-      <script type="text/javascript">
+        <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script>
+        <script type="text/javascript">
         $(document).ready(function() {
           if ($('#navigation_autocomplete').length > 0) {
             $('#navigation_autocomplete').yourlabsAutocomplete({
               url: '{% url 'navigation_autocomplete' %}',
               choiceSelector: 'a',
               minimumCharacters: 3,
-              placeholder: '{% trans "Search ... (enter at least 3 characters)" %}',
+              placeholder: '{% trans "Search ... (at least 3 characters)" %}',
             }).input.bind('selectChoice', function(e, choice, autocomplete) {
              document.location.href = choice.attr('href');
             });
           }
         });
-      </script>
-{% endcomment %}
-
+        </script>
         {% block extra_script_style %}{% endblock extra_script_style %}
         {% endblock script_style_base %}
 
