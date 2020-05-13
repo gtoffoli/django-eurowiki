@@ -7,16 +7,24 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+
 from rdflib_django.utils import get_named_graph
 
+from .classes import Country
 from .forms import NamedGraphForm, NamespaceModelForm, URIStatementForm, LiteralStatementForm
 from .scripts import make_uri
+
+def eu_countries(language=settings.LANGUAGE_CODE):
+    return [Country(qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()]
+
+def homepage(request):
+    return render(request, 'homepage.html', {'countries': eu_countries()})
 
 def uri_to_label(uri):
     label = uri.split('/')[-1]
     return label
 
-from django.conf import settings
 def friend_uri(uri, append_label=True, lang='en'):
     code = ''
     for short, long in settings.RDF_PREFIX_ITEMS:

@@ -3,7 +3,7 @@
 {# generate_menu #}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE|slice:":2" }}">
     <head>
         {# include 'google_analytics.html' #}
         <meta charset="utf-8">
@@ -54,16 +54,16 @@
                         <a class="nav-link {% if request.path == '/' %} active {% endif %}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/statements/' %} active {% endif %}" href="/statements/">Statements</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.path == '/uri_statements/' %} active {% endif %}" href="/uri_statements/">Uri statements</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/literal_statements/' %} active {% endif %}" href="/literal_statements/">Literal statements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/statements/' %} active {% endif %}" href="/statements/">statements</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/uri_statement/new/' %} active {% endif %}" href="/uri_statement/new">edit statement</a>
+                        <a class="nav-link {% if request.path == '/uri_statement/new/' %} active {% endif %}" href="/uri_statement/new">Edit statement</a>
                     </li>
                 </ul>
             </div>
@@ -73,7 +73,7 @@
                         <input type="hidden" name="next" value="{{ path_no_language }}">
                         <select name="language" onchange='this.form.submit()' class="form-control">
                         {% for lang in LANGUAGES %}
-                            <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.1 }}</option>
+                            <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE|slice:":2" %}selected="selected"{% endif %}>{{ lang.1 }}</option>
                         {% endfor %}
                         </select>
                     </form>
@@ -110,9 +110,9 @@
                     </form>
                     <nav class="ew-links collapse" id="ew-menu-nav">
                         <ul class="nav">
-                            <li><a href="#" class="">France</a></li>
-                            <li><a href="#" class="">Germany</a></li>
-                            <li><a href="#" class="">Italy</a></li>
+							{% for country in COUNTRIES %}
+							<li><a href="{{ country.url }}" class="">{{ country.label }}</a></li>
+							{% endfor %}
                         </ul>
                     </nav>
                 </div>

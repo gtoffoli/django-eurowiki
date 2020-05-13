@@ -24,12 +24,9 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
-
+    url(r'^$', views.homepage, name='homepage'),
     
-    
-    url(r'^$', views.list_namespaces, name='homepage'),
-
-    url(r'^named_graph/(?P<namespace_id>[\d-]+)/$', views.view_named_graph, name='named_graph'),
+    url(r'^named_graph/(?P<named_graph_id>[\d-]+)/$', views.view_named_graph, name='named_graph'),
     url(r'^named_graph/new/$', views.editNamedGraph.as_view(), name='named_graph_new'),
     url(r'^named_graph/(?P<named_graph_id>[\d-]+)/edit/$', views.editNamedGraph.as_view(), name='named_graph_edit'),
 
@@ -47,4 +44,5 @@ urlpatterns = [
     url(r'^literal_statement/(?P<statement_id>[\d-]+)/$', views.view_literal_statement, name='literal_statement'),
     url(r'^literal_statement/new/$', views.editLiteralStatement.as_view(), name='literal_statement_new'),
     url(r'^literal_statement/(?P<statement_id>[\d-]+)/edit/$', views.editLiteralStatement.as_view(), name='literal_statement_edit'),
+
 ]
