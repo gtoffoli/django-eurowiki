@@ -62,6 +62,7 @@ OTHER_ITEM_LABELS = {
 }
 
 PREDICATE_LABELS =  OrderedDict([
+    ('label', {'en': 'label', 'it': 'etichetta',}), #
     ('P279', {'en': 'subclass of', 'it': 'sottoclasse di',}), # subclass of
     ('P31', {'en': 'instance of', 'it': 'istanza di',}), # instance of
     ('P361', {'en': 'Part of', 'it': 'Parte di',}), # part of
@@ -75,6 +76,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P1541', {'en': 'motto text', 'it': 'testo del motto',}), # motto text (of country)
     ('P1546', {'en': 'national motto', 'it': 'motto nazionale',}), # motto (of country)
     ('P832', {'en': 'public holiday', 'it': 'festa nazionale',}),
+    ('P1476', {'en': 'title', 'it': 'titolo',}), # 
     ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
     ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
 
@@ -83,6 +85,8 @@ PREDICATE_LABELS =  OrderedDict([
     ('P582', {'en': 'end date', 'it': 'data di fine',}), # end time (of validity of a property assertion)
 ])
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
+
+EU_COUNTRY_PROPERTIES = ['P163', 'P85', 'P237', 'P1546',]
 
 # this dictionary should allow to compute URIs, based on prefix to namespace mapping
 OTHER_EXTERNAL_RESOURCES = {

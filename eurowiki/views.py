@@ -5,6 +5,7 @@ from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
+from django.utils.translation import get_language
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -13,43 +14,13 @@ from rdflib_django.utils import get_named_graph
 
 from .classes import Country
 from .forms import NamedGraphForm, NamespaceModelForm, URIStatementForm, LiteralStatementForm
-from .scripts import make_uri
+from .utils import make_uriref, id_from_uriref, friend_uri, friend_graph
 
 def eu_countries(language=settings.LANGUAGE_CODE):
-    return [Country(qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()]
+    return [Country(id=qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()]
 
 def homepage(request):
-    return render(request, 'homepage.html', {'countries': eu_countries()})
-
-def uri_to_label(uri):
-    label = uri.split('/')[-1]
-    return label
-
-def friend_uri(uri, append_label=True, lang='en'):
-    code = ''
-    for short, long in settings.RDF_PREFIX_ITEMS:
-        if uri.startswith(long):
-            code = uri[len(long):]
-            uri = '{}:{}'.format(short, code)
-            break
-    label = ''
-    if append_label and code:
-        if code[0] == 'Q':
-            labels = settings.EU_COUNTRY_LABELS.get(code, {})
-            if not labels:
-                labels = settings.OTHER_ITEM_LABELS.get(code, {})
-            if labels:
-                label = labels[lang]
-        elif code[0] == 'P':
-            labels = settings.PREDICATE_LABELS.get(code, {})
-            if labels:
-                label = labels[lang]
-    if label:
-        uri = '{} ({})'.format(uri, label)
-    return uri
-
-def friend_graph(context):
-    return str(context).split('.')[-2]
+    return render(request, 'homepage.html')
 
 def list_stores(request):
     stores = Store.objects.all()
@@ -64,22 +35,25 @@ def list_namespaces(request):
     return render(request, 'list_namespaces.html', {'namespaces': namespaces})
 
 def list_uri_statements(request):
+    lang = get_language()
     statements = URIStatement.objects.all().order_by('context', 'subject', 'predicate')
-    statements = sorted(statements, key=lambda s: settings.ORDERED_PREDICATE_KEYS.index(uri_to_label(s.predicate)))
-    statement_dicts = [{'graph': friend_graph(s.context), 'subject': friend_uri(s.subject), 'predicate': friend_uri(s.predicate), 'object': friend_uri(s.object)}
+    statements = sorted(statements, key=lambda s: settings.ORDERED_PREDICATE_KEYS.index(id_from_uriref(s.predicate)))
+    statement_dicts = [{'graph': friend_graph(s.context), 'subject': friend_uri(s.subject, lang=lang), 'predicate': friend_uri(s.predicate, lang=lang), 'object': friend_uri(s.object, lang=lang)}
                        for s in statements]
     return render(request, 'list_uri_statements.html', {'statement_dicts': statement_dicts})
 
 def list_literal_statements(request):
+    lang = get_language()
     statements = LiteralStatement.objects.all().order_by('context', 'subject', 'predicate')
-    statement_dicts = [{'graph': friend_graph(s.context), 'subject': friend_uri(s.subject), 'predicate': friend_uri(s.predicate), 'object': str(s.object)}
+    statement_dicts = [{'graph': friend_graph(s.context), 'subject': friend_uri(s.subject, lang=lang), 'predicate': friend_uri(s.predicate, lang=lang), 'object': str(s.object)}
                        for s in statements]
     return render(request, 'list_literal_statements.html', {'statement_dicts': statement_dicts})
 
 def list_statements(request):
-    graph_identifier = make_uri('http://www.wikidata.org')
+    lang = get_language()
+    graph_identifier = make_uriref('http://www.wikidata.org')
     graph = get_named_graph(graph_identifier)
-    statement_dicts = [{'graph': 'wikidata', 'subject': friend_uri(s), 'predicate': friend_uri(p), 'object': friend_uri(o)}
+    statement_dicts = [{'graph': 'wikidata', 'subject': friend_uri(s, lang=lang), 'predicate': friend_uri(p, lang=lang), 'object': friend_uri(o, lang=lang)}
                            for s, p, o in graph]
     return render(request, 'list_statements.html', {'statement_dicts': statement_dicts})
         
@@ -183,6 +157,8 @@ class editLiteralStatement(View):
             return HttpResponseRedirect('/literal_statement/{}/'.format(statement.id))
         return render(request, self.template_name, {'form': form})
 
-def view_item(request, item_id):
-    item = None
-    return render(request, 'item.html', {'item': item})
+def view_country(request, item_code):
+    assert item_code[0]=='Q'
+    country = Country(id=item_code)
+    return render(request, 'country.html', {'country' : country})
+

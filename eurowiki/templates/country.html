@@ -1,0 +1,29 @@
+{% extends "eurowiki_base.html" %}
+{% load static i18n %}
+
+{% block head_title %}{{ country.label }}{% endblock head_title %}
+
+{% block body_class %}item_view{% endblock body_class %}
+
+{% block body %}
+    <h2>{{ country.label }}</h2>
+
+    <div class="table-responsive">
+    <table class="table table-striped">
+    <thead>
+{% comment %}
+    	<tr><th>predicate</th><th>object</th></tr>
+{% endcomment %}
+    	<tr><th></th><th></th><th></th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for p, o in country.properties %}
+        <tr>
+            <td>{{ p.label }}</td>
+    	    <td>{{ o.label }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    </div>
+{% endblock body %}

@@ -159,7 +159,7 @@ SELECT ?country WHERE
     country_codes = [c_dict['country']['value'].split('/')[-1] for c_dict in country_list]
     return country_codes
 
-def make_uri(value, prefix=None):
+def make_uriref(value, prefix=None):
     if not prefix:
         if value.startswith('Q'):
             prefix = 'wd'
@@ -171,7 +171,7 @@ def make_uri(value, prefix=None):
         return URIRef(value)
 
 # The URI RDFS_LABEL (http://www.w3.org/2000/01/rdf-schema#label) is defined explicitly here, since
-# calling URIRef with the base argument (see make_uri above) seems broken for namespaces ending with "#"
+# calling URIRef with the base argument (see make_uriref above) seems broken for namespaces ending with "#"
 RDFS_LABEL = settings.RDF_PREFIXES['rdfs']+'label'
 
 # def clone_wd_countries_from_query(query_result):
@@ -184,7 +184,7 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
         return 'no argument was found'
     c_dict_list = data_dict['results']['bindings']
     store = Store.objects.get(identifier=DEFAULT_STORE)
-    graph_identifier = make_uri('http://www.wikidata.org')
+    graph_identifier = make_uriref('http://www.wikidata.org')
     wikidata_graph, created = NamedGraph.objects.get_or_create(identifier=graph_identifier, store=store)
     if created:
         print('new named graph created:', str(wikidata_graph))
@@ -193,49 +193,49 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
     context = wikidata_graph
     for c_dict in c_dict_list:
         country = c_dict['country']['value']
-        subject = make_uri(country)
-        URIStatement.objects.get_or_create(subject=subject, predicate=make_uri(INSTANCE_OF), object=make_uri(SOVEREIGN_STATE), context=context)
-        URIStatement.objects.get_or_create(subject=subject, predicate=make_uri(MEMBER_OF), object=make_uri(EU), context=context)
+        subject = make_uriref(country)
+        URIStatement.objects.get_or_create(subject=subject, predicate=make_uriref(INSTANCE_OF), object=make_uriref(SOVEREIGN_STATE), context=context)
+        URIStatement.objects.get_or_create(subject=subject, predicate=make_uriref(MEMBER_OF), object=make_uriref(EU), context=context)
         if c_dict.get('anthem', {}):
             anthem = c_dict['anthem']['value']
             anthem_uri = URIRef(anthem)
-            URIStatement.objects.get_or_create(subject=subject, predicate=make_uri(HAS_NATIONAL_ANTHEM), object=anthem_uri, context=context)
+            URIStatement.objects.get_or_create(subject=subject, predicate=make_uriref(HAS_NATIONAL_ANTHEM), object=anthem_uri, context=context)
         anthemLabel_dict = c_dict['anthemLabel']
         if anthemLabel_dict and anthemLabel_dict['xml:lang']=='en':
             anthemLabel = anthemLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=anthem_uri, predicate=make_uri(RDFS_LABEL), object=Literal(anthemLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=anthem_uri, predicate=make_uriref(RDFS_LABEL), object=Literal(anthemLabel), context=context)
         if c_dict.get('anthem_text_author', {}):
             anthem_text_author = c_dict['anthem_text_author']['value']
             anthem_text_author_uri = URIRef(anthem_text_author)
-            URIStatement.objects.get_or_create(subject=anthem_uri, predicate=make_uri(TEXT_BY), object=anthem_text_author_uri, context=context)
+            URIStatement.objects.get_or_create(subject=anthem_uri, predicate=make_uriref(TEXT_BY), object=anthem_text_author_uri, context=context)
         anthem_text_authorLabel_dict = c_dict.get('anthem_text_authorLabel', {})
         if anthem_text_authorLabel_dict and anthem_text_authorLabel_dict['xml:lang']=='en':
             anthem_text_authorLabel = anthem_text_authorLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=anthem_text_author_uri, predicate=make_uri(RDFS_LABEL), object=Literal(anthem_text_authorLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=anthem_text_author_uri, predicate=make_uriref(RDFS_LABEL), object=Literal(anthem_text_authorLabel), context=context)
         if c_dict.get('anthem_music_author', {}):
             anthem_music_author = c_dict['anthem_music_author']['value']
             anthem_music_author_uri = URIRef(anthem_music_author)
-            URIStatement.objects.get_or_create(subject=anthem_uri, predicate=make_uri(MUSIC_BY), object=anthem_music_author_uri, context=context)
+            URIStatement.objects.get_or_create(subject=anthem_uri, predicate=make_uriref(MUSIC_BY), object=anthem_music_author_uri, context=context)
         anthem_music_authorLabel_dict = c_dict.get('anthem_music_authorLabel', {})
         if anthem_music_authorLabel_dict and anthem_music_authorLabel_dict.get('xml:lang', '')=='en':
             anthem_music_authorLabel = anthem_music_authorLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=anthem_music_author_uri, predicate=make_uri(RDFS_LABEL), object=Literal(anthem_music_authorLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=anthem_music_author_uri, predicate=make_uriref(RDFS_LABEL), object=Literal(anthem_music_authorLabel), context=context)
         if c_dict.get('flag', {}):
             flag = c_dict['flag']['value']
             flag_uri = URIRef(flag)
-            URIStatement.objects.get_or_create(subject=subject, predicate=make_uri(HAS_NATIONAL_FLAG), object=flag_uri, context=context)
+            URIStatement.objects.get_or_create(subject=subject, predicate=make_uriref(HAS_NATIONAL_FLAG), object=flag_uri, context=context)
         flagLabel_dict = c_dict.get('flagLabel', {})
         if flagLabel_dict and flagLabel_dict.get('xml:lang', '')=='en':
             flagLabel = flagLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=flag_uri, predicate=make_uri(RDFS_LABEL), object=Literal(flagLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=flag_uri, predicate=make_uriref(RDFS_LABEL), object=Literal(flagLabel), context=context)
         if c_dict.get('emblem', {}):
             emblem = c_dict['emblem']['value']
             emblem_uri = URIRef(emblem)
-            URIStatement.objects.get_or_create(subject=subject, predicate=make_uri(HAS_NATIONAL_EMBLEM), object=emblem_uri, context=context)
+            URIStatement.objects.get_or_create(subject=subject, predicate=make_uriref(HAS_NATIONAL_EMBLEM), object=emblem_uri, context=context)
         emblemLabel_dict = c_dict.get('emblemLabel', {})
         if emblemLabel_dict and emblemLabel_dict.get('xml:lang', '')=='en':
             emblemLabel = emblemLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=subject, predicate=make_uri(RDFS_LABEL), object=Literal(emblemLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=subject, predicate=make_uriref(RDFS_LABEL), object=Literal(emblemLabel), context=context)
             
 def clone_wd_countries_from_json(filepath):
     pass
@@ -293,10 +293,10 @@ def load_item_from_file(filepath, langs=['en', 'it',]):
 # export to RDF or N3 file the entire "wikidata" graph from the eurowiki DB
 def export_countries(format="rdf"):
     store = Store.objects.get(identifier=DEFAULT_STORE)
-    graph_identifier = make_uri('http://www.wikidata.org')
+    graph_identifier = make_uriref('http://www.wikidata.org')
     wikidata_graph = NamedGraph.objects.get(identifier=graph_identifier, store=store)
     target = "/tmp/countries.{}".format(format)
-    graph = get_named_graph(make_uri('http://www.wikidata.org'))
+    graph = get_named_graph(make_uriref('http://www.wikidata.org'))
     graph.serialize(target, format=format)
  
 """
