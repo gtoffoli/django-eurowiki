@@ -38,7 +38,7 @@ class FlatPageIndex(indexes.SearchIndex, indexes.Indexable):
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from haystack.forms import ModelSearchForm, model_choices
-class commonsModelSearchForm(ModelSearchForm):
+class eurowikiModelSearchForm(ModelSearchForm):
     def __init__(self, *args, **kwargs):
         super(ModelSearchForm, self).__init__(*args, **kwargs)
         self.fields['models'] = forms.MultipleChoiceField(choices=model_choices(), required=False, label=_('In'), widget=forms.CheckboxSelectMultiple)

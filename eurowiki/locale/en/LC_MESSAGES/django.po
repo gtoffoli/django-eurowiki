@@ -3,69 +3,43 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-13 15:31+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2020-05-15 18:55+0200\n"
+"PO-Revision-Date: 2020-05-15 19:01+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"X-Generator: Poedit 2.3.1\n"
 
 #: .\search_indexes.py:44
 msgid "In"
 msgstr ""
 
 #: .\templates\account\login.html:7 .\templates\account\login.html:32
-#: .\templates\account\login.html:57
+#: .\templates\account\login.html:56
 msgid "Sign In"
 msgstr ""
 
 #: .\templates\account\login.html:38
-msgid ""
-"Please sign in with one\n"
-"    of your existing third party accounts:"
+msgid "Please sign in with one of your existing third party accounts:"
 msgstr ""
 
-#: .\templates\account\login.html:47
+#: .\templates\account\login.html:46
 msgid "or"
 msgstr ""
 
-#: .\templates\account\login.html:59
+#: .\templates\account\login.html:58
 msgid "Forgot Password?"
 msgstr ""
 
-#: .\templates\autocomplete.html:5
-msgid "members"
-msgstr ""
-
-#: .\templates\autocomplete.html:8
-msgid "communities and projects"
-msgstr ""
-
-#: .\templates\autocomplete.html:11
-msgid "external repositories"
-msgstr ""
-
-#: .\templates\autocomplete.html:14
-msgid "OERs"
-msgstr ""
-
-#: .\templates\autocomplete.html:17
-msgid "learning paths"
-msgstr ""
-
-#: .\templates\autocomplete.html:20
-msgid "help pages"
-msgstr ""
-
-#: .\templates\autocomplete.html:27
+#: .\templates\autocomplete.html:26
 msgid "no item"
 msgstr ""
 
@@ -79,23 +53,23 @@ msgid "Named graph"
 msgstr ""
 
 #: .\templates\edit_namespace.html:4 .\templates\edit_namespace.html:10
+#: .\templates\namespace_model.html:4 .\templates\uri_statement.html:4
 msgid "Namespace"
 msgstr ""
 
-#: .\templates\edit_uri_statement.html:5
-#: .\templates\edit_uri_statement.html:10
+#: .\templates\edit_uri_statement.html:5 .\templates\edit_uri_statement.html:10
 msgid "URI statement"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:90
+#: .\templates\eurowiki_base.html:91
 msgid "Log out"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:94
+#: .\templates\eurowiki_base.html:95
 msgid "Log in"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:147
+#: .\templates\eurowiki_base.html:139
 msgid "Search ... (at least 3 characters)"
 msgstr ""
 
@@ -115,4 +89,8 @@ msgstr ""
 #: .\templates\list_uri_statements.html:4
 #: .\templates\list_uri_statements.html:8
 msgid "Uri statements"
+msgstr ""
+
+#: .\templates\statement.html:4
+msgid "Statement"
 msgstr ""

@@ -26,10 +26,13 @@
   }
 }
 @media (min-width: 768px) {
-  .ew-navbar {
-    position: sticky;
-    top: 0;
-    z-index: 1071;
+  @supports ((position: -webkit-sticky) or (position: sticky)){
+    .ew-navbar {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 1071;
+    }
   }
 }
 .ew-navbar .navbar-nav .nav-item {
@@ -82,41 +85,41 @@
   }
 
 /* SIDEBAR LEFT */
-
 .ew-sidebar {
   order: 0;
-  background-color: #F7F7F7; /* rgba(230, 238, 255, .5);*/
+  background-color: #F7F7F7;
   border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
 @media (min-width: 768px) {
-  .ew-sidebar {
-    position: sticky;
-    top: 4.1rem;
-    z-index: 1000;
-    height: calc(100vh - 4.1rem);
-    border-right: 1px solid rgba(0, 0, 0, .1);
-    overflow-y: auto;
+  @supports ((position: -webkit-sticky) or (position: sticky)) {
+    .ew-sidebar {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 4rem;
+      z-index: 1000;
+      height: calc(100vh - 4rem);
+      border-right: 1px solid rgba(0, 0, 0, .1);
+    }
   }
 }
-.ew-sidebar .nav {
-    display: block;
+.ew-links {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-right: -15px;
+  margin-left: 0;
 }
-.ew-sidebar .nav > li > a {
-  display: block;
-  padding: .25rem 1.5rem .25rem 0;
-  /*font-size: 90%;*/
-  color: rgba(0, 0, 0, .65);
+@media (min-width: 768px) {
+  @supports ((position: -webkit-sticky) or (position: sticky)) {
+    .ew-links {
+      max-height: calc(100vh - 9rem);
+      overflow-y: auto;
+    }
+  }
 }
-.ew-sidebar .nav > li > a:hover {
-  color: rgba(0, 0, 0, .85);
-  text-decoration: none;
-  background-color: transparent;
-}
-.ew-sidebar .nav > .active > a,
-.ew-sidebar .nav > .active:hover > a {
-  font-weight: 600;
-  color: rgba(0, 0, 0, .85);
-  background-color: transparent;
+@media (min-width: 768px) { 
+  .ew-links {
+    display: block !important;
+  }
 }
 .ew-search {
   position: relative;
@@ -137,11 +140,28 @@
 .ew-search .btn-link:hover {
     color: #60676e;
 }
-@media (min-width: 768px) {
-.ew-sidebar .collapse:not(.show) {
+.ew-sidebar .nav > li > a {
   display: block;
-}}
+  padding: .15rem 1.5rem .15rem 0;
+  font-size: 90%;
+  color: rgba(0, 0, 0, .65);
+}
+.ew-sidebar .nav > li > a:hover {
+  color: rgba(0, 0, 0, .85);
+  text-decoration: none;
+  background-color: transparent;
+}
+.ew-sidebar .nav {
+    display: block;
+}
+.ew-sidebar .nav > .active > a,
+.ew-sidebar .nav > .active:hover > a {
+  font-weight: 600;
+  color: rgba(0, 0, 0, .85);
+  background-color: transparent;
+}
 
+/* BOX AUTOCOMPLETE */
 .yourlabs-autocomplete {
 	position: absolute;
 	z-index:1001;

@@ -234,6 +234,7 @@ if SEARCH_BACKEND == 'whoosh':
         'default': {
             'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
             'PATH': os.path.join(PARENT_ROOT, 'whoosh_index'),
+            'EXCLUDED_INDEXES': 'commons.search_indexes.FlatPageIndex',
         },
     }
 
