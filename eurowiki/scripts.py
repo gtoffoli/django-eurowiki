@@ -1,10 +1,8 @@
 import os
 import time
 import json
-import pprint
-from urllib.parse import urljoin
 import urllib.request
-from rdflib.term import BNode, URIRef, Literal
+from rdflib.term import URIRef, Literal
 from wikidata.client import Client
 from SPARQLWrapper import SPARQLWrapper, JSON
 from django.conf import settings
@@ -12,6 +10,7 @@ from django.template.defaultfilters import slugify
 from rdflib_django.store import DEFAULT_STORE
 from rdflib_django.utils import get_named_graph
 from rdflib_django.models import Store, NamedGraph, URIStatement, LiteralStatement
+from .utils import make_uriref
 
 wd = 'http://www.wikidata.org/entity/'
 wikidata_sparql_endpoint = 'https://query.wikidata.org/sparql'
@@ -159,21 +158,6 @@ SELECT ?country WHERE
     country_codes = [c_dict['country']['value'].split('/')[-1] for c_dict in country_list]
     return country_codes
 
-def make_uriref(value, prefix=None):
-    if not prefix:
-        if value.startswith('Q'):
-            prefix = 'wd'
-        elif value.startswith('P'):
-            prefix = 'wdt'
-    if prefix:
-        return URIRef(value, base=settings.RDF_PREFIXES[prefix])
-    else:
-        return URIRef(value)
-
-# The URI RDFS_LABEL (http://www.w3.org/2000/01/rdf-schema#label) is defined explicitly here, since
-# calling URIRef with the base argument (see make_uriref above) seems broken for namespaces ending with "#"
-RDFS_LABEL = settings.RDF_PREFIXES['rdfs']+'label'
-
 # def clone_wd_countries_from_query(query_result):
 #   c_dict_list = query_result['results']['bindings']
 def clone_wd_countries_from_query(data_dict={}, filepath=''):
@@ -203,7 +187,7 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
         anthemLabel_dict = c_dict['anthemLabel']
         if anthemLabel_dict and anthemLabel_dict['xml:lang']=='en':
             anthemLabel = anthemLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=anthem_uri, predicate=make_uriref(RDFS_LABEL), object=Literal(anthemLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=anthem_uri, predicate=make_uriref(settings.RDFS_LABEL), object=Literal(anthemLabel), context=context)
         if c_dict.get('anthem_text_author', {}):
             anthem_text_author = c_dict['anthem_text_author']['value']
             anthem_text_author_uri = URIRef(anthem_text_author)
@@ -211,7 +195,7 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
         anthem_text_authorLabel_dict = c_dict.get('anthem_text_authorLabel', {})
         if anthem_text_authorLabel_dict and anthem_text_authorLabel_dict['xml:lang']=='en':
             anthem_text_authorLabel = anthem_text_authorLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=anthem_text_author_uri, predicate=make_uriref(RDFS_LABEL), object=Literal(anthem_text_authorLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=anthem_text_author_uri, predicate=make_uriref(settings.RDFS_LABEL), object=Literal(anthem_text_authorLabel), context=context)
         if c_dict.get('anthem_music_author', {}):
             anthem_music_author = c_dict['anthem_music_author']['value']
             anthem_music_author_uri = URIRef(anthem_music_author)
@@ -219,7 +203,7 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
         anthem_music_authorLabel_dict = c_dict.get('anthem_music_authorLabel', {})
         if anthem_music_authorLabel_dict and anthem_music_authorLabel_dict.get('xml:lang', '')=='en':
             anthem_music_authorLabel = anthem_music_authorLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=anthem_music_author_uri, predicate=make_uriref(RDFS_LABEL), object=Literal(anthem_music_authorLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=anthem_music_author_uri, predicate=make_uriref(settings.RDFS_LABEL), object=Literal(anthem_music_authorLabel), context=context)
         if c_dict.get('flag', {}):
             flag = c_dict['flag']['value']
             flag_uri = URIRef(flag)
@@ -227,7 +211,7 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
         flagLabel_dict = c_dict.get('flagLabel', {})
         if flagLabel_dict and flagLabel_dict.get('xml:lang', '')=='en':
             flagLabel = flagLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=flag_uri, predicate=make_uriref(RDFS_LABEL), object=Literal(flagLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=flag_uri, predicate=make_uriref(settings.RDFS_LABEL), object=Literal(flagLabel), context=context)
         if c_dict.get('emblem', {}):
             emblem = c_dict['emblem']['value']
             emblem_uri = URIRef(emblem)
@@ -235,7 +219,7 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
         emblemLabel_dict = c_dict.get('emblemLabel', {})
         if emblemLabel_dict and emblemLabel_dict.get('xml:lang', '')=='en':
             emblemLabel = emblemLabel_dict['value']
-            LiteralStatement.objects.get_or_create(subject=subject, predicate=make_uriref(RDFS_LABEL), object=Literal(emblemLabel), context=context)
+            LiteralStatement.objects.get_or_create(subject=subject, predicate=make_uriref(settings.RDFS_LABEL), object=Literal(emblemLabel), context=context)
             
 def clone_wd_countries_from_json(filepath):
     pass

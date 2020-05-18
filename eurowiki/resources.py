@@ -13,6 +13,9 @@ RDF_PREFIXES = {
     "p": '{}/{}'.format(WIKIDATA_BASE, 'prop/'), # wikidata property type
 }
 RDF_PREFIX_ITEMS = RDF_PREFIXES.items()
+# The URI RDFS_LABEL (http://www.w3.org/2000/01/rdf-schema#label) is defined explicitly here, since
+# calling URIRef with the base argument (see make_uriref above) seems broken for namespaces ending with "#"
+RDFS_LABEL =RDF_PREFIXES['rdfs']+'label'
 
 EU = 'Q458'
 EU_LABELS = {'en': 'European Union', 'it': 'Unione Europea'}

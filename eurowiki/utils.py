@@ -33,7 +33,8 @@ def friend_uri(uriref, append_label=True, lang='en'):
                 labels = settings.OTHER_ITEM_LABELS.get(id, {})
             if labels:
                 label = labels[lang]
-        elif id[0] == 'P':
+        # elif id[0] == 'P':
+        else:
             labels = settings.PREDICATE_LABELS.get(id, {})
             if labels:
                 label = labels[lang]

@@ -6,24 +6,15 @@
 {% block body_class %}item_view{% endblock body_class %}
 
 {% block body %}
-    <h2>{{ country.label }}</h2>
+    <h2><a href="{{ country.wd_url }}" target="_blank">{{ country.label }}</a></h2>
 
-    <div class="table-responsive">
-    <table class="table table-striped">
-    <thead>
-{% comment %}
-    	<tr><th>predicate</th><th>object</th></tr>
-{% endcomment %}
-    	<tr><th></th><th></th><th></th><th></th></tr>
-    </thead>
-    <tbody>
+	<ul>
         {% for p, o in country.properties %}
-        <tr>
-            <td>{{ p.label }}</td>
-    	    <td>{{ o.label }}</td>
-        </tr>
+	  	<li><label>{{ p.label }}</label>: <a href="{{ o.wd_url }}" target="_blank">{{ o.label }}</a>
+	  		{% with props=o.properties %}
+	    		{% include "_props_subtree.html" %}
+	    	{% endwith %}
+	  	</li>
         {% endfor %}
-    </tbody>
-    </table>
-    </div>
+	</ul>
 {% endblock body %}

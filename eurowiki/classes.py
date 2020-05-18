@@ -30,10 +30,17 @@ class EurowikiBase(object):
 class Item(EurowikiBase):
 
     def is_literal(self):
+        print('is_literal:', isinstance(self.uriref, Literal))
         return isinstance(self.uriref, Literal)
+
+    def is_wikidata(self):
+        return self.uriref.count(settings.WIKIDATA_BASE)
 
     def url(self):
         return '/item/{}/'.format(self.id)
+
+    def wd_url(self):
+        return self.is_wikidata() and self.uriref.replace('http:', 'https:') or None
 
     def labels(self):
         return settings.OTHER_ITEM_LABELS.get(self.id, {})
