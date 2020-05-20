@@ -10,7 +10,7 @@ from django.template.defaultfilters import slugify
 from rdflib_django.store import DEFAULT_STORE
 from rdflib_django.utils import get_named_graph
 from rdflib_django.models import Store, NamedGraph, URIStatement, LiteralStatement
-from .utils import make_uriref
+from .utils import make_uriref, id_from_uriref
 
 wd = 'http://www.wikidata.org/entity/'
 wikidata_sparql_endpoint = 'https://query.wikidata.org/sparql'
@@ -85,9 +85,22 @@ def wd_get_item_json(wd_item_code):
 
 # get directly from wikidata API a wide set of properties for all EU countries
 # and save each set as a JSON structure in a file identified by country name and code
+def wd_dump_eu_country(wd_item_code, path):
+    labels = settings.EU_COUNTRY_LABELS.get(wd_item_code, {})
+    label = slugify(labels['en'])
+    filepath = '{}/{}-{}.json'.format(path, label, wd_item_code)
+    time.sleep(SLEEP_TIME)
+    python_data = wd_get_item_json(wd_item_code)
+    file = open(filepath, 'w')
+    file.write(json.dumps(python_data))
+    file.close()
+
+# get directly from wikidata API a wide set of properties for all EU countries
+# and save each set as a JSON structure in a file identified by country name and code
 def wd_dump_eu_countries(path):
     country_codes = settings.EU_COUNTRY_LABELS.keys()
     for wd_item_code in country_codes:
+        """
         labels = settings.EU_COUNTRY_LABELS.get(wd_item_code, {})
         if not labels:
             continue
@@ -99,6 +112,8 @@ def wd_dump_eu_countries(path):
         file = open(filename, 'w')
         file.write(json.dumps(python_data))
         file.close()
+        """
+        wd_dump_eu_country(wd_item_code, path)
 
 # get the entities belonging to the EU, and selected related entities, with a sparql query
 # from the User Manual: WDQS understands many shortcut abbreviations, known as prefixes. Some are internal to Wikidata,
@@ -158,8 +173,6 @@ SELECT ?country WHERE
     country_codes = [c_dict['country']['value'].split('/')[-1] for c_dict in country_list]
     return country_codes
 
-# def clone_wd_countries_from_query(query_result):
-#   c_dict_list = query_result['results']['bindings']
 def clone_wd_countries_from_query(data_dict={}, filepath=''):
     if filepath and not data_dict:
         f = open(filepath, 'r')
@@ -220,13 +233,14 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
         if emblemLabel_dict and emblemLabel_dict.get('xml:lang', '')=='en':
             emblemLabel = emblemLabel_dict['value']
             LiteralStatement.objects.get_or_create(subject=subject, predicate=make_uriref(settings.RDFS_LABEL), object=Literal(emblemLabel), context=context)
-            
-def clone_wd_countries_from_json(filepath):
-    pass
 
 # create or update from a dict the statements describing a wd item
 # inside the tree, derived form JSON, describing an EU country
 def load_item_from_dict(item_dict, wd_item_code, langs):
+    store = Store.objects.get(identifier=DEFAULT_STORE)
+    graph_identifier = make_uriref('http://www.wikidata.org')
+    wikidata_graph, created = NamedGraph.objects.get_or_create(identifier=graph_identifier, store=store)
+    subject = make_uriref(wd_item_code)
     item_property_keys = item_dict.keys()
     print('keys:', item_property_keys)
     assert item_dict['type']=='item'
@@ -255,17 +269,36 @@ def load_item_from_dict(item_dict, wd_item_code, langs):
             if not mainsnak:
                 continue
             datatype = mainsnak['datatype']
-            # print('datatype:', datatype)
-            if datatype=='wikibase-item':
+            snaktype = mainsnak['snaktype']
+            try:
+                assert datatype in ['wikibase-item', 'quantity', 'time', 'commonsMedia', 'url',]
+            except:
+                print('------------------------------ datatype =', datatype)
+                return
+            if snaktype in ['value',]:
                 property = mainsnak['property']
+                predicate = make_uriref(property)
                 label = settings.PREDICATE_LABELS.get(key, {}).get('en', '')
-                value = mainsnak['datavalue']['value']['id']
-                print('{} ({}): {}'.format(property, label, value))
+                if datatype=='wikibase-item':
+                    value = mainsnak['datavalue']['value']['id']
+                elif datatype=='quantity':
+                    value = mainsnak['datavalue']['value']['amount']
+                elif datatype=='time':
+                    value = mainsnak['datavalue']['value']['time']
+                elif datatype=='commonsMedia':
+                    value = mainsnak['datavalue']['value']
+                elif datatype=='url':
+                    value = mainsnak['datavalue']['value']
+                if property in settings.LITERAL_PROPERTIES:
+                    statement, created = LiteralStatement.objects.get_or_create(subject=subject, predicate=predicate, object=Literal(value), context=wikidata_graph)
+                elif not value in settings.EU_COUNTRY_KEYS:
+                    statement, created = URIStatement.objects.get_or_create(subject=subject, predicate=predicate, object=make_uriref(value), context=wikidata_graph)
+                if created:
+                    print('{} ({}): {}'.format(property, label, value))
 
 # create or update the statements describing an EU country from JSON data
 # that were dumped starting from a wikidata item
 def load_item_from_file(filepath, langs=['en', 'it',]):
-    print('load_item_from_file', filepath)
     file = open(filepath, 'r')
     data = json.loads(file.read())
     file.close()
@@ -273,6 +306,20 @@ def load_item_from_file(filepath, langs=['en', 'it',]):
     wd_item_code = list(value.keys())[0]
     item_dict = value[wd_item_code]
     load_item_from_dict(item_dict, wd_item_code, langs)
+
+def dump_and_load_eu_countries(path):
+    for wd_item_code in settings.EU_COUNTRY_KEYS:
+        wd_dump_eu_country(wd_item_code, path)
+        label = slugify(settings.EU_COUNTRY_LABELS[wd_item_code]['en'])
+        filepath = '{}/{}-{}.json'.format(path, label, wd_item_code)
+        load_item_from_file(filepath)
+
+def find_circularities():   
+    for s in URIStatement.objects.all():
+        subject = id_from_uriref(s.subject)
+        object = id_from_uriref(s.object)
+        eq = object==subject and '-----' or ''
+        print(subject, object, eq)
 
 # export to RDF or N3 file the entire "wikidata" graph from the eurowiki DB
 def export_countries(format="rdf"):
@@ -305,3 +352,5 @@ WHERE
 }
 ORDER BY ASC(?countryLabel)
 """
+
+        

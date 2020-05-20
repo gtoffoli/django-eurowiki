@@ -1,5 +1,11 @@
+import urllib.request
+import json
+import hashlib
 from rdflib.term import URIRef
 from django.conf import settings
+
+wikidata_get_claims_template = 'https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&rank=normal&property={}&entity={}'
+wikidata_image_src_template = 'https://upload.wikimedia.org/wikipedia/commons/{}/{}/{}'
 
 def make_uriref(value, prefix=None):
     if not prefix:
@@ -44,3 +50,20 @@ def friend_uri(uriref, append_label=True, lang='en'):
 
 def friend_graph(context):
     return str(context).split('.')[-2]
+
+def wd_get_item_claims(wd_item_code, wd_prop_code):
+    request_url = wikidata_get_claims_template.format(wd_prop_code, wd_item_code)
+    with urllib.request.urlopen(request_url) as opened_url:
+        python_data = json.loads(opened_url.read().decode())
+    return python_data.get('claims', [])
+
+def wd_get_image_url(image_name):
+    name = image_name.replace(' ', '_')
+    m = hashlib.md5()
+    m.update(name.encode('UTF-8'))
+    hashed = m.hexdigest()
+    a = hashed[:1]
+    ab = hashed[:2]
+    image_url = wikidata_image_src_template.format(a, ab, name)
+    return image_url
+    

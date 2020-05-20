@@ -15,7 +15,7 @@ RDF_PREFIXES = {
 RDF_PREFIX_ITEMS = RDF_PREFIXES.items()
 # The URI RDFS_LABEL (http://www.w3.org/2000/01/rdf-schema#label) is defined explicitly here, since
 # calling URIRef with the base argument (see make_uriref above) seems broken for namespaces ending with "#"
-RDFS_LABEL =RDF_PREFIXES['rdfs']+'label'
+RDFS_LABEL = RDF_PREFIXES['rdfs']+'label'
 
 EU = 'Q458'
 EU_LABELS = {'en': 'European Union', 'it': 'Unione Europea'}
@@ -52,6 +52,7 @@ EU_COUNTRY_LABELS = OrderedDict([
     ('Q28', {'en': 'Hungary', 'it': 'Ungheria',}), #  (member of Q458)
     ('Q145', {'en': 'United Kingdom', 'it': 'Regno Unito',}), #
 ])
+EU_COUNTRY_KEYS = list(EU_COUNTRY_LABELS.keys())
 
 OTHER_ITEM_LABELS = {
     'Q458': {'en': 'European Union', 'it': 'Unione Europea'},
@@ -73,15 +74,19 @@ PREDICATE_LABELS =  OrderedDict([
     ('P17', {'en': 'country', 'it': 'paese',}), # country
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
 
+    ('P948', {'en': 'page banner', 'it': 'banner di pagina',}), #
     ('P85', {'en': 'national anthem', 'it': 'inno nazionale',}), # national anthem (of country)
     ('P163', {'en': 'national flag', 'it': 'bandiera nazionale',}), # 
+    ('P41', {'en': 'flag image', 'it': 'immagine della bandiera',}), #
     ('P237', {'en': 'coat of arms', 'it': 'descrizione dello stemma',}), # description of emblem
+    ('P94', {'en': 'emblem image', 'it': 'immagine dello stemma',}), #
     ('P1541', {'en': 'motto text', 'it': 'testo del motto',}), # motto text (of country)
     ('P1546', {'en': 'national motto', 'it': 'motto nazionale',}), # motto (of country)
     ('P832', {'en': 'public holiday', 'it': 'festa nazionale',}),
     ('P1476', {'en': 'title', 'it': 'titolo',}), # 
     ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
     ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
+    ('P18', {'en': 'image', 'it': 'immagine',}), #
 
     ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
     ('P580', {'en': 'start date', 'it': 'data di inizio',}), # start time (of validity of a property assertion)
@@ -89,7 +94,10 @@ PREDICATE_LABELS =  OrderedDict([
 ])
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
-EU_COUNTRY_PROPERTIES = ['P163', 'P85', 'P237', 'P1546',]
+EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'P832',]
+LITERAL_PROPERTIES = ['label', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P580', 'P582', 'P948',]
+IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948']
+
 
 # this dictionary should allow to compute URIs, based on prefix to namespace mapping
 OTHER_EXTERNAL_RESOURCES = {
