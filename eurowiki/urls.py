@@ -45,5 +45,6 @@ urlpatterns = [
     url(r'^literal_statement/new/$', views.editLiteralStatement.as_view(), name='literal_statement_new'),
     url(r'^literal_statement/(?P<statement_id>[\d-]+)/edit/$', views.editLiteralStatement.as_view(), name='literal_statement_edit'),
 
-     url(r'^country/(?P<item_code>\w[\d]+)/$$', views.view_country, name='view_country'),
+     url(r'^country/(?P<item_code>\w[\d]+)/$', views.view_country, name='view_country'),
+     url(r'^countries/compare/$', views.compare_countries, name='compare_countries'),
 ]

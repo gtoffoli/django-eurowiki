@@ -159,6 +159,18 @@ class editLiteralStatement(View):
 
 def view_country(request, item_code):
     assert item_code[0]=='Q'
+    countries = []
     country = Country(id=item_code)
-    return render(request, 'country.html', {'country' : country})
+    countries.append(country)
+    return render(request, 'country.html', {'countries_selected' : countries})
 
+def compare_countries(request):
+    countries= []
+    post=request.POST
+    if post:
+        countries_code = post.getlist('group',[])
+        for country_code in countries_code:
+            assert country_code[0]=='Q'
+            country = Country(id=country_code)
+            countries.append(country)
+    return render(request, 'country.html', {'countries_selected' : countries})

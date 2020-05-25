@@ -6,14 +6,56 @@
 {% block body_class %}item_view{% endblock body_class %}
 
 {% block body %}
-
+{% comment %}
   {% with source=country.banner_url %}
-    {% if source %}<div style="margin-top: 10px;"><img src="{{ source }}" style="max-width:100%; height:auto;"></div>{% endif %}
+    {% if source %}<div class="ew-banner"><img src="{{ source }}" class="img-fluid"></div>{% endif %}
   {% endwith %}
-  <h2><a href="{{ country.wd_url }}" target="_blank">{{ country.label }}</a></h2>
+  <h1 class="ew-title">{{ country.label }} <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%" aria-hidden="true"></i></a></h1>
 
   {% with props=country.properties %}
     {% include "_props_subtree.html" %}
   {% endwith %}
+{% endcomment %}
 
+<div class="table-responsive">
+    <table class="table ew-table w-auto">
+        <tbody>
+         <tr>
+        {% for country in countries_selected %}
+        <td> 
+            {% if countries_selected|length == 1 %}
+            {% with source=country.banner_url %}
+            {% if source %}<div class="ew-banner"><img src="{{ source }}" class="img-fluid"></div>{% endif %}
+            {% endwith %}
+            {% endif %}
+            <h1 class="ew-title" style="white-space: nowrap;">{{ country.label }} <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%" aria-hidden="true"></i></a></h1>
+            <div class="p-2" style="{% if countries_selected|length == 1 %}max-height: calc(100vh - 22rem);{% else %}max-height: calc(100vh - 12rem);{% endif %} overflow-y: auto;">
+            {% with props=country.properties %}
+            {% for p, o in props %}
+  
+            <details open>
+            {% if p.is_literal %}
+                {% if p.is_image %}
+                <summary>{{ p.label }}</summary>
+                    <a href="{{ p.wd_url }}"><img src="{{ o.url }}" style="width:120px; margin-left:30px"></a>
+                 {% else %}
+                    <summary>{% trans "title" %}/{% trans "name" %}: {{ o.label }}</summary>
+                {% endif %}
+               {% else %}
+               <summary>{{ p.label }}</summary> 
+               {% if o.is_wikidata %}<a href="{{ o.wd_url }}" target="_blank">{{ o.label }}</a>
+                                      {% else %}<p>{{ o.label }}</p>{% endif %}
+
+               {% with props=o.properties %}
+                 {% include "_props_subtree.html" %}
+               {% endwith %}
+            {% endif %}
+            </details>
+
+          {% endfor %}{% endwith %}
+</div></td>{% endfor %}
+</tr>
+</tbody>
+    </table>
+</div>
 {% endblock body %}

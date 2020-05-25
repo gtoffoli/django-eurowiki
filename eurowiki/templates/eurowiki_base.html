@@ -108,13 +108,35 @@
                         </span>
                         <button class="btn btn-link ew-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
                     </form>
-                    <nav class="ew-links collapse" id="ew-menu-nav">
-                        <ul class="nav">
+                    {% block sidebar %}
+                    <nav class="nav-links collapse" id="ew-menu-nav">
+                        <div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_list"><i class="fa fa-list" aria-hidden="true"></i> <span style="font-size: 80%">List view</span></a></div><div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_select"><i class="fa fa-check-square-o" aria-hidden="true"></i> <span style="font-size: 80%">Compare</span></a></div>
+                        <div class="ew-links">
+                        <ul class="nav pl-3" id="list_countries" style="display:{% if countries_selected|length <= 1 %}block{%else%}none{% endif %}">
                         {% for country in COUNTRIES %}
-                            <li ><a href="{{ country.url }}" class="{% if request.path == '/country.url/' %} active {% endif %}">{{ country.label }}</a></li>
+                            <li {% if request.path ==  country.url %}class="active"{% endif %}><a href="{{ country.url }}">{{ country.label }}</a></li>
                         {% endfor %}
                         </ul>
+                        <form action="/countries/compare/" method="post" id="form_countries" style="display:{% if countries_selected|length > 1 %}block{%else%}none{% endif %}">
+                        {% csrf_token %}
+                        <div class="mt-1">
+                        <button type="submit" class="btn btn-secondary" style="font-size: 90%">compare</button>
+                        </div>
+                        <div class="form-group">
+                        <ul class="nav pl-3">
+                        {% for country in COUNTRIES %}
+                            <li><input type="checkbox" name="group" value="{{country.id}}" {% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}checked{% endif %}{% endfor %}{% endif %}> <label class="mb-0">{{ country.label }}</label></li>
+                        {% endfor %}
+                        </ul>
+                        </div>
+                        <div class="form-group">
+                        <button type="submit" class="btn btn-secondary" style="font-size: 90%">compare</button>
+                        </div>
+                        </form>
+                        </div>
                     </nav>
+
+                    {% endblock sidebar %}
                 </div>
                 <main class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-4 ew-content" role="main">
                     {% block body %}{% endblock body %}
@@ -139,6 +161,18 @@
              document.location.href = choice.attr('href');
             });
           }
+          
+          $('#active_list').on('click', function(event){
+            event.preventDefault();
+            $("#list_countries").css("display", "block");
+            $("#form_countries").css("display", "none");
+            
+          });
+          $('#active_select').on('click', function(event){
+            event.preventDefault();
+            $("#form_countries").css("display", "block");
+            $("#list_countries").css("display", "none");
+          });
         });
         </script>
         {% block extra_script_style %}{% endblock extra_script_style %}

@@ -111,13 +111,13 @@
 @media (min-width: 768px) {
   @supports ((position: -webkit-sticky) or (position: sticky)) {
     .ew-links {
-      max-height: calc(100vh - 9rem);
+      max-height: calc(100vh - 12rem);
       overflow-y: auto;
     }
   }
 }
 @media (min-width: 768px) { 
-  .ew-links {
+  .nav-links {
     display: block !important;
   }
 }
@@ -140,13 +140,19 @@
 .ew-search .btn-link:hover {
     color: #60676e;
 }
-.ew-sidebar .nav > li > a {
+.ew-sidebar .nav > li {
   display: block;
   padding: .15rem 1.5rem .15rem 0;
+  color: rgba(0, 0, 0, .65);
+}
+.ew-sidebar .nav > li > a,
+.ew-sidebar .nav > li > label,
+.ew-sidebar .ew-like-button > a {
   font-size: 90%;
   color: rgba(0, 0, 0, .65);
 }
-.ew-sidebar .nav > li > a:hover {
+.ew-sidebar .nav > li > a:hover,
+.ew-sidebar .ew-like-button > a:hover {
   color: rgba(0, 0, 0, .85);
   text-decoration: none;
   background-color: transparent;
@@ -159,6 +165,10 @@
   font-weight: 600;
   color: rgba(0, 0, 0, .85);
   background-color: transparent;
+}
+
+ew-like-button > a:hover {
+    text-decoration: none;
 }
 
 /* BOX AUTOCOMPLETE */
@@ -181,4 +191,29 @@
 
 .ew-content {
     order: 1;
+}
+
+.ew-banner {
+  background: rgba(0,51,153, .02);
+  padding-bottom: 1rem;
+}
+.ew-title {
+  font-size: 2rem;
+  background: rgba(0,51,153, .02);
+  color:#FFCC00;
+  padding:0 0.5rem 0.25rem 0.5rem;
+  border-bottom: 1px solid #003399;
+}
+
+.ew-table td, .ew-table th {
+    padding: 0;
+    vertical-align: top;
+    border-top-width: 0;
+    border-right: 1px solid rgba(0,0,0, .1);
+}
+.ew-table td:last-child, .ew-table th:last-child {
+    padding: 0;
+    vertical-align: top;
+    border-top-width: 0;
+    border-right-width: 0;
 }
