@@ -10,6 +10,7 @@ from django.template.defaultfilters import slugify
 from rdflib_django.store import DEFAULT_STORE
 from rdflib_django.utils import get_named_graph
 from rdflib_django.models import Store, NamedGraph, URIStatement, LiteralStatement
+from .classes import Country, Predicate
 from .utils import make_uriref, id_from_uriref
 
 wd = 'http://www.wikidata.org/entity/'
@@ -307,12 +308,16 @@ def load_item_from_file(filepath, langs=['en', 'it',]):
     item_dict = value[wd_item_code]
     load_item_from_dict(item_dict, wd_item_code, langs)
 
-def dump_and_load_eu_countries(path):
+def dump_and_load_eu_countries(path, no_dump=False):
     for wd_item_code in settings.EU_COUNTRY_KEYS:
-        wd_dump_eu_country(wd_item_code, path)
+        if not no_dump:
+            wd_dump_eu_country(wd_item_code, path)
         label = slugify(settings.EU_COUNTRY_LABELS[wd_item_code]['en'])
         filepath = '{}/{}-{}.json'.format(path, label, wd_item_code)
         load_item_from_file(filepath)
+
+def add_ew_country_descriptions():
+    pass
 
 def find_circularities():   
     for s in URIStatement.objects.all():
@@ -321,11 +326,21 @@ def find_circularities():
         eq = object==subject and '-----' or ''
         print(subject, object, eq)
 
+# for each country find and list properties not defined 
+def find_holes():
+    graph = get_named_graph(make_uriref('http://www.wikidata.org'))
+    for country_code in settings.EU_COUNTRY_KEYS:
+        country = Country(id=country_code)
+        holes = []
+        for prop_code in settings.EU_COUNTRY_PROPERTIES:
+            predicate = Predicate(id=prop_code)
+            objects = graph.objects(subject=country.uriref, predicate=predicate.uriref)
+            if not list(objects):
+                holes.append(predicate.label())
+        print('- {}: {}'.format(country.label(), ', '.join(holes)))
+
 # export to RDF or N3 file the entire "wikidata" graph from the eurowiki DB
 def export_countries(format="rdf"):
-    store = Store.objects.get(identifier=DEFAULT_STORE)
-    graph_identifier = make_uriref('http://www.wikidata.org')
-    wikidata_graph = NamedGraph.objects.get(identifier=graph_identifier, store=store)
     target = "/tmp/countries.{}".format(format)
     graph = get_named_graph(make_uriref('http://www.wikidata.org'))
     graph.serialize(target, format=format)

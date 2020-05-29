@@ -6,11 +6,15 @@ Should include only terminology and the core of top-level items.
 
 # this dictionary should allow to derive sources from namespace prefix
 WIKIDATA_BASE = 'http://www.wikidata.org'
+EUROWIKI_BASE = 'http://www.eurowiki.eu'
 RDF_PREFIXES = {
     "rdfs": 'http://www.w3.org/2000/01/rdf-schema#',
     "wd": '{}/{}'.format(WIKIDATA_BASE, 'entity/'), # wikidata items
     "wdt": '{}/{}'.format(WIKIDATA_BASE, 'prop/direct/'), # wikidata property "truthy"
     "p": '{}/{}'.format(WIKIDATA_BASE, 'prop/'), # wikidata property type
+    "ew": '{}/{}'.format(EUROWIKI_BASE, 'entity/'), # eurowiki items
+    "ewp": '{}/{}'.format(EUROWIKI_BASE, 'prop/'), # eurowiki items
+    "ewt": '{}/{}'.format(EUROWIKI_BASE, 'prop/direct/'), # eurowiki property "truthy"
 }
 RDF_PREFIX_ITEMS = RDF_PREFIXES.items()
 # The URI RDFS_LABEL (http://www.w3.org/2000/01/rdf-schema#label) is defined explicitly here, since
@@ -23,7 +27,6 @@ EU_LABELS = {'en': 'European Union', 'it': 'Unione Europea'}
 from collections import OrderedDict
 EU_COUNTRY_LABELS = OrderedDict([
     ('Q40', {'en': 'Austria', 'it': 'Austria',}), # Austria
-    ('Q29', {'en': 'Spain', 'it': 'Spagna',}), # Spain
     ('Q31', {'en': 'Belgium', 'it': 'Belgio',}), # Belgium
     ('Q219', {'en': 'Bulgaria', 'it': 'Bulgaria',}), # Bulgaria
     ('Q224', {'en': 'Croatia', 'it': 'Croazia',}), # Croatia
@@ -48,6 +51,7 @@ EU_COUNTRY_LABELS = OrderedDict([
     ('Q218', {'en': 'Romania', 'it': 'Romania',}), # Romania
     ('Q214', {'en': 'Slovakia', 'it': 'Slovacchia',}), # Slovakia
     ('Q215', {'en': 'Slovenia', 'it': 'Slovenia',}), # Slovenia
+    ('Q29', {'en': 'Spain', 'it': 'Spagna',}), # Spain
     ('Q34', {'en': 'Sweden', 'it': 'Svezia',}), # Sweden
     ('Q28', {'en': 'Hungary', 'it': 'Ungheria',}), #  (member of Q458)
     ('Q145', {'en': 'United Kingdom', 'it': 'Regno Unito',}), #
@@ -57,12 +61,16 @@ EU_COUNTRY_KEYS = list(EU_COUNTRY_LABELS.keys())
 OTHER_ITEM_LABELS = {
     'Q458': {'en': 'European Union', 'it': 'Unione Europea'},
     'Q3624078': {'en': 'sovereign state', 'it': 'stato sovrano',},
+    'Q2065736': {'en': 'cultural property', 'it': 'bene culturale',},
+    'Q4989906': {'en': 'monument', 'it': 'monumento',},
+    'Q1128637': {'en': 'national symbol', 'it': 'simbolo nazionale',}, # symbol of national identity
     'Q23691': {'en': 'national anthem', 'it': 'inno nazionale',},
     'Q186516': {'en': 'national flag', 'it': 'bandiera nazionale',},
     'Q1128637': {'en': 'national symbol', 'it': 'simbolo nazionale',},
     'Q57598': {'en': 'national day', 'it': 'festa nazionale',},
     'Q29654714': {'en': 'national motto', 'it': 'motto nazionale',},
     'Q1079693': {'en': 'national emblem', 'it': 'stemma nazionale',},
+    'Q7755': {'en': 'constitution', 'it': 'costituzione',},
 }
 
 PREDICATE_LABELS =  OrderedDict([
@@ -73,6 +81,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
     ('P17', {'en': 'country', 'it': 'paese',}), # country
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
+    ('P953', {'en': 'online full text', 'it': 'testo completo online',}), # 'full work available at', 'testo completo disponibile all'indirizzo'
 
     ('P948', {'en': 'page banner', 'it': 'banner di pagina',}), #
     ('P85', {'en': 'national anthem', 'it': 'inno nazionale',}), # national anthem (of country)
@@ -86,20 +95,44 @@ PREDICATE_LABELS =  OrderedDict([
     ('P1476', {'en': 'title', 'it': 'titolo',}), # 
     ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
     ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
+    ('P180', {'en': 'depicts', 'it': 'raffigura',}), #
     ('P18', {'en': 'image', 'it': 'immagine',}), #
+    ('P38', {'en': 'currency', 'it': 'valuta',}),
+    ('P92', {'en': 'main regulatory text', 'it': 'legge fondamentale',}),
+
+    ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
+    ('P790', {'en': 'approved by', 'it': 'designato da',}), # in template: 'deliberato da' (ente)
+    ('P828', {'en': 'grounds for the adoption', 'it': "motivazione per l'adozione",}), # in wikidata: 'has cause', 'causato da'
 
     ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
+    ('P571', {'en': 'inception', 'it': 'data di adozione',}), # in wikidata: 'data di fondazione o creazione'
+    ('P577', {'en': 'publication date', 'it': 'data di pubblicazione',}),
     ('P580', {'en': 'start date', 'it': 'data di inizio',}), # start time (of validity of a property assertion)
     ('P582', {'en': 'end date', 'it': 'data di fine',}), # end time (of validity of a property assertion)
+    ('P837', {'en': 'day of year', 'it': 'giorno di ricorrenza',}) # "day in year for periodic occurrence"
 ])
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
-EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'P832',]
-LITERAL_PROPERTIES = ['label', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P580', 'P582', 'P948',]
+EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'P832', 'P38', 'P92',]
+LITERAL_PROPERTIES = ['label', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P571', 'P577', 'P580', 'P582', 'P948',]
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948']
 
+EW_PREDICATE_LABELS = OrderedDict([
+    ('PUE1', {'en': 'title', 'it': 'titolo',}), #
+    ('PUE2', {'en': 'description', 'it': 'descrizione',}), #
+    ('PUE3', {'en': 'proposed by', 'it': 'proposto da',}), # REPURPOSED - in WD: P748 (appointed by, designato da)
+    ('PUE4', {'en': 'historical origins', 'it': 'origini storiche',}), # brand-NEW
+    ('PUE5', {'en': 'cultural significance', 'it': 'significato culturale',}), # brand-NEW
+    ('PUE6', {'en': 'national monument', 'it': 'monumento nazionale',}), # brand-NEW - domain: Q3624078, range: Q4989906 and Q1128637
+    ('PUE7', {'en': 'subject depicted', 'it': 'soggetto raffigurato',}), # multi-value shortcut for a relation path involving P180
+    ('PUE8', {'en': 'general principles', 'it': 'principi generali',}), # brand-NEW for constitutions
+    ('PUE9', {'en': 'soverainity cession', 'it': 'cessione di sovranità',}), # brand-NEW for constitutions
+    ('PUE10', {'en': 'mentions to religions', 'it': 'riferimenti alla religione',}), # brand-NEW for constitutions
+    ('PUE11', {'en': 'human rights and minorities', 'it': 'diritti umani e minoranze',}), # brand-NEW for constitutions
+])
+EW_ORDERED_PREDICATE_KEYS = list(EW_PREDICATE_LABELS.keys())
 
-# this dictionary should allow to compute URIs, based on prefix to namespace mapping
+# this sample dictionary should allow to compute URIs, based on prefix to namespace mapping
 OTHER_EXTERNAL_RESOURCES = {
   "wd": [
     # miscellaneous concepts
@@ -115,3 +148,14 @@ OTHER_EXTERNAL_RESOURCES = {
     'Q506234', # Altare della Patria (instance of Q4989906 and Q1128637, - P17 Q38)
   ],
 }
+
+EW_TREE = OrderedDict([
+    ('P85', ('P1476', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'P571', 'P828',),), # national anthem: title, text auth., composer, ...
+    ('P163', ('PUE2', 'P41', 'PUE3', 'P790', 'PUE4', 'P571', 'P828',),), # national flag: descr., img, prop., delib., date, ...
+    ('P237', ('PUE2', 'P94', 'PUE3', 'P790', 'PUE4', 'P571', 'P828',),), # coat of arms: descr., img, prop., delib., date, ...
+    ('P1546', ('P1541', 'PUE3', 'P790', 'PUE4', 'PUE5', 'P571', 'P828',),), #national motto: text
+    ('P832', ('PUE1', 'P837', 'PUE3', 'P790', 'P571', 'P828', 'PUE2',),), # national holiday(s): title, day,  prop., delib., date, ...
+    ('P38', ('P38', 'PUE7', 'PUE3', 'P790', 'P571', 'P828',),), # monetazione
+    ('PUE6', ('PUE2', 'PUE3', 'P790', 'PUE5', 'P571', 'P828',),), # national monument
+    ('P92', ('P953',  'PUE3', 'P790', 'PUE4', 'PUE8', 'PUE9', 'PUE10', 'PUE11',),), # national constitution
+])
