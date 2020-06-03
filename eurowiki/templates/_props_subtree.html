@@ -7,11 +7,11 @@
       <li><label>{{ p.label }}</label>:<br>
           <a href="{{ p.wd_url }}"><img src="{{ o.url }}" style="width:120px; margin-left:30px"></a></li>
     {% else %}
-      <li><label>{% trans "title" %}/{% trans "name" %}</label>: {{ o.label }}</li>
+      <li><label>{{ p.label }}</label>: {{ o }}</li>
     {% endif %}
   {% else %}
     <li><label>{{ p.label }}</label>: {% if o.is_wikidata %}<a href="{{ o.wd_url }}" target="_blank">{{ o.label }}</a>
-                                      {% else %}{{ o.label }}{% endif %}
+                                      {% else %}{% endif %}
       {% with props=o.properties %}
         {% include "_props_subtree.html" %}
       {% endwith %}

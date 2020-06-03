@@ -183,7 +183,7 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
     c_dict_list = data_dict['results']['bindings']
     store = Store.objects.get(identifier=DEFAULT_STORE)
     graph_identifier = make_uriref('http://www.wikidata.org')
-    wikidata_graph, created = NamedGraph.objects.get_or_create(identifier=graph_identifier, store=store)
+    wikidata_graph, created = NamedGraph.objects.get_or_create(graph_identifier=graph_identifier, store=store)
     if created:
         print('new named graph created:', str(wikidata_graph))
     else:
@@ -240,7 +240,7 @@ def clone_wd_countries_from_query(data_dict={}, filepath=''):
 def load_item_from_dict(item_dict, wd_item_code, langs):
     store = Store.objects.get(identifier=DEFAULT_STORE)
     graph_identifier = make_uriref('http://www.wikidata.org')
-    wikidata_graph, created = NamedGraph.objects.get_or_create(identifier=graph_identifier, store=store)
+    wikidata_graph, created = NamedGraph.objects.get_or_create(graph_identifier=graph_identifier, store=store)
     subject = make_uriref(wd_item_code)
     item_property_keys = item_dict.keys()
     print('keys:', item_property_keys)

@@ -198,6 +198,7 @@ LANGUAGES = (
     (u'en', u'English'),
     (u'it', u'Italiano'),
 )
+LANGUAGE_CODES = [l[0] for l in LANGUAGES]
 
 TIME_ZONE = 'UTC'
 

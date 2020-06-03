@@ -8,6 +8,7 @@ Should include only terminology and the core of top-level items.
 WIKIDATA_BASE = 'http://www.wikidata.org'
 EUROWIKI_BASE = 'http://www.eurowiki.eu'
 RDF_PREFIXES = {
+    "xsd": 'http://www.w3.org/2001/XMLSchema#uri',
     "rdfs": 'http://www.w3.org/2000/01/rdf-schema#',
     "wd": '{}/{}'.format(WIKIDATA_BASE, 'entity/'), # wikidata items
     "wdt": '{}/{}'.format(WIKIDATA_BASE, 'prop/direct/'), # wikidata property "truthy"
@@ -20,6 +21,14 @@ RDF_PREFIX_ITEMS = RDF_PREFIXES.items()
 # The URI RDFS_LABEL (http://www.w3.org/2000/01/rdf-schema#label) is defined explicitly here, since
 # calling URIRef with the base argument (see make_uriref above) seems broken for namespaces ending with "#"
 RDFS_LABEL = RDF_PREFIXES['rdfs']+'label'
+RDFS_COMMENT = RDF_PREFIXES['rdfs']+'comment'
+
+URI_LABEL_CODES = {
+    "wd": 'Q', # wikidata items
+    "wdt": 'P', # wikidata property "truthy"
+    "ew": 'QUE', # eurowiki items
+    "ewt": 'PUE', # eurowiki property "truthy"
+}
 
 EU = 'Q458'
 EU_LABELS = {'en': 'European Union', 'it': 'Unione Europea'}
@@ -74,7 +83,8 @@ OTHER_ITEM_LABELS = {
 }
 
 PREDICATE_LABELS =  OrderedDict([
-    ('label', {'en': 'label', 'it': 'etichetta',}), #
+    ('label', {'en': 'name/title', 'it': 'nome/titolo',}), #
+    ('comment', {'en': 'description', 'it': 'descrizione',}), #
     ('P279', {'en': 'subclass of', 'it': 'sottoclasse di',}), # subclass of
     ('P31', {'en': 'instance of', 'it': 'istanza di',}), # instance of
     ('P361', {'en': 'Part of', 'it': 'Parte di',}), # part of
@@ -101,7 +111,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P92', {'en': 'main regulatory text', 'it': 'legge fondamentale',}),
 
     ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
-    ('P790', {'en': 'approved by', 'it': 'designato da',}), # in template: 'deliberato da' (ente)
+    ('P790', {'en': 'deliberated by', 'it': 'deliberato da',}), # in wikidata: approved by, approvato da (ente)
     ('P828', {'en': 'grounds for the adoption', 'it': "motivazione per l'adozione",}), # in wikidata: 'has cause', 'causato da'
 
     ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
@@ -111,11 +121,12 @@ PREDICATE_LABELS =  OrderedDict([
     ('P582', {'en': 'end date', 'it': 'data di fine',}), # end time (of validity of a property assertion)
     ('P837', {'en': 'day of year', 'it': 'giorno di ricorrenza',}) # "day in year for periodic occurrence"
 ])
-ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
+# ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
-EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'P832', 'P38', 'P92',]
-LITERAL_PROPERTIES = ['label', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P571', 'P577', 'P580', 'P582', 'P948',]
-IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948']
+EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'P832', 'P38', 'P92',] # mandatory 1st level properties for countries
+LITERAL_PROPERTIES = ['label', 'comment', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P571', 'P577', 'P580', 'P582', 'P948',] # properties occurring in Literal Statements
+RDF_I18N_PROPERTIES = ['label', 'comment',] # RDF properties having a literal value language-awware
+IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948'] # properties from whose value an online address can be computed 
 
 EW_PREDICATE_LABELS = OrderedDict([
     ('PUE1', {'en': 'title', 'it': 'titolo',}), #
@@ -130,7 +141,8 @@ EW_PREDICATE_LABELS = OrderedDict([
     ('PUE10', {'en': 'mentions to religions', 'it': 'riferimenti alla religione',}), # brand-NEW for constitutions
     ('PUE11', {'en': 'human rights and minorities', 'it': 'diritti umani e minoranze',}), # brand-NEW for constitutions
 ])
-EW_ORDERED_PREDICATE_KEYS = list(EW_PREDICATE_LABELS.keys())
+# EW_ORDERED_PREDICATE_KEYS = list(EW_PREDICATE_LABELS.keys())
+ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())+list(EW_PREDICATE_LABELS.keys())
 
 # this sample dictionary should allow to compute URIs, based on prefix to namespace mapping
 OTHER_EXTERNAL_RESOURCES = {

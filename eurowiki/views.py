@@ -10,7 +10,7 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from rdflib_django.utils import get_named_graph
+from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
 from .classes import Country
 from .forms import NamedGraphForm, NamespaceModelForm, URIStatementForm, LiteralStatementForm
@@ -49,10 +49,12 @@ def list_literal_statements(request):
                        for s in statements]
     return render(request, 'list_literal_statements.html', {'statement_dicts': statement_dicts})
 
-def list_statements(request):
+def list_statements(request, graph_identifier=None):
     lang = get_language()
-    graph_identifier = make_uriref('http://www.wikidata.org')
-    graph = get_named_graph(graph_identifier)
+    if graph_identifier:
+        graph = get_named_graph(graph_identifier)
+    else:
+        graph = get_conjunctive_graph()
     statement_dicts = [{'graph': 'wikidata', 'subject': friend_uri(s, lang=lang), 'predicate': friend_uri(p, lang=lang), 'object': friend_uri(o, lang=lang)}
                            for s, p, o in graph]
     return render(request, 'list_statements.html', {'statement_dicts': statement_dicts})

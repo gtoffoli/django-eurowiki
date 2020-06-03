@@ -2,6 +2,8 @@ import urllib.request
 import json
 import hashlib
 from rdflib.term import URIRef
+from rdflib_django.store import DEFAULT_STORE
+from rdflib_django.models import NamedGraph, URIStatement
 from django.conf import settings
 
 wikidata_get_claims_template = 'https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&rank=normal&property={}&entity={}'
@@ -23,6 +25,21 @@ def id_from_uriref(uriref):
     if label.count('#'):
         label = label.split('#')[-1]      
     return label
+
+# (re-)generate human-friendly nodeIDs, following a certain pattern; to be tested
+def item_uriref_generator(prefix='ew', context=None):
+    if not context:
+        context = NamedGraph.objects.get_or_create(graph_identifier=make_uriref(settings.EUROWIKI_BASE))
+    statements = URIStatement.objects.filter(subject__startswith=settings.RDF_PREFIXES[prefix], context=context).order_by('-subject')
+    code_base = settings.URI_LABEL_CODES[prefix]
+    if statements:
+        value_number = id_from_uriref(statements[0].subject).replace(code_base, '')
+        ordinal = int(value_number)
+    else:
+        ordinal = 0
+    ordinal += 1
+    value = '{}{:04d}'.format(code_base, ordinal)
+    return make_uriref(value, prefix=prefix)
 
 def friend_uri(uriref, append_label=True, lang='en'):
     id = ''

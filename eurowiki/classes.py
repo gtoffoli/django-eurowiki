@@ -1,12 +1,13 @@
 from django.conf import settings
 from django.utils.translation import get_language
 from rdflib.term import Literal
-from rdflib_django.utils import get_named_graph
+from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 from .utils import make_uriref, id_from_uriref, wd_get_image_url
 
 class EurowikiBase(object):
 
-    def __init__(self, uriref=None, id=None, graph=None):
+    # def __init__(self, uriref=None, id=None, graph=None):
+    def __init__(self, uriref=None, id=None, graph=None, graph_identifier=None):
         assert uriref or id
         if uriref:
             self.uriref = uriref
@@ -14,9 +15,10 @@ class EurowikiBase(object):
         elif id:
             self.id = id
             self.uriref = make_uriref(id)
-        if not graph:
-            graph_identifier = make_uriref('http://www.wikidata.org')
+        if graph_identifier:
             graph = get_named_graph(graph_identifier)
+        elif not graph:
+            graph = get_conjunctive_graph()
         self.graph = graph
 
     def labels(self):
@@ -41,12 +43,21 @@ class Item(EurowikiBase):
     def labels(self):
         return settings.OTHER_ITEM_LABELS.get(self.id, {})
 
-    def properties(self, keys=[]):
+    def properties(self, keys=[], language=None):
+        if not language:
+            language = get_language()[:2]
         p_o_iterable = self.graph.predicate_objects(subject=self.uriref)
         if keys:
             p_o_iterable = [[p, o] for [p, o] in p_o_iterable if id_from_uriref(p) in keys]
         p_o_iterable = sorted(p_o_iterable, key=lambda p_o: settings.ORDERED_PREDICATE_KEYS.index(id_from_uriref(p_o[0])))
         props = []
+        lang_code_dict = {}
+        value_dict = {}
+        property_dict = {}
+        for prop_id in settings.RDF_I18N_PROPERTIES:
+            lang_code_dict[prop_id] = None
+            value_dict[prop_id] = None
+            property_dict[prop_id] = None
         for p, o in p_o_iterable:
             if keys and not keys.count(id_from_uriref(p)):
                 continue
@@ -54,9 +65,36 @@ class Item(EurowikiBase):
             if p.is_literal():
                 if p.is_image():
                     o = Image(o)
+                else:
+                    prop_id = p.id
+                    if prop_id in settings.RDF_I18N_PROPERTIES:
+                        lang = o.language
+                        if lang==language:
+                            lang_code_dict[prop_id] = lang
+                            property_dict[prop_id] = p
+                            value_dict[prop_id] = o.value
+                        elif not value_dict[prop_id] and lang==settings.LANGUAGE_CODE:
+                            lang_code_dict[prop_id] = lang
+                            property_dict[prop_id] = p
+                            value_dict[prop_id] = o.value
+                        elif lang and (not value_dict[prop_id] or (lang_code_dict[prop_id] in settings.LANGUAGE_CODES and lang in settings.LANGUAGE_CODES and settings.LANGUAGE_CODES.index(lang)<settings.LANGUAGE_CODES.index(lang_code_dict[prop_id]))):
+                            lang_code_dict[prop_id] = lang
+                            property_dict[prop_id] = p
+                            value_dict[prop_id] = o.value
+                        print('', lang, o.value)
+                        if lang:
+                            continue
+                    else:
+                        if value_dict[prop_id]:
+                            props.append([property_dict[prop_id], value_dict[prop_id]])
+                            value_dict[prop_id] = None
+                        o = o.value
             else:
                 o = Item(uriref=o, graph=self.graph)
             props.append([p, o])
+        for prop_id in settings.RDF_I18N_PROPERTIES:
+            if value_dict[prop_id]:
+                props.append([property_dict[prop_id], value_dict[prop_id]])
         return props
 
 class Country(Item):
