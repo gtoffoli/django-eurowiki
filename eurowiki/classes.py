@@ -84,11 +84,6 @@ class Item(EurowikiBase):
                         print('', lang, o.value)
                         if lang:
                             continue
-                    else:
-                        if value_dict[prop_id]:
-                            props.append([property_dict[prop_id], value_dict[prop_id]])
-                            value_dict[prop_id] = None
-                        o = o.value
             else:
                 o = Item(uriref=o, graph=self.graph)
             props.append([p, o])
