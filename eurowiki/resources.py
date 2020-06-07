@@ -9,6 +9,7 @@ WIKIDATA_BASE = 'http://www.wikidata.org'
 EUROWIKI_BASE = 'http://www.eurowiki.eu'
 RDF_PREFIXES = {
     "xsd": 'http://www.w3.org/2001/XMLSchema#uri',
+    "rdf": 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     "rdfs": 'http://www.w3.org/2000/01/rdf-schema#',
     "wd": '{}/{}'.format(WIKIDATA_BASE, 'entity/'), # wikidata items
     "wdt": '{}/{}'.format(WIKIDATA_BASE, 'prop/direct/'), # wikidata property "truthy"

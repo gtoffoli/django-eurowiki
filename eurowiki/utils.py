@@ -2,7 +2,6 @@ import urllib.request
 import json
 import hashlib
 from rdflib.term import URIRef
-from rdflib_django.store import DEFAULT_STORE
 from rdflib_django.models import NamedGraph, URIStatement
 from django.conf import settings
 
@@ -16,7 +15,11 @@ def make_uriref(value, prefix=None):
         elif value.startswith('P'):
             prefix = 'wdt'
     if prefix:
-        return URIRef(value, base=settings.RDF_PREFIXES[prefix])
+        base = settings.RDF_PREFIXES[prefix]
+        if base.count('-') and base.endswith('#'): # overccome issue in rdflib URIRef
+            return URIRef(base + value)
+        else:
+            return URIRef(value, base=base)
     else:
         return URIRef(value)
 

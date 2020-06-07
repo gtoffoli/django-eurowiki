@@ -1,7 +1,7 @@
 ﻿{% load i18n static %}
 
 <ul>
-{% for p, o in props %}
+{% for p, o, c, r in props %}
   {% if p.is_literal %}
     {% if p.is_image %}
       <li><label>{{ p.label }}</label>:<br>
@@ -15,6 +15,11 @@
       {% with props=o.properties %}
         {% include "_props_subtree.html" %}
       {% endwith %}
+      {% if r %} {{ r.label }}
+        {% with props=r.properties %}
+          {% include "_props_subtree.html" %}
+        {% endwith %}
+      {% endif %}
     </li>
   {% endif %}
 {% endfor %}
