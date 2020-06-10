@@ -97,7 +97,7 @@
       position: sticky;
       top: 4rem;
       z-index: 1000;
-      height: calc(100vh - 4rem);
+      height: calc(100vh - 9rem); /*4rem*/
       border-right: 1px solid rgba(0, 0, 0, .1);
     }
   }
@@ -111,7 +111,7 @@
 @media (min-width: 768px) {
   @supports ((position: -webkit-sticky) or (position: sticky)) {
     .ew-links {
-      max-height: calc(100vh - 12rem);
+      max-height: calc(100vh - 15rem); /*14.5rem*/
       overflow-y: auto;
     }
   }

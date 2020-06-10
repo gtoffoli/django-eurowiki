@@ -7,7 +7,7 @@
     <head>
         {# include 'google_analytics.html' #}
         <meta charset="utf-8">
-        <title>{% block head_title_base %}{% block head_title %}{% endblock head_title %}{% endblock head_title_base %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
+        <title>{% block head_title %}{% endblock head_title %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
 
 {% comment %}
         <link rel="canonical" href="{{ CANONICAL }}">
@@ -23,8 +23,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% endblock viewport %}
 
-        <link rel="shortcut icon" href="{% static "eurowiki/img/favicon.ico" %}" type="image/x-icon">
-        <link rel="apple-touch-icon" href="{% static "eurowiki/img/eurowiki_icon.png" %}" type="image/png">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static "eurowiki/favicon/apple-touch-icon.png" %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static "eurowiki/favicon/favicon-32x32.png" %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static "eurowiki/favicon/favicon-16x16.png" %}">
+        <link rel="manifest" href="{% static "eurowiki/favicon/site.webmanifest" %}">
+        <link rel="mask-icon" href="{% static "eurowiki/favicon/safari-pinned-tab.svg" %}" color="#003399">
+        <meta name="msapplication-TileColor" content="#003399">
+        <meta name="theme-color" content="#003399">
 
         {% block style_head_base %}
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -45,9 +50,22 @@
     </head>
 
     <body class="{% block body_class %}{% endblock body_class %}" id="{% block body_id %}{% endblock body_id %}" style="cursor:default">
+        <div style="background-color:#f7f7f7" class="p-1 text-center">
+           <a href="https://www.uniroma1.it/" class="pt-1 pr-1" target="_blank" title="Sapienza Università di Roma"><img src="{% static "eurowiki/img/logo_sapienza.png" %}"></a> <a href="https://saras.uniroma1.it/" style="color:#005866; font-size:90%; text-decoration:none" title="Sapienza Università di Roma - SARAS" target="_blank">Dipartimento di Storia Antropologia Religioni Arte Spettacolo</a>
+        </div>
         {% block topbar_base %}
         <header class="navbar navbar-expand navbar-dark flex-column flex-md-row ew-navbar">
-            <a class="navbar-brand mr-0 mr-md-2 p-0 pb-md-1" href="/" title="{{ site_name }}">{{ site_name }}</a>
+            <a class="navbar-brand mr-0 mr-md-2 p-0 pb-md-1" href="/" title="HomePage">
+                <svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     width="47px" height="42px" viewBox="0 0 47 42" enable-background="new 0 0 47 42" xml:space="preserve">
+                         <path fill="none" stroke="#FFCC00" stroke-miterlimit="10" d="M46.5,38.5c0,1.657-1.344,3-3,3h-40c-1.657,0-3-1.343-3-3v-35 c0-1.657,1.343-3,3-3h40c1.656,0,3,1.343,3,3V38.5z"/>
+                         <g>
+                            <path fill="#FFCC00" d="M25.406,21.979h-9.143v7.127h10.223v3.636h-14.65V8.48h14.109v3.635h-9.682v6.263h9.143V21.979z"/>
+                            <path fill="#FFCC00" d="M34.803,8.48v24.261h-4.428V8.48H34.803z"/>
+                         </g>
+                </svg>
+            </a>
+            <a class="navbar-brand mr-0 mr-md-2 p-0 pb-md-1" href="/" title="HomePage">{{ site_name }}</a>
             <div class="navbar-nav-scroll">
                 <ul class="navbar-nav flex-row">
                     <li class="nav-item">
@@ -78,7 +96,7 @@
                         </select>
                     </form>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item pr-0">
                     {% if user.is_authenticated %}
                     <div class="mb-0">
                         <form method="post" action="{% url 'account_logout' %}">
@@ -95,7 +113,6 @@
                     {% endif %}
                 </li>
             </ul>
-            
         </header>
         {% endblock topbar_base %}
         {% block body_base %}
@@ -110,14 +127,14 @@
                     </form>
                     {% block sidebar %}
                     <nav class="nav-links collapse" id="ew-menu-nav">
-                        <div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_list"><i class="fa fa-list" aria-hidden="true"></i> <span style="font-size: 80%">List view</span></a></div><div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_select"><i class="fa fa-check-square-o" aria-hidden="true"></i> <span style="font-size: 80%">Compare</span></a></div>
+                        <div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_list"><i class="fa fa-list" aria-hidden="true"></i> <span style="font-size: 80%">{% trans 'list view'|capfirst %}</span></a></div><div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_select"><i class="fa fa-check-square-o" aria-hidden="true"></i> <span style="font-size: 80%">{% trans 'compare'|capfirst %}</span></a></div>
                         <div class="ew-links">
                         <ul class="nav pl-3" id="list_countries" style="display:{% if countries_selected|length <= 1 %}block{%else%}none{% endif %}">
                         {% for country in COUNTRIES %}
                             <li {% if request.path ==  country.url %}class="active"{% endif %}><a href="{{ country.url }}">{{ country.label }}</a></li>
                         {% endfor %}
                         </ul>
-                        <form action="/countries/compare/" method="post" id="form_countries" style="display:{% if countries_selected|length > 1 %}block{%else%}none{% endif %}">
+                        <form action="/countries/compare/" method="post" id="compare_countries" style="display:{% if countries_selected|length > 1 %}block{%else%}none{% endif %}">
                         {% csrf_token %}
                         <div class="mt-1">
                         <button type="submit" class="btn btn-secondary" style="font-size: 90%">compare</button>
@@ -144,6 +161,10 @@
             </div>
         </div>
         {% endblock body_base %}
+        <footer class="navbar navbar-expand navbar-dark flex-column flex-md-row pt-2 pb-2 pl-3 pr-3" style="background:#f7f7f7;  border-top: 1px solid rgba(0, 0, 0, .1);">
+            <div class="small">&copy; Università degli Studi di Roma "La Sapienza" - Dipartimento di Storia Antropologia Religioni Arte Spettacolo - Piazzale Aldo Moro 5, 00185 Roma</div>
+            <div class="navbar-nav ml-md-auto small">{% trans "built by"|capfirst %}&nbsp;<a href="https://www.linkroma.it" target="_blank">LINK srl</a>&nbsp;{% trans "with" %}&nbsp;<a href="https://www.python.org/" target="_blank">Python</a>&nbsp;{% trans "and" %}&nbsp;<a href="https://www.djangoproject.com/" target="_blank">Django</a></div>
+        </footer>
     
         {% block script_style_base %}
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -165,13 +186,21 @@
           $('#active_list').on('click', function(event){
             event.preventDefault();
             $("#list_countries").css("display", "block");
-            $("#form_countries").css("display", "none");
+            $("#compare_countries").css("display", "none");
             
           });
           $('#active_select').on('click', function(event){
             event.preventDefault();
-            $("#form_countries").css("display", "block");
+            $("#compare_countries").css("display", "block");
             $("#list_countries").css("display", "none");
+          });
+          
+          $('#compare_countries').on('submit', function(event) {
+            if ($("input[type=checkbox]:checked").length < 2) {
+                alert("{% trans 'Select at least 2 countries' %}");
+                return false;
+            }
+            return true;
           });
         });
         </script>
