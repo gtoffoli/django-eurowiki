@@ -70,6 +70,7 @@ EU_COUNTRY_KEYS = list(EU_COUNTRY_LABELS.keys())
 
 OTHER_ITEM_LABELS = {
     'Q458': {'en': 'European Union', 'it': 'Unione Europea'},
+    'Q4916': {'en': 'Euro', 'it': 'Euro'},
     'Q8886': {'en': 'European Council', 'it': 'Consiglio Europeo'}, 
     'Q3624078': {'en': 'sovereign state', 'it': 'stato sovrano',},
     'Q2065736': {'en': 'cultural property', 'it': 'bene culturale',},
@@ -94,16 +95,17 @@ PREDICATE_LABELS =  OrderedDict([
     ('P17', {'en': 'country', 'it': 'paese',}), # country
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
     ('P953', {'en': 'online full text', 'it': 'testo completo online',}), # 'full work available at', 'testo completo disponibile all'indirizzo'
+    ('P170', {'en': 'creator/author', 'it': 'creatore/autore',}),
 
     ('P948', {'en': 'page banner', 'it': 'banner di pagina',}), #
     ('P85', {'en': 'national anthem', 'it': 'inno nazionale',}), # national anthem (of country)
     ('P163', {'en': 'national flag', 'it': 'bandiera nazionale',}), # 
     ('P41', {'en': 'flag image', 'it': 'immagine della bandiera',}), #
-    ('P237', {'en': 'coat of arms', 'it': 'descrizione dello stemma',}), # description of emblem
+    ('P237', {'en': 'coat of arms', 'it': 'stemma',}), # description of emblem
     ('P94', {'en': 'emblem image', 'it': 'immagine dello stemma',}), #
     ('P1541', {'en': 'motto text', 'it': 'testo del motto',}), # motto text (of country)
     ('P1546', {'en': 'national motto', 'it': 'motto nazionale',}), # motto (of country)
-    ('P832', {'en': 'public holiday', 'it': 'festa nazionale',}),
+    ('P832', {'en': 'public holiday', 'it': 'festa pubblica',}),
     ('P1476', {'en': 'title', 'it': 'titolo',}), # 
     ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
     ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
@@ -126,7 +128,7 @@ PREDICATE_LABELS =  OrderedDict([
 # ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
 EW_PREDICATE_LABELS = OrderedDict([
-    ('PUE1', {'en': 'title', 'it': 'titolo',}), #
+    ('PUE1', {'en': 'text', 'it': 'testo',}), #
     ('PUE2', {'en': 'description', 'it': 'descrizione',}), #
     ('PUE3', {'en': 'proposed by', 'it': 'proposto da',}), # REPURPOSED - in WD: P748 (appointed by, designato da)
     ('PUE4', {'en': 'historical origins', 'it': 'origini storiche',}), # brand-NEW
@@ -135,7 +137,7 @@ EW_PREDICATE_LABELS = OrderedDict([
     ('PUE7', {'en': 'subjects depicted', 'it': 'soggetti raffigurati',}), # multi-value shortcut for a relation path involving P180
     ('PUE8', {'en': 'year or time of composition or adoption', 'it': 'anno o circostanze di composizione o adozione',}), # brand-new
     ('PUE9', {'en': 'changes since origin or adoption', 'it': 'modifiche da origine o adozione',}), # brand-new
-    ('PUE10', {'en': 'national holiday', 'it': 'festa nazionale',}), # brand-new (usually one among public holidays)
+    ('PUE10', {'en': 'national day', 'it': 'festa nazionale',}), # brand-new (usually one among public holidays)
     ('PUE11', {'en': 'general principles', 'it': 'principi generali',}), # brand-NEW for constitutions
     ('PUE12', {'en': 'soverainity cession', 'it': 'cessione di sovranità',}), # brand-NEW for constitutions
     ('PUE13', {'en': 'mentions to religions', 'it': 'riferimenti alla religione',}), # brand-NEW for constitutions
@@ -146,9 +148,9 @@ EW_PREDICATE_LABELS = OrderedDict([
 PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
-EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'PUE6', 'PUE10', 'P38', 'P92',] # mandatory 1st level properties for countries
-LITERAL_PROPERTIES = ['label', 'comment', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
-RDF_I18N_PROPERTIES = ['label', 'comment', 'P237', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # RDF properties having a literal value language-awware
+EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'PUE6', 'PUE10', 'P838', 'P832', 'P38', 'P92', 'P953',] # mandatory 1st level properties for countries
+LITERAL_PROPERTIES = ['label', 'comment', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
+RDF_I18N_PROPERTIES = ['label', 'comment', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # RDF properties having a literal value language-awware
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948'] # properties from whose value an online address can be computed 
 
 # this sample dictionary should allow to compute URIs, based on prefix to namespace mapping
