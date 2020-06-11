@@ -15,7 +15,7 @@
       {% with props=o.properties %}
         {% include "_props_subtree.html" %}
       {% endwith %}
-      {% if r %} {{ r.label }}
+      {% if r %}{% comment %} {{ r.label }}{% endcomment %}
         {% with props=r.properties %}
           {% include "_props_subtree.html" %}
         {% endwith %}

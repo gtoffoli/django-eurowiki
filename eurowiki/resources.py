@@ -87,7 +87,7 @@ OTHER_ITEM_LABELS = {
 
 PREDICATE_LABELS =  OrderedDict([
     ('label', {'en': 'name/title', 'it': 'nome/titolo',}), #
-    ('comment', {'en': 'description', 'it': 'descrizione',}), #
+    ('comment', {'en': 'comment', 'it': 'commento',}), #
     ('P279', {'en': 'subclass of', 'it': 'sottoclasse di',}), # subclass of
     ('P31', {'en': 'instance of', 'it': 'istanza di',}), # instance of
     ('P361', {'en': 'Part of', 'it': 'Parte di',}), # part of
@@ -148,9 +148,9 @@ EW_PREDICATE_LABELS = OrderedDict([
 PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
-EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'PUE6', 'PUE10', 'P838', 'P832', 'P38', 'P92', 'P953',] # mandatory 1st level properties for countries
-LITERAL_PROPERTIES = ['label', 'comment', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
-RDF_I18N_PROPERTIES = ['label', 'comment', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # RDF properties having a literal value language-awware
+EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'PUE6', 'PUE10', 'P832', 'P38', 'P92', 'P953',] # mandatory 1st level properties for countries
+LITERAL_PROPERTIES = ['label', 'comment', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
+RDF_I18N_PROPERTIES = ['label', 'comment', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # RDF properties having a literal value language-awware
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948'] # properties from whose value an online address can be computed 
 
 # this sample dictionary should allow to compute URIs, based on prefix to namespace mapping

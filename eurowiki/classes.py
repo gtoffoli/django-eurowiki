@@ -57,6 +57,7 @@ class Item(EurowikiBase):
         p_o_c_r_iterable = [[quad[1], quad[2], quad[3], None] for quad in self.graph.quads((self.uriref or self.bnode, None, None))]
         p_o_c_r_iterable = [[p, o, c, r] for p, o, c, r in p_o_c_r_iterable if id_from_uriref(p) in keys]
         # handle reified properties and build a triple for each
+        RDF_STATEMENT = make_uriref('Statement', prefix='rdf')
         RDF_SUBJECT = make_uriref('subject', prefix='rdf')
         RDF_PREDICATE = make_uriref('predicate', prefix='rdf')
         RDF_OBJECT = make_uriref('object', prefix='rdf')
@@ -68,6 +69,10 @@ class Item(EurowikiBase):
                 continue
             o = self.graph.value(subject=reified, predicate=RDF_OBJECT)
             c = quad[3]
+            if reified:
+                statements = self.graph.quads((reified, None, RDF_STATEMENT, None))
+                if statements:
+                    reified = list(statements)[0][1]
             p_o_c_r_iterable.append((p, o, c, reified))
         # sort our pseudo-quads
         p_o_c_r_iterable = sorted(p_o_c_r_iterable, key=lambda p_o: keys.index(id_from_uriref(p_o[0])))
