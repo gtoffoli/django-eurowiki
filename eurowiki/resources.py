@@ -8,7 +8,7 @@ Should include only terminology and the core of top-level items.
 WIKIDATA_BASE = 'http://www.wikidata.org'
 EUROWIKI_BASE = 'http://www.eurowiki.eu'
 RDF_PREFIXES = {
-    "xsd": 'http://www.w3.org/2001/XMLSchema#uri',
+    "xsd": 'http://www.w3.org/2001/XMLSchema#',
     "rdf": 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     "rdfs": 'http://www.w3.org/2000/01/rdf-schema#',
     "wd": '{}/{}'.format(WIKIDATA_BASE, 'entity/'), # wikidata items
@@ -89,7 +89,6 @@ PREDICATE_LABELS =  OrderedDict([
     ('label', {'en': 'name/title', 'it': 'nome/titolo',}), #
     ('comment', {'en': 'comment', 'it': 'commento',}), #
     ('P279', {'en': 'subclass of', 'it': 'sottoclasse di',}), # subclass of
-    ('P31', {'en': 'instance of', 'it': 'istanza di',}), # instance of
     ('P361', {'en': 'Part of', 'it': 'Parte di',}), # part of
     ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
     ('P17', {'en': 'country', 'it': 'paese',}), # country
@@ -111,8 +110,8 @@ PREDICATE_LABELS =  OrderedDict([
     ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
     ('P180', {'en': 'depicts', 'it': 'raffigura',}), #
     ('P18', {'en': 'image', 'it': 'immagine',}), #
-    ('P38', {'en': 'currency', 'it': 'valuta',}),
-    ('P92', {'en': 'main regulatory text', 'it': 'legge fondamentale',}),
+    ('P38', {'en': 'currency and coinage', 'it': 'valuta e monete',}), # in wikidata: 'currency', 'valuta'
+    ('P92', {'en': 'constitution', 'it': 'costituzione',}), # in wikidata: 'main regulatory text', 'legge fondamentale'
 
     ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
     ('P790', {'en': 'deliberated by', 'it': 'deliberato da',}), # in wikidata: approved by, approvato da (ente)
@@ -149,8 +148,8 @@ PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
 EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'PUE6', 'PUE10', 'P832', 'P38', 'P92', 'P953',] # mandatory 1st level properties for countries
-LITERAL_PROPERTIES = ['label', 'comment', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
-RDF_I18N_PROPERTIES = ['label', 'comment', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # RDF properties having a literal value language-awware
+LITERAL_PROPERTIES = ['label', 'comment', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
+RDF_I18N_PROPERTIES = ['label', 'comment', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # RDF properties having a literal value language-awware
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948'] # properties from whose value an online address can be computed 
 
 # this sample dictionary should allow to compute URIs, based on prefix to namespace mapping
@@ -167,6 +166,9 @@ OTHER_EXTERNAL_RESOURCES = {
     'Q41180', # La Marseillaise (instance of Q23691, - P642 Q142)
     'Q326724', # Bastille Day (instance of Q57598, - P17 Q142)
     'Q506234', # Altare della Patria (instance of Q4989906 and Q1128637, - P17 Q38)
+  ],
+  "wd": [
+    ('P31', {'en': 'instance of', 'it': 'istanza di',}), # instance of
   ],
 }
 
