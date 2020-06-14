@@ -105,7 +105,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P1541', {'en': 'motto text', 'it': 'testo del motto',}), # motto text (of country)
     ('P1546', {'en': 'national motto', 'it': 'motto nazionale',}), # motto (of country)
     ('P832', {'en': 'public holiday', 'it': 'festa pubblica',}),
-    ('P1476', {'en': 'title', 'it': 'titolo',}), # 
+    ('P1476', {'en': 'title', 'it': 'titolo',}), # original title
     ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
     ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
     ('P180', {'en': 'depicts', 'it': 'raffigura',}), #

@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.core.cache import cache
+from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from rdflib.term import BNode
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
@@ -43,14 +45,23 @@ class EurowikiBase(object):
 class Item(EurowikiBase):
 
     def url(self):
+        # return '/item/{}/'.format(self.id)
         return '/item/{}/'.format(self.id)
 
     def labels(self):
         return settings.OTHER_ITEM_LABELS.get(self.id, {})
 
-    def properties(self, keys=[], language=None):
+    def preferred_label(self, language=None):
+        properties = self.properties(keys=['P1476', 'title', 'label',], exclude_keys=[], language=language)
+        if properties:
+            return properties[0][1]
+        return self.label()
+
+    def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
         if not keys:
             keys = settings.ORDERED_PREDICATE_KEYS
+        if exclude_keys:
+            keys = [key for key in keys if not key in exclude_keys]
         if not language:
             language = get_language()[:2]
         # get quads, to include context, remove subject and append placeholder for reified properties

@@ -1,17 +1,20 @@
-﻿{% load i18n static %}
+{% load i18n static %}
 
 <ul>
 {% for p, o, c, r in props %}
   {% if p.is_literal %}
     {% if p.is_image %}
       <li><label>{{ p.label }}</label>:<br>
-          <a href="{{ p.wd_url }}"><img src="{{ o.url }}" style="width:120px; margin-left:30px"></a></li>
+          <img src="{{ o.url }}" style="width:120px; margin-left:30px"></li>
     {% else %}
       <li><label>{{ p.label }}</label>: {{ o }}</li>
     {% endif %}
   {% else %}
-    <li><label>{{ p.label }}</label>: {% if o.is_wikidata %}<a href="{{ o.wd_url }}" target="_blank">{{ o.label }}</a>
-                                      {% else %}{% endif %}
+    <li><label>{{ p.label }}</label>:
+      <a href="{{ o.url }}">{{ o.preferred_label }}</a>
+      {% if o.is_wikidata %}
+	    &nbsp; <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:80%" aria-hidden="true"></i></a>
+      {% endif %}
       {% with props=o.properties %}
         {% include "_props_subtree.html" %}
       {% endwith %}

@@ -1,5 +1,6 @@
 # see https://stackoverflow.com/questions/2112715/how-do-i-fix-pydev-undefined-variable-from-import-errors (Eclipse)
 # Window -> Preferences -> PyDev -> Editor -> Code Analysis -> Undefined -> Undefined Variable From Import -> Ignore
+from rdflib.term import BNode
 from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
 
 from django.http import HttpResponseRedirect
@@ -12,7 +13,7 @@ from django.conf import settings
 
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
-from .classes import Country
+from .classes import Country, Item
 from .forms import NamedGraphForm, NamespaceModelForm, URIStatementForm, LiteralStatementForm
 from .utils import make_uriref, id_from_uriref, friend_uri, friend_graph
 
@@ -176,3 +177,14 @@ def compare_countries(request):
             country = Country(id=country_code)
             countries.append(country)
     return render(request, 'country.html', {'countries_selected' : countries})
+
+def view_item(request, item_code):
+    print('----- item_code =', item_code, len(item_code))
+    if len(item_code)==35:
+        bnode = BNode(item_code)
+        item = Item(bnode=bnode)
+    else:
+        item = Item(id=item_code)
+    print('----- bnode =', item.bnode)
+    print('----- uriref =', item.uriref)
+    return render(request, 'item.html', {'item' : item})

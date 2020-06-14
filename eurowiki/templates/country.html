@@ -27,14 +27,17 @@
             {% if p.is_literal %}
                 {% if p.is_image %}
                 <summary>{{ p.label }}</summary>
-                    <a href="{{ p.wd_url }}"><img src="{{ o.url }}" style="width:120px; margin-left:30px"></a>
+                    <img src="{{ o.url }}" style="width:120px; margin-left:30px">
                  {% else %}
-                    <summary>{% trans "title" %}/{% trans "name" %}: {{ o.label }}</summary>
+                    <label>{{ p.label }}: {{ o }}</label>
                 {% endif %}
             {% else %}
                <summary>{{ p.label }}</summary> 
-               {% if o.is_wikidata %}<a href="{{ o.wd_url }}" target="_blank">{{ o.label }}</a>
-                                      {% else %}<p>{{ o.label }}</p>{% endif %}
+               <div style="margin-left: 1.5rem;"><a href="{{ o.url }}">{{ o.preferred_label }}</a>
+               {% if o.is_wikidata %}
+				  &nbsp; <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:80%" aria-hidden="true"></i></a>
+		       {% endif %}
+		       </div>
                {% with props=o.properties %}
                  {% include "_props_subtree.html" %}
                {% endwith %}

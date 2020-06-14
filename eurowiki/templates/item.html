@@ -1,0 +1,52 @@
+{% extends "eurowiki_base.html" %}
+{% load static i18n %}
+
+{% block head_title %}{% endblock head_title %}
+
+{% block body_class %}item_view{% endblock body_class %}
+
+{% block body %}
+
+<div class="table-responsive">
+
+<h2 class="ew-title" style="white-space: nowrap;">{{ item.preferred_label }}
+	{% if item.is_wikidata %}
+		&nbsp; <a href="{{ item.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%" aria-hidden="true"></i></a>
+	{% endif %}
+</h2>
+
+{% with props=item.properties %}
+{% for p, o, c, r in props %}
+
+	{% if p.is_literal %}
+		{% if p.is_image %}
+		<details open>
+			<label>{{ p.label }}</label>
+			<img src="{{ o.url }}" style="width:120px; margin-left:30px">
+		</details>
+		{% else %}
+		<label>{{ p.label }}: {{ o }}</label>
+		{% endif %}
+	{% else %}
+		<details close>
+			<summary>{{ p.label }}</summary> 
+			<div style="margin-left: 1.5rem;"><a href="{{ o.url }}"}>{{ o.preferred_label }}</a>
+			{% if o.is_wikidata %}
+				&nbsp; <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:80%" aria-hidden="true"></i></a>
+			{% endif %}
+			</div>
+			{% with props=o.properties %}
+				{% include "_props_subtree.html" %}
+			{% endwith %}
+			{% if r %}{% comment %} {{ r.label }}{% endcomment %}
+				{% with props=r.properties %}
+					{% include "_props_subtree.html" %}
+				{% endwith %}
+			{% endif %}
+		</details>
+	{% endif %}
+
+{% endfor %}{% endwith %}
+
+</div>
+{% endblock body %}
