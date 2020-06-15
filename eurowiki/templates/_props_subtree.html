@@ -65,13 +65,13 @@
 <div class="d-flex justify-content-start mb-3" style=" font-size:1rem; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
-            <div class="summary_label p-2 pr-3" style="font-size:90%;">{{ p.label }}</div><div class="p-2" style="font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
+            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%;">{{ p.label }}</div><div class="p-2" style="flex-basis: 85%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
         {% else %}
-            <div class="summary_label p-2 pr-3" style="font-size:90%;">{{ p.label }}</div><div class="p-2"  style="font-size:90%;">{{ o }}</div>
+            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%;">{{ p.label }}</div><div class="p-2"  style="flex-basis: 85%; font-size:90%;">{{ o }}</div>
         {% endif %}
     {% else %}
-        <div class="summary_label p-2 pr-3" style="font-size:90%;">{{ p.label }}</div>
-        <div class="p-2">
+        <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%;">{{ p.label }}</div>
+        <div class="p-2" style="flex-basis: 85%;">
             <div class="mb-3 font-size:90%"><a href="{{ o.url }}">{{ o.preferred_label }}</a> {% if o.is_wikidata %} <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link"></i></a>{% endif %}</div>
             {% include "_props_subtree.html" %}
             {% if r %} {# {{ r.label }} #}
