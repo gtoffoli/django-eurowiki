@@ -23,6 +23,9 @@ def eu_countries(language=settings.LANGUAGE_CODE):
 def homepage(request):
     return render(request, 'homepage.html')
 
+def search(request):
+    return render(request, 'search.html')
+
 def list_stores(request):
     stores = Store.objects.all()
     return render(request, 'list_stores.html', {'stores': stores})
@@ -167,7 +170,7 @@ def view_country(request, item_code):
     countries.append(country)
     return render(request, 'country.html', {'countries_selected' : countries})
 
-def compare_countries(request):
+def view_countries(request):
     countries= []
     post=request.POST
     if post:

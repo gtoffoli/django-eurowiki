@@ -31,13 +31,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+"""
 if IS_LINUX:
     ALLOWED_HOSTS = ['*']
     # PROTOCOL = 'https'
 else:
     ALLOWED_HOSTS = ["localhost",]
     PROTOCOL = 'http'
-
+"""
 # Application definition
 
 INSTALLED_APPS = [

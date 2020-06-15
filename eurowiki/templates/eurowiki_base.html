@@ -1,6 +1,5 @@
 ﻿{% load static i18n %}
-{# load menu #}
-{# generate_menu #}
+
 
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
@@ -72,16 +71,7 @@
                         <a class="nav-link {% if request.path == '/' %} active {% endif %}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/statements/' %} active {% endif %}" href="/statements/">Statements</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/uri_statements/' %} active {% endif %}" href="/uri_statements/">Uri statements</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/literal_statements/' %} active {% endif %}" href="/literal_statements/">Literal statements</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/uri_statement/new/' %} active {% endif %}" href="/uri_statement/new">Edit statement</a>
+                        <a class="nav-link {% if request.path == '/search/' %} active {% endif %}" href="/search/">{% trans "search"|capfirst %}</a>
                     </li>
                 </ul>
             </div>
@@ -119,16 +109,22 @@
         <div class="container-fluid">
             <div class="row flex-xl-nowrap">
                 <div class="col-12 col-md-3 col-xl-2 ew-sidebar">
-                    <form role="search" class="ew-search d-flex align-items-center">
-                        <span class="" style="position: relative; width:100%; display: inline-block; direction: ltr;">
-                              <input class="form-control" size="32" type="text" style="font-size:90%" name="q" id="navigation_autocomplete">
-                        </span>
-                        <button class="btn btn-link ew-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
-                    </form>
+{% comment %}
+<form role="search" class="ew-search d-flex align-items-center">
+    <span class="" style="position: relative; width:100%; display: inline-block; direction: ltr;">
+        <input class="form-control" size="32" type="text" style="font-size:90%" name="q" id="navigation_autocomplete">
+    </span>
+    <button class="btn btn-link ew-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
+</form>
+{% endcomment %}
                     {% block sidebar %}
+                    <div class="ew-bar-menu text-right">
+                        <button class="btn btn-link ew-bar-menu-toggle d-md-none p-0 ml-0" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
+                    </div>
                     <nav class="nav-links collapse" id="ew-menu-nav">
-                        <div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_list"><i class="fa fa-list" aria-hidden="true"></i> <span style="font-size: 80%">{% trans 'list view'|capfirst %}</span></a></div><div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_select"><i class="fa fa-check-square-o" aria-hidden="true"></i> <span style="font-size: 80%">{% trans 'compare'|capfirst %}</span></a></div>
-                        <div class="ew-links">
+{% comment %}
+<div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_list"><i class="fa fa-list" aria-hidden="true"></i> <span style="font-size: 80%">{% trans 'list view'|capfirst %}</span></a></div><div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_select"><i class="fa fa-check-square-o" aria-hidden="true"></i> <span style="font-size: 80%">{% trans 'compare'|capfirst %}</span></a></div>
+<div class="ew-links">
                         <ul class="nav pl-3" id="list_countries" style="display:{% if countries_selected|length <= 1 %}block{%else%}none{% endif %}">
                         {% for country in COUNTRIES %}
                             <li {% if request.path ==  country.url %}class="active"{% endif %}><a href="{{ country.url }}">{{ country.label }}</a></li>
@@ -150,9 +146,55 @@
                         <button type="submit" class="btn btn-secondary" style="font-size: 90%">compare</button>
                         </div>
                         </form>
+</div>
+### MMR seconda versione 
+                        
+                        <form action="/countries/view/" method="post" id="view_countries">
+                        {% csrf_token %}
+                        <!--div class="mt-1">
+                        <button type="submit" class="btn">{% trans "view" %} <i class="fa fa-eye"></i></button>
+                        </div-->
+                        <div class="mt-2">
+                            <input type="checkbox" name="checkall" id="checkall" onClick="check_uncheck_checkbox(this.checked);" />Check All
+                        <button type="submit" class="btn" style="border: 1px solid #000; border-rounded: 3px"><small>{% trans "view" %}</small> <i class="fa fa-eye"></i></button>
                         </div>
+                        <div class="ew-links">
+                        <div class="form-group">
+                        <ul class="nav pl-3">
+                        {% for country in COUNTRIES %}
+                            <li><input type="checkbox" name="group" value="{{country.id}}" {% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}checked{% endif %}{% endfor %}{% endif %}> <label class="mb-0">{{ country.label }}</label></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                        
+                        </div>
+                        <div class="mt-2">
+                            <input type="checkbox" name="checkall" id="checkall" onClick="check_uncheck_checkbox(this.checked);" />Check All
+                        <button type="submit" class="btn" style="border: 1px solid #000; border-rounded: 3px"><small>{% trans "view" %}</small> <i class="fa fa-eye"></i></button>
+                        </div>
+                        </form>
+{% endcomment %}
+                        <form action="/countries/view/" method="post" id="view_countries">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-end mt-2">
+                                <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "uncheck" %}</small> </button>
+                                <button type="submit" class="btn"><i class="fa fa-eye"></i> <small>{% trans "view" %}</small></button>
+                            </div>
+                            <div class="ew-links">
+                                <div class="form-group">
+                                    <ul class="nav pl-3">
+                                        {% for country in COUNTRIES %}
+                                        <li class="d-flex justify-content-between"><div {% if request.path ==  country.url %}class="active"{% else %}{% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}class="active"{% endif %}{% endfor %}{% endif %}{% endif %}><a href="{{ country.url }}">{{ country.label }}</a></div><div><input type="checkbox" name="group" value="{{country.id}}" {% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}checked{% endif %}{% endfor %}{% endif %}></div></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-2">
+                                <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "uncheck" %}</small> </button>
+                                <button type="submit" class="btn"><i class="fa fa-eye"></i> <small>{% trans "view" %}</small></button>
+                            </div>
+                        </form>
                     </nav>
-
                     {% endblock sidebar %}
                 </div>
                 <main class="col-12 col-md-9 col-xl-10 py-md-3 pl-md-4 ew-content" role="main">
@@ -169,9 +211,12 @@
         {% block script_style_base %}
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+{% comment %}
         <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script>
+{% endcomment %}
         <script type="text/javascript">
         $(document).ready(function() {
+{% comment %}
           if ($('#navigation_autocomplete').length > 0) {
             $('#navigation_autocomplete').yourlabsAutocomplete({
               url: '{% url 'navigation_autocomplete' %}',
@@ -182,7 +227,7 @@
              document.location.href = choice.attr('href');
             });
           }
-          
+
           $('#active_list').on('click', function(event){
             event.preventDefault();
             $("#list_countries").css("display", "block");
@@ -194,13 +239,25 @@
             $("#compare_countries").css("display", "block");
             $("#list_countries").css("display", "none");
           });
-          
-          $('#compare_countries').on('submit', function(event) {
-            if ($("input[type=checkbox]:checked").length < 2) {
-                alert("{% trans 'Select at least 2 countries' %}");
+{% endcomment %}
+          $('#view_countries').on('submit', function(event) {
+            if ($("input[type=checkbox]:checked").length == 0) {
+               // alert("{% trans 'Select at least 1 country' %}");
                 return false;
             }
+            if ($("input[type=checkbox]:checked").length == 1) {
+                 val=$("input[type=checkbox]:checked").val();
+                 location.href='/country/'+val+'/';
+                 return false;
+            }
             return true;
+          });
+          $('button.uncheck').on('click', function(event) {
+             if ($("input[name='group']:checked").length > 0) {
+                $.each($("input[name='group']:checked"), function(){
+                    $(this).removeAttr("checked");
+                });
+             }
           });
         });
         </script>

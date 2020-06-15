@@ -121,6 +121,7 @@
     display: block !important;
   }
 }
+/*
 .ew-search {
   position: relative;
   padding: 1rem 15px;
@@ -140,18 +141,28 @@
 .ew-search .btn-link:hover {
     color: #60676e;
 }
+*/
+.ew-bar-menu-toggle {
+    line-height: 1;
+    color: #212529;
+}
+.ew-bar-menu .btn-link,
+.ew-bar-menu .btn-link:hover {
+    color: #60676e;
+}
+
 .ew-sidebar .nav > li {
   display: block;
-  padding: .15rem 1.5rem .15rem 0;
+  padding: .15rem .8rem .15rem 0;
   color: rgba(0, 0, 0, .65);
 }
-.ew-sidebar .nav > li > a,
+.ew-sidebar .nav > li > div > a,
 .ew-sidebar .nav > li > label,
 .ew-sidebar .ew-like-button > a {
   font-size: 90%;
   color: rgba(0, 0, 0, .65);
 }
-.ew-sidebar .nav > li > a:hover,
+.ew-sidebar .nav > li > div > a:hover,
 .ew-sidebar .ew-like-button > a:hover {
   color: rgba(0, 0, 0, .85);
   text-decoration: none;
@@ -160,7 +171,7 @@
 .ew-sidebar .nav {
     display: block;
 }
-.ew-sidebar .nav > .active > a,
+.ew-sidebar .nav > li > .active > a,
 .ew-sidebar .nav > .active:hover > a {
   font-weight: 600;
   color: rgba(0, 0, 0, .85);
@@ -171,7 +182,7 @@ ew-like-button > a:hover {
     text-decoration: none;
 }
 
-/* BOX AUTOCOMPLETE */
+/* BOX AUTOCOMPLETE 
 .yourlabs-autocomplete {
 	position: absolute;
 	z-index:1001;
@@ -186,6 +197,7 @@ ew-like-button > a:hover {
   box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
 	width:100%;
 }
+*/
 
 /* main content */
 
@@ -199,21 +211,29 @@ ew-like-button > a:hover {
 }
 .ew-title {
   font-size: 2rem;
-  background: rgba(0,51,153, .02);
+  background: rgba(0,51,153, .04);
   color:#FFCC00;
   padding:0 0.5rem 0.25rem 0.5rem;
-  border-bottom: 1px solid #003399;
+  border-bottom: 1px solid rgba(0, 51, 153, .3);
 }
 
-.ew-table td, .ew-table th {
-    padding: 0;
+.ew-table td, ew-table th {
+    padding: 0; 
     vertical-align: top;
     border-top-width: 0;
-    border-right: 1px solid rgba(0,0,0, .1);
+    border-right: 1px solid rgba(0, 51, 153, .1);
 }
 .ew-table td:last-child, .ew-table th:last-child {
-    padding: 0;
     vertical-align: top;
     border-top-width: 0;
     border-right-width: 0;
 }
+
+.summary_label {
+    background: rgba(0, 51, 153, .04);
+    color: rgba(0, 0, 0, .85);
+}
+.summary_label:focus {
+    outline: none;
+}
+

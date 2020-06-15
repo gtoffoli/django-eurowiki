@@ -16,15 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
-from eurowiki import views, search_indexes
+from eurowiki import views # search_indexes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
+    # url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
     url(r'^$', views.homepage, name='homepage'),
+    url(r'^search/$', views.search, name='search'),
     
     url(r'^named_graph/(?P<named_graph_id>[\d-]+)/$', views.view_named_graph, name='named_graph'),
     url(r'^named_graph/new/$', views.editNamedGraph.as_view(), name='named_graph_new'),
@@ -46,6 +47,7 @@ urlpatterns = [
     url(r'^literal_statement/(?P<statement_id>[\d-]+)/edit/$', views.editLiteralStatement.as_view(), name='literal_statement_edit'),
 
      url(r'^country/(?P<item_code>\w[\d]+)/$', views.view_country, name='view_country'),
-     url(r'^countries/compare/$', views.compare_countries, name='compare_countries'),
+     #url(r'^countries/compare/$', views.compare_countries, name='compare_countries'),
+     url(r'^countries/view/$', views.view_countries, name='view_countries'),
      url(r'^item/(?P<item_code>[\w\d]+)/$', views.view_item, name='view_item'),
 ]
