@@ -50,4 +50,6 @@ urlpatterns = [
      #url(r'^countries/compare/$', views.compare_countries, name='compare_countries'),
      url(r'^countries/view/$', views.view_countries, name='view_countries'),
      url(r'^item/(?P<item_code>[\w\d]+)/$', views.view_item, name='view_item'),
+     url(r'^item/(?P<item_code>[\w\d]+)/edit/$', views.edit_item, name='edit_item'),
+
 ]

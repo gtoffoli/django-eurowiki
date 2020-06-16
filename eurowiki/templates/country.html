@@ -22,7 +22,7 @@
                 <div class="p-2" style="{% if countries_selected|length == 1 %}max-height: calc(100vh - 27.2rem);{% else %}max-height: calc(100vh - 16.2rem);{% endif %} overflow-y: auto;">
                     {% with props=country.properties %}
                     {% for p, o, c, r in props %}
-                        <details open>
+                        <details>
                         {% if p.is_literal %}
                             {% if p.is_image %}
                                 <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
@@ -34,14 +34,16 @@
                         {% else %}
                             <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
                             <div>
-                                <div class="mb-3 p-2"><a href="{{ o.url }}">{{ o.preferred_label }}</a>
+                                <div class="mb-3 p-2"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{{ o.preferred_label }}
                                 {% if o.is_wikidata %}
-                                <span class="ml-1"><a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link"></i></a></span>
+                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" aria-hidden="true"></i></a>
                                 {% endif %}
+                                
                                 </div>
                                 {% include "_props_subtree.html" %}
-                                {% if r %} {% comment %}{{ r.label }}{% endcomment %}
-                                    {% include "_props_subtree.html" %} {% endif %}
+                                {% if r %} {% comment %} {{ r.label }} {% endcomment %}
+                                    {% include "_props_subtree.html" %} 
+                                {% endif %}
                             </div>
                         {% endif %}
                         </details>

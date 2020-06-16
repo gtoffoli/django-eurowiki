@@ -191,3 +191,14 @@ def view_item(request, item_code):
     print('----- bnode =', item.bnode)
     print('----- uriref =', item.uriref)
     return render(request, 'item.html', {'item' : item})
+
+def edit_item(request, item_code):
+    print('----- item_code =', item_code, len(item_code))
+    if len(item_code)==35:
+        bnode = BNode(item_code)
+        item = Item(bnode=bnode)
+    else:
+        item = Item(id=item_code)
+    print('----- bnode =', item.bnode)
+    print('----- uriref =', item.uriref)
+    return render(request, 'item_edit.html', {'item' : item})
