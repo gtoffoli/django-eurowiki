@@ -88,11 +88,13 @@ OTHER_ITEM_LABELS = {
 PREDICATE_LABELS =  OrderedDict([
     ('label', {'en': 'name/title', 'it': 'nome/titolo',}), #
     ('comment', {'en': 'comment', 'it': 'commento',}), #
+    ('P242', {'en': 'stated in', 'it': "fonte dell'affermazione",}), # applies only to statements
     ('P279', {'en': 'subclass of', 'it': 'sottoclasse di',}), # subclass of
     ('P361', {'en': 'Part of', 'it': 'Parte di',}), # part of
     ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
     ('P17', {'en': 'country', 'it': 'paese',}), # country
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
+    ('P854', {'en': 'reference URL', 'it': 'riferimento a URL',}),
     ('P953', {'en': 'online full text', 'it': 'testo completo online',}), # 'full work available at', 'testo completo disponibile all'indirizzo'
     ('P170', {'en': 'creator/author', 'it': 'creatore/autore',}),
 
@@ -147,8 +149,8 @@ EW_PREDICATE_LABELS = OrderedDict([
 PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
-EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'PUE6', 'PUE10', 'P832', 'P38', 'P92', 'P953',] # mandatory 1st level properties for countries
-LITERAL_PROPERTIES = ['label', 'comment', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
+EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'PUE6', 'PUE10', 'P832', 'P38', 'P92',] # mandatory 1st level properties for countries
+LITERAL_PROPERTIES = ['label', 'comment', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
 RDF_I18N_PROPERTIES = ['label', 'comment', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # RDF properties having a literal value language-awware
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948'] # properties from whose value an online address can be computed 
 
