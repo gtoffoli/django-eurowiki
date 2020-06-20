@@ -8,8 +8,8 @@ from .utils import make_uriref, id_from_uriref, wd_get_image_url
 
 class EurowikiBase(object):
 
-    # def __init__(self, uriref=None, id=None, graph=None):
-    def __init__(self, uriref=None, id=None, bnode=None, graph=None, graph_identifier=None):
+    # def __init__(self, uriref=None, id=None, bnode=None, graph=None, graph_identifier=None):
+    def __init__(self, uriref=None, id=None, bnode=None, graph=None, graph_identifier=None, in_predicate=None):
         assert uriref or id or bnode
         self.uriref = self.id = self.bnode = None
         if uriref:
@@ -25,6 +25,7 @@ class EurowikiBase(object):
         elif not graph:
             graph = get_conjunctive_graph()
         self.graph = graph
+        self.in_predicate = in_predicate
 
     def labels(self):
         return {}
@@ -59,7 +60,11 @@ class Item(EurowikiBase):
 
     def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
         if not keys:
-            keys = settings.ORDERED_PREDICATE_KEYS
+            in_prop_id = self.in_predicate and self.in_predicate.id or None
+            if in_prop_id and in_prop_id in settings.EW_TREE_KEYS:
+                keys = settings.EW_TREE[in_prop_id]
+            else:
+                keys = settings.ORDERED_PREDICATE_KEYS
         if exclude_keys:
             keys = [key for key in keys if not key in exclude_keys]
         if not language:
@@ -81,12 +86,11 @@ class Item(EurowikiBase):
             o = self.graph.value(subject=reified, predicate=RDF_OBJECT)
             c = quad[3]
             if reified:
-                statements = self.graph.quads((reified, None, RDF_STATEMENT, None))
+                statements = list(self.graph.quads((reified, None, RDF_STATEMENT, None)))
                 if statements:
-                    reified = list(statements)[0][1]
+                    reified = statements[0][1]
+                    assert isinstance(reified, BNode)
             p_o_c_r_iterable.append((p, o, c, reified))
-        # sort our pseudo-quads
-        p_o_c_r_iterable = sorted(p_o_c_r_iterable, key=lambda p_o: keys.index(id_from_uriref(p_o[0])))
         # initialize memory for handling language-aware string literals
         lang_code_dict = {}
         value_dict = {}
@@ -133,15 +137,24 @@ class Item(EurowikiBase):
                         if lang:
                             continue
             else:
-                o = Item(uriref=o, graph=self.graph)
+                o = Item(uriref=o, graph=self.graph, in_predicate=p)
                 if r:
-                    r = Item(bnode=r, graph=self.graph)
+                    r = Item(bnode=r, graph=self.graph, in_predicate=p)
             props.append([p, o, c, r])
         # append proper version of language-aware string literals
         for prop_id in settings.RDF_I18N_PROPERTIES:
             if value_dict[prop_id]:
                 props.append([property_dict[prop_id], value_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
-        return props
+        # sort properties at the end of all processing
+        props = sorted(props, key=lambda prop: keys.index(prop[0].id))
+        # record the previous property in the tuple itself, so that it can be accessed in template 
+        props_with_pp = []
+        previous_p = None
+        for prop in props:
+            prop.append(previous_p)
+            previous_p = prop[0]
+            props_with_pp.append(prop)
+        return props_with_pp
 
 class Country(Item):
 
@@ -169,6 +182,12 @@ class Predicate(EurowikiBase):
 
     def is_image(self):
         return self.id in settings.IMAGE_PROPERTIES
+
+    def is_url(self):
+        return self.id in settings.URL_PROPERTIES
+
+    def is_repeatable(self):
+        return self.id in settings.REPEATABLE_PROPERTIES
 
 class Image(str):
 

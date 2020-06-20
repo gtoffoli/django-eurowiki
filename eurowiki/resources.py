@@ -23,6 +23,8 @@ RDF_PREFIX_ITEMS = RDF_PREFIXES.items()
 # calling URIRef with the base argument (see make_uriref above) seems broken for namespaces ending with "#"
 RDFS_LABEL = RDF_PREFIXES['rdfs']+'label'
 RDFS_COMMENT = RDF_PREFIXES['rdfs']+'comment'
+RDFS_MEMBER = RDF_PREFIXES['rdfs']+'member'
+RDF_BAG =  RDF_PREFIXES['rdf']+'Bag'
 
 URI_LABEL_CODES = {
     "wd": 'Q', # wikidata items
@@ -94,7 +96,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
     ('P17', {'en': 'country', 'it': 'paese',}), # country
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
-    ('P854', {'en': 'reference URL', 'it': 'riferimento a URL',}),
+    ('P854', {'en': 'online reference', 'it': 'riferimento online',}),
     ('P953', {'en': 'online full text', 'it': 'testo completo online',}), # 'full work available at', 'testo completo disponibile all'indirizzo'
     ('P170', {'en': 'creator/author', 'it': 'creatore/autore',}),
 
@@ -112,7 +114,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
     ('P180', {'en': 'depicts', 'it': 'raffigura',}), #
     ('P18', {'en': 'image', 'it': 'immagine',}), #
-    ('P38', {'en': 'currency and coinage', 'it': 'valuta e monete',}), # in wikidata: 'currency', 'valuta'
+    ('P38', {'en': 'currency and coinage', 'it': 'valuta e monetazione',}), # in wikidata: 'currency', 'valuta'
     ('P92', {'en': 'constitution', 'it': 'costituzione',}), # in wikidata: 'main regulatory text', 'legge fondamentale'
 
     ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
@@ -149,10 +151,12 @@ EW_PREDICATE_LABELS = OrderedDict([
 PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
-EU_COUNTRY_PROPERTIES = ['P163', 'P41', 'P85', 'P237', 'P94', 'P1541', 'P1546', 'PUE6', 'PUE10', 'P832', 'P38', 'P92',] # mandatory 1st level properties for countries
-LITERAL_PROPERTIES = ['label', 'comment', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # properties occurring in Literal Statements
-RDF_I18N_PROPERTIES = ['label', 'comment', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14',] # RDF properties having a literal value language-awware
-IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948'] # properties from whose value an online address can be computed 
+EU_COUNTRY_PROPERTIES = ['P85', 'P163', 'P237', 'P1546', 'PUE6', 'PUE10', 'P38', 'P92',] # mandatory 1st level properties for countries
+LITERAL_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment',] # properties occurring in Literal Statements
+RDF_I18N_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment',] # RDF properties having a literal value language-awware
+IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948',] # properties from whose value an online address can be computed 
+URL_PROPERTIES = ['P854', 'P953',]
+REPEATABLE_PROPERTIES = ['PUE6', 'PUE10',] # predicates allowing multiple properties for same subject 
 
 # this sample dictionary should allow to compute URIs, based on prefix to namespace mapping
 OTHER_EXTERNAL_RESOURCES = {
@@ -175,12 +179,14 @@ OTHER_EXTERNAL_RESOURCES = {
 }
 
 EW_TREE = OrderedDict([
-    ('P85', ('P1476', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'P571', 'P828',),), # national anthem: title, text auth., composer, ...
-    ('P163', ('PUE2', 'P41', 'PUE3', 'P790', 'PUE4', 'P571', 'P828',),), # national flag: descr., img, prop., delib., date, ...
-    ('P237', ('PUE2', 'P94', 'PUE3', 'P790', 'PUE4', 'P571', 'P828',),), # coat of arms: descr., img, prop., delib., date, ...
-    ('P1546', ('P1541', 'PUE3', 'P790', 'PUE4', 'PUE5', 'P571', 'P828',),), #national motto: text
-    ('P832', ('PUE1', 'P837', 'PUE3', 'P790', 'P571', 'P828', 'PUE2',),), # national holiday(s): title, day,  prop., delib., date, ...
-    ('P38', ('P38', 'PUE7', 'PUE3', 'P790', 'P571', 'P828',),), # monetazione
-    ('PUE6', ('PUE2', 'PUE3', 'P790', 'PUE5', 'P571', 'P828',),), # national monument
-    ('P92', ('P953',  'PUE3', 'P790', 'PUE4', 'PUE8', 'PUE9', 'PUE10', 'PUE11',),), # national constitution
+    ('P85', ('P1476', 'PUE1', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), # national anthem: title, text auth., composer, ...
+    ('P163', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'P828', 'PUE9', 'P854',),), # national flag: descr., img, prop., delib., date, ...
+    ('P237', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), # national emblem: descr., img, prop., delib., date, ...
+    ('P1546', ('P1541', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), #national motto: text
+    ('PUE6', ('PUE2', 'PUE3', 'P790', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), # national monuments
+    ('PUE10', ('PUE1', 'PUE2', 'P837', 'PUE4', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), # national (holi)days: title, day,  prop., delib., date, ...
+    ('P38', ('PUE3', 'P790', 'P571', 'P828', 'PUE7', 'PUE8','PUE9', 'P854',),), # currency and coinage
+    ('P92', ('P953', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854',),), # national constitution
+    ('Bag', ('', 'P832',),), # container of members (monuments and days)
 ])
+EW_TREE_KEYS = list(EW_TREE.keys())
