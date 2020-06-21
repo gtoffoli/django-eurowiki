@@ -1,7 +1,7 @@
 {% load i18n static %}
 {% comment %}
 <ul>
-{% for p, o, c, r, pp in props %}
+{% for p, o, c, r, previous_p in props %}
   {% if p.is_literal %}
     {% if p.is_image %}
       <li><label>{{ p.label }}</label>:<br>
@@ -61,13 +61,18 @@
 {% endcomment %}
 
 {% with props=o.properties %}
-{% for p, o, c, r, pp in props %}
+{% for p, o, lang, c, r, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
-        <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div><div class="p-2" style="flex-basis: 85%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
+        	<div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div><div class="p-2" style="flex-basis: 85%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
         {% else %}
-            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div><div class="p-2" style="flex-basis: 85%; font-size:90%;">{% if p.is_url %}<a href="{{ o }}" target="_blank">{{ o }}</a>{% else %}{{ o|linebreaks }}{% endif %}</div>
+            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}{% endif %}</div><div class="p-2" style="flex-basis: 85%; font-size:90%;">{% if p.is_url %}<a href="{{ o }}" target="_blank">{{ o }}</a>{% else %}{{ o|linebreaks }}</div>
+        {% endif %}
+        {% if r %}
+           	{% with o=r %}
+            {% include "_props_subtree.html" %}
+        	{% endwith %}
         {% endif %}
     {% else %}
         <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
@@ -78,8 +83,10 @@
                 {% endif %}
             </div>
             {% include "_props_subtree.html" %}
-            {% if r %} {% comment %} {{ r.label }} {% endcomment %}
+            {% if r %}
+               	{% with o=r %}
                 {% include "_props_subtree.html" %}
+            	{% endwith %}
             {% endif %}
         </div>
     {% endif %}

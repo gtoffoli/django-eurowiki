@@ -33,6 +33,7 @@ URI_LABEL_CODES = {
     "ewt": 'PUE', # eurowiki property "truthy"
 }
 
+UNKNOWN_LABEL_DICT = {'en': '?', 'it': '?'}
 EU = 'Q458'
 EU_LABELS = {'en': 'European Union', 'it': 'Unione Europea'}
 

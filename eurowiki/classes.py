@@ -8,7 +8,6 @@ from .utils import make_uriref, id_from_uriref, wd_get_image_url
 
 class EurowikiBase(object):
 
-    # def __init__(self, uriref=None, id=None, bnode=None, graph=None, graph_identifier=None):
     def __init__(self, uriref=None, id=None, bnode=None, graph=None, graph_identifier=None, in_predicate=None):
         assert uriref or id or bnode
         self.uriref = self.id = self.bnode = None
@@ -31,11 +30,16 @@ class EurowikiBase(object):
         return {}
 
     def label(self, language=None):
-        if self.bnode:
-            return self.bnode.toPython()
         if not language:
             language = get_language()[:2]
-        return self.labels().get(language, self.labels().get('en', '')) or self.id
+        labels = self.labels()
+        lbl = labels.get(language, labels.get('en', ''))
+        if not lbl:
+            if not self.is_wikidata(): # self.bnode or isinstance(self, BNode): # why these alternatives do not work?
+                lbl = settings.UNKNOWN_LABEL_DICT.get(language, '?')
+            else:
+                lbl = self.id
+        return lbl
 
     def is_wikidata(self):
         return self.uriref and self.uriref.count(settings.WIKIDATA_BASE)
@@ -140,11 +144,11 @@ class Item(EurowikiBase):
                 o = Item(uriref=o, graph=self.graph, in_predicate=p)
                 if r:
                     r = Item(bnode=r, graph=self.graph, in_predicate=p)
-            props.append([p, o, c, r])
+            props.append([p, o, None, c, r])
         # append proper version of language-aware string literals
         for prop_id in settings.RDF_I18N_PROPERTIES:
             if value_dict[prop_id]:
-                props.append([property_dict[prop_id], value_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
+                props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
         # sort properties at the end of all processing
         props = sorted(props, key=lambda prop: keys.index(prop[0].id))
         # record the previous property in the tuple itself, so that it can be accessed in template 

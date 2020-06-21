@@ -1,19 +1,19 @@
 {% load i18n static %}
 
 {% with props=o.properties %}
-{% for p, o, c, r, previous_p in props %}
+{% for p, o, lang, c, r, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
-    <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
+    <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]</div>
     {% if p.is_literal %}
         <div class="p-2" style="flex-basis: 85%; font-size:90%;">
 	        {% if p.is_image %}
 	        	<img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;">
 	        {% else %}
-	            <textarea style="width: 100%">{{ o }}</textarea>
+	            <textarea style="width: 100%">{{ o }}</textarea>{% endif %}
 	        {% endif %}
-            {% if r %} {% comment %} {{ r.label }} {% endcomment %}
+            {% if r %}
                	{% with o=r %}
-                {% include "_props_subtree.html" %}
+                {% include "_props_subtree_edit.html" %}
             	{% endwith %}
             {% endif %}
         </div>
@@ -24,10 +24,10 @@
                 <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link"></i></a>
                 {% endif %}
             </div>
-            {% include "_props_subtree.html" %}
-            {% if r %} {% comment %} {{ r.label }} {% endcomment %}
+            {% include "_props_subtree_edit.html" %}
+            {% if r %}
                	{% with o=r %}
-                {% include "_props_subtree.html" %}
+                {% include "_props_subtree_edit.html" %}
             	{% endwith %}
             {% endif %}
         </div>

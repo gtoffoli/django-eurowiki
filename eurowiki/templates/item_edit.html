@@ -13,7 +13,7 @@
 </h1>
 <div style="max-height: calc(100vh - 16.2rem); overflow-y:auto">
 {% with props=item.properties %}
-{% for p, o, c, r in props %}
+{% for p, o, lang, c, r, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 0px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
@@ -25,7 +25,7 @@
         {% else %}
             <div class="p-2" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></div>
             <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
-            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
+            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}</div>
             <div class="p-2" style="flex-basis: 85%; font-size:90%;"><textarea style="width: 100%">{{ o }}</textarea></div>
             </div>
         {% endif %}
@@ -39,9 +39,11 @@
                 <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link"></i></a>
                 {% endif %}
             </div>
-            {% include "_props_subtree.html" %}
-            {% if r %} {% comment %} {{ r.label }} {% endcomment %}
-                {% include "_props_subtree.html" %}
+            {% include "_props_subtree_edit.html" %}
+            {% if r %}
+               	{% with o=r %}
+                {% include "_props_subtree_edit.html" %}
+				{% endwith %}
             {% endif %}
         </div>
         </div>

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
-from eurowiki import views # search_indexes
+from . import views # search_indexes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,15 +27,6 @@ urlpatterns = [
     url(r'^$', views.homepage, name='homepage'),
     url(r'^search/$', views.search, name='search'),
     
-    url(r'^named_graph/(?P<named_graph_id>[\d-]+)/$', views.view_named_graph, name='named_graph'),
-    url(r'^named_graph/new/$', views.editNamedGraph.as_view(), name='named_graph_new'),
-    url(r'^named_graph/(?P<named_graph_id>[\d-]+)/edit/$', views.editNamedGraph.as_view(), name='named_graph_edit'),
-
-    url(r'^namespaces/$', views.list_namespaces, name='list_namespaces'),
-    url(r'^namespace/(?P<namespace_id>[\d-]+)/$', views.view_namespace_model, name='namespace_model'),
-    url(r'^namespace/new/$', views.editNamespaceModel.as_view(), name='namespace_model_new'),
-    url(r'^namespace/(?P<namespace_id>[\d-]+)/edit/$', views.editNamespaceModel.as_view(), name='namespace_model_edit'),
-
     url(r'^statements/$', views.list_statements, name='list_statements'),
     url(r'^uri_statements/$', views.list_uri_statements, name='list_uri_statements'),
     url(r'^uri_statement/(?P<statement_id>[\d-]+)/$', views.view_uri_statement, name='uri_statement'),
@@ -52,4 +43,6 @@ urlpatterns = [
      url(r'^item/(?P<item_code>[\w\d]+)/$', views.view_item, name='view_item'),
      url(r'^item/(?P<item_code>[\w\d]+)/edit/$', views.edit_item, name='edit_item'),
 
+    url(r'^statement/(?P<subject_id>[\w\d]+)/new/$', views.editStatement.as_view(), name='statement_new'),
+    url(r'^statement/(?P<statement_id>[\d-]+)/edit/$', views.editStatement.as_view(), name='statement_edit'),
 ]

@@ -6,15 +6,18 @@ from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
+from django import forms
 from django.utils.translation import get_language
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
+from rdflib_django.models import URIStatement, LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
-from .classes import Country, Item
-from .forms import NamedGraphForm, NamespaceModelForm, URIStatementForm, LiteralStatementForm
+from .classes import Country, Item, Predicate
+from .forms import URIStatementForm, LiteralStatementForm
+from .forms import StatementForm
 from .utils import make_uriref, id_from_uriref, friend_uri, friend_graph
 
 def eu_countries(language=settings.LANGUAGE_CODE):
@@ -63,56 +66,6 @@ def list_statements(request, graph_identifier=None):
                            for s, p, o in graph]
     return render(request, 'list_statements.html', {'statement_dicts': statement_dicts})
         
-def view_named_graph(request, named_graph_id):
-    named_graph = get_object_or_404(NamedGraph, pk=named_graph_id)
-    return render(request, 'named_graph.html', {'named_graph': named_graph})
-
-@method_decorator(login_required, name='post')
-class editNamedGraph(View):
-    form_class = NamedGraphForm
-    template_name = 'edit_named_graph.html'
-
-    def get(self, request, named_graph_id=None):
-        if named_graph_id:
-            named_graph = get_object_or_404(NamedGraph, pk=named_graph_id) 
-            form = self.form_class(instance=named_graph)
-        else:
-            initial = {}
-            form = self.form_class(initial=initial)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            named_graph = form.save()
-            return HttpResponseRedirect('/named_graph/{}/'.format(named_graph.id))
-        return render(request, self.template_name, {'form': form})
-
-def view_namespace_model(request, namespace_model_id):
-    namespace_model = get_object_or_404(NamespaceModel, pk=namespace_model_id)
-    return render(request, 'namespace_model.html', {'namespace_model': namespace_model})
-
-@method_decorator(login_required, name='post')
-class editNamespaceModel(View):
-    form_class = NamespaceModelForm
-    template_name = 'edit_namespace.html'
-
-    def get(self, request, namespace_id=None):
-        if namespace_id:
-            namespace = get_object_or_404(URIStatement, pk=namespace_id) 
-            form = self.form_class(instance=namespace)
-        else:
-            initial = {}
-            form = self.form_class(initial=initial)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            namespace = form.save()
-            return HttpResponseRedirect('/namespace/{}/'.format(namespace.id))
-        return render(request, self.template_name, {'form': form})
-
 def view_uri_statement(request, statement_id):
     statement = get_object_or_404(URIStatement, pk=statement_id)
     return render(request, 'uri_statement.html', {'statement': statement})
@@ -182,23 +135,59 @@ def view_countries(request):
     return render(request, 'country.html', {'countries_selected' : countries})
 
 def view_item(request, item_code):
-    print('----- item_code =', item_code, len(item_code))
     if len(item_code)==35:
         bnode = BNode(item_code)
         item = Item(bnode=bnode)
     else:
         item = Item(id=item_code)
-    print('----- bnode =', item.bnode)
-    print('----- uriref =', item.uriref)
     return render(request, 'item.html', {'item' : item})
 
 def edit_item(request, item_code):
-    print('----- item_code =', item_code, len(item_code))
     if len(item_code)==35:
         bnode = BNode(item_code)
         item = Item(bnode=bnode)
     else:
         item = Item(id=item_code)
-    print('----- bnode =', item.bnode)
-    print('----- uriref =', item.uriref)
     return render(request, 'item_edit.html', {'item' : item})
+
+# @method_decorator(login_required, name='post')
+
+class editStatement(View):
+    form_class = StatementForm
+    template_name = 'edit_statement.html'
+
+    def get(self, request, statement_id=None, subject_id=None):
+        language = get_language()[:2]
+        if statement_id:
+            statement_class = 'lit' # estrarre dallo statement
+            if statement_class=='uri':
+                statement = get_object_or_404(URIStatement, pk=statement_id)
+            else:
+                statement = get_object_or_404(LiteralStatement, pk=statement_id)
+            form = self.form_class(instance=statement)
+        if subject_id:
+            statement_class = 'lit'
+            initial = { 'statement_class': 'lit', 'subject': subject_id, 'datatype': 'string', 'language': language }
+        form = self.form_class(initial=initial)
+        if subject_id:
+            form.fields['object'].widget = forms.HiddenInput()
+            # form.fields['datatype'].widget = forms.HiddenInput()
+        return render(request, self.template_name, {'form':form, 'subject':subject_id, 'statement':statement_id})
+
+    def post(self, request, statement_id=None, subject_id=None):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            # statement = form.save()
+            # return HttpResponseRedirect('/uri_statement/{}/'.format(statement.id))
+        statement_class = data['statement_class']
+        datatype = data['datatype']
+        if statement_class=='lit':
+            form.fields['object'].widget = forms.HiddenInput()
+            if not datatype=='string':
+                form.fields['language'].widget = forms.HiddenInput()
+        else: # statement_class=='uri'
+            form.fields['literal'].widget = forms.HiddenInput()
+            form.fields['datatype'].widget = forms.HiddenInput()
+            form.fields['language'].widget = forms.HiddenInput()      
+        return render(request, self.template_name, {'form': form, 'subject':subject_id, 'statement':statement_id})

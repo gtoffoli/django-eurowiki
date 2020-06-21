@@ -21,7 +21,7 @@
                <h1 class="ew-title" style="white-space: nowrap;">{{ country.label }} <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%"></i></a></h1>
                <div class="p-2" style="{% if countries_selected|length == 1 %}max-height: calc(100vh - 27.2rem);{% else %}max-height: calc(100vh - 16.2rem);{% endif %} overflow-y: auto;">
                    {% with props=country.properties %}
-                   {% for p, o, c, r, previous_p in props %}
+                   {% for p, o, lang, c, r, previous_p in props %}
 						{% if previous_p.is_repeatable and p.id != previous_p.id %}
                           		</details>
 						{% endif %}
@@ -48,7 +48,7 @@
                                
                                </div>
                                {% include "_props_subtree.html" %}
-                               {% if r %} {% comment %} {{ r.label }} {% endcomment %}
+                               {% if r %}
                                    	{% with o=r %}
                                    	{% include "_props_subtree.html" %} 
                                		{% endwith %}

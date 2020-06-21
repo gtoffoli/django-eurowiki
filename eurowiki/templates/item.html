@@ -16,7 +16,7 @@
 </h2>
 
 {% with props=item.properties %}
-{% for p, o, c, r in props %}
+{% for p, o, lang, c, r, previous_p in props %}
 
 	{% if p.is_literal %}
 		{% if p.is_image %}
@@ -25,7 +25,7 @@
 			<img src="{{ o.url }}" style="width:120px; margin-left:30px">
 		</details>
 		{% else %}
-		<label>{{ p.label }}: {{ o }}</label>
+		<label>{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}: {{ o }}</label>
 		{% endif %}
 	{% else %}
 		<details close>
@@ -35,12 +35,10 @@
 				&nbsp; <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:80%" aria-hidden="true"></i></a>
 			{% endif %}
 			</div>
-			{% with props=o.properties %}
+			{% include "_props_subtree.html" %}
+			{% if r %}
+               	{% with o=r %}
 				{% include "_props_subtree.html" %}
-			{% endwith %}
-			{% if r %}{% comment %} {{ r.label }}{% endcomment %}
-				{% with props=r.properties %}
-					{% include "_props_subtree.html" %}
 				{% endwith %}
 			{% endif %}
 		</details>
