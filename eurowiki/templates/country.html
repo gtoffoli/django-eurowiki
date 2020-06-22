@@ -59,7 +59,11 @@
                           		</details>
 						{% endif %}
 
+
                    {% endfor %}{% endwith %}
+<div class="d-flex justify-content-center mb-3">
+	<div class="ml-3"><a class="btn btn-light" href="/statement/{{ country.id }}/new/">{% trans "add property"|capfirst %}</a></div>
+</div>
                </div>
            </td>
        {% endfor %}

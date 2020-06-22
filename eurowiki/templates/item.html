@@ -45,6 +45,9 @@
 	{% endif %}
 
 {% endfor %}{% endwith %}
+<div class="d-flex justify-content-center mb-3">
+	<div class="ml-3"><a class="btn btn-light" href="/statement/{{ item.id }}/new/">{% trans "add property"|capfirst %}</a></div>
+</div>
 
 </div>
 {% endblock body %}

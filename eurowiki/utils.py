@@ -14,6 +14,8 @@ def make_uriref(value, prefix=None):
             prefix = 'wd'
         elif value.startswith('P'):
             prefix = 'wdt'
+        elif value in ['label', 'comment',]:
+            prefix = 'rdfs'
     if prefix:
         base = settings.RDF_PREFIXES[prefix]
         if base.count('-') and base.endswith('#'): # overccome issue in rdflib URIRef

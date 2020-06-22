@@ -65,9 +65,11 @@
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
-        	<div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div><div class="p-2" style="flex-basis: 85%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
+        	<div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
+        	<div class="p-2" style="flex-basis: 85%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
         {% else %}
-            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}{% endif %}</div><div class="p-2" style="flex-basis: 85%; font-size:90%;">{% if p.is_url %}<a href="{{ o }}" target="_blank">{{ o }}</a>{% else %}{{ o|linebreaks }}</div>
+            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}{% endif %}</div>
+            <div class="p-2" style="flex-basis: 85%; font-size:90%;">{% if p.is_url %}<a href="{{ o }}" target="_blank">{{ o }}</a>{% else %}{{ o|linebreaks }}</div>
         {% endif %}
         {% if r %}
            	{% with o=r %}

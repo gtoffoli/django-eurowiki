@@ -2,12 +2,12 @@
 {% load static i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "edit statement" %}{% endblock head_title %}
+{% block head_title %}{% trans "edit statement"|capfirst %}{% endblock head_title %}
 
 {% block body_class %}statement{% endblock body_class %}
 {% block body %}
 
-<h2 class="text-center">{% trans "edit statement" %}</h2>
+<h2 class="text-center">{% trans "edit statement"|capfirst %}</h2>
 
 {% if subject %}
 <form action="/statement/{{ subject }}/new/" method="post" novalidate>
@@ -16,7 +16,7 @@
 {% endif %}
     {% csrf_token %}
     {{ form|crispy }}
-    <button type="submit" class="btn btn-primary" value="save">Save</button>
+    <button type="submit" class="btn btn-primary" name="save" value="save">Save</button>
 </form>
 
 {% endblock body %}

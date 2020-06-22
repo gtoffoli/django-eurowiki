@@ -2,20 +2,10 @@
 from django.conf import settings
 from django import forms
 from django.utils.translation import get_language, ugettext_lazy as _
-from rdflib_django.models import URIStatement, LiteralStatement
+from rdflib_django.models import NamedGraph, URIStatement, LiteralStatement
 
 
-class LiteralStatementForm(forms.ModelForm):
-    class Meta:
-        model = LiteralStatement
-        exclude = ()
-
-class URIStatementForm(forms.ModelForm):
-    class Meta:
-        model = URIStatement
-        exclude = ()
-
-STATEMENT_CLASS_CHOICES = (('lit', _('Literal Statement')), ('uri', _('URI Statement')))
+STATEMENT_CLASS_CHOICES = (('literal', _('Literal Statement')), ('uri', _('URI Statement')))
 PREDICATE_CHOICES = settings.ORDERED_PREDICATE_KEYS
 DATATYPE_CHOICES = (
     ('string', _('string')),
@@ -27,6 +17,10 @@ DATATYPE_CHOICES = (
 LANGUAGE_CHOICES = settings.LANGUAGES
 language = get_language()[:2]
 PREDICATE_CHOICES = [(key, settings.PREDICATE_LABELS[key].get(language, key)) for key in settings.ORDERED_PREDICATE_KEYS]
+CONTEXT_CHOICES = []
+for identifier in NamedGraph.objects.all().values_list('identifier', flat=True).distinct():
+    context = identifier.n3().replace('<','').replace('>','')
+    CONTEXT_CHOICES.append((context, context))
 
 class StatementForm(forms.Form):
     subject = forms.CharField(required=True, label=_('subject'))
@@ -36,3 +30,4 @@ class StatementForm(forms.Form):
     literal = forms.CharField(required=False, label=_('literal value'))
     datatype = forms.ChoiceField(required=False, choices=DATATYPE_CHOICES, label=_('data type'), widget=forms.Select(attrs={'class':'form-control',}))
     language = forms.ChoiceField(required=False, choices=LANGUAGE_CHOICES, label=_('string language'), widget=forms.Select(attrs={'class':'form-control',}))
+    context = forms.ChoiceField(required=False, choices=CONTEXT_CHOICES, label=_('context'), widget=forms.Select(attrs={'class':'form-control',}))

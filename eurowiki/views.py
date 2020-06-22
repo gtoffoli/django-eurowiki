@@ -1,7 +1,7 @@
 # see https://stackoverflow.com/questions/2112715/how-do-i-fix-pydev-undefined-variable-from-import-errors (Eclipse)
 # Window -> Preferences -> PyDev -> Editor -> Code Analysis -> Undefined -> Undefined Variable From Import -> Ignore
-from rdflib.term import BNode
-from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
+from rdflib.namespace import XSD
+from rdflib.term import Literal, BNode
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -12,11 +12,10 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from rdflib_django.models import URIStatement, LiteralStatement
+from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
-from .classes import Country, Item, Predicate
-from .forms import URIStatementForm, LiteralStatementForm
+from .classes import Country, Item
 from .forms import StatementForm
 from .utils import make_uriref, id_from_uriref, friend_uri, friend_graph
 
@@ -70,51 +69,9 @@ def view_uri_statement(request, statement_id):
     statement = get_object_or_404(URIStatement, pk=statement_id)
     return render(request, 'uri_statement.html', {'statement': statement})
 
-@method_decorator(login_required, name='post')
-class editURIStatement(View):
-    form_class = URIStatementForm
-    template_name = 'edit_uri_statement.html'
-
-    def get(self, request, statement_id=None):
-        if statement_id:
-            statement = get_object_or_404(URIStatement, pk=statement_id) 
-            form = self.form_class(instance=statement)
-        else:
-            initial = {}
-            form = self.form_class(initial=initial)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            statement = form.save()
-            return HttpResponseRedirect('/uri_statement/{}/'.format(statement.id))
-        return render(request, self.template_name, {'form': form})
-
 def view_literal_statement(request, statement_id):
     statement = get_object_or_404(LiteralStatement, pk=statement_id)
     return render(request, 'literal_statement.html', {'statement': statement})
-
-@method_decorator(login_required, name='post')
-class editLiteralStatement(View):
-    form_class = LiteralStatementForm
-    template_name = 'edit_literal_statement.html'
-
-    def get(self, request, statement_id=None):
-        if statement_id:
-            statement = get_object_or_404(URIStatement, pk=statement_id) 
-            form = self.form_class(instance=statement)
-        else:
-            initial = {}
-            form = self.form_class(initial=initial)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            statement = form.save()
-            return HttpResponseRedirect('/literal_statement/{}/'.format(statement.id))
-        return render(request, self.template_name, {'form': form})
 
 def view_country(request, item_code):
     assert item_code[0]=='Q'
@@ -150,8 +107,7 @@ def edit_item(request, item_code):
         item = Item(id=item_code)
     return render(request, 'item_edit.html', {'item' : item})
 
-# @method_decorator(login_required, name='post')
-
+@method_decorator(login_required, name='post')
 class editStatement(View):
     form_class = StatementForm
     template_name = 'edit_statement.html'
@@ -159,16 +115,16 @@ class editStatement(View):
     def get(self, request, statement_id=None, subject_id=None):
         language = get_language()[:2]
         if statement_id:
-            statement_class = 'lit' # estrarre dallo statement
+            statement_class = 'literal' # estrarre dallo statement
             if statement_class=='uri':
                 statement = get_object_or_404(URIStatement, pk=statement_id)
             else:
                 statement = get_object_or_404(LiteralStatement, pk=statement_id)
             form = self.form_class(instance=statement)
         if subject_id:
-            statement_class = 'lit'
-            initial = { 'statement_class': 'lit', 'subject': subject_id, 'datatype': 'string', 'language': language }
-        form = self.form_class(initial=initial)
+            statement_class = 'literal'
+            initial = { 'statement_class': 'literal', 'subject': subject_id, 'datatype': 'string', 'language': language }
+            form = self.form_class(initial=initial)
         if subject_id:
             form.fields['object'].widget = forms.HiddenInput()
             # form.fields['datatype'].widget = forms.HiddenInput()
@@ -178,16 +134,46 @@ class editStatement(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            statement_class = data['statement_class']
+            if statement_class == 'literal':
+                form.fields['object'].widget = forms.HiddenInput()
+                predicate = data['predicate']
+                value = data['literal']
+                dt = data['datatype']
+                language = language = data['language']
+                context = data['context']
+                if dt == 'string':
+                    datatype = XSD.string
+                    if predicate in settings.RDF_I18N_PROPERTIES:
+                        o = Literal(value, lang=language)
+                    else:
+                        o = Literal(value)
+                else:
+                    form.fields['language'].widget = forms.HiddenInput()
+                    if dt == 'integer':
+                        datatype = XSD.integer
+                    elif dt == 'date':
+                        datatype = XSD.date
+                    elif dt == 'gYear':
+                        datatype = XSD.integer
+                    elif dt == 'gMonthDay':
+                        datatype = XSD.string
+                    o = Literal(value, datatype=datatype)
+                if request.POST.get('save', ''):
+                    assert value
+                    if dt == 'string':
+                        assert language
+                    s = make_uriref(subject_id)
+                    p = make_uriref(predicate)
+                    c = NamedGraph.objects.get(identifier=make_uriref(context))
+                    statement = LiteralStatement(subject=s, predicate=p, object=o, context=c)
+                    statement.save()
+                    print('statement:', statement)
+                    return HttpResponseRedirect('/item/{}/'.format(subject_id))
+            else:  # statement_class=='uri'
+                form.fields['literal'].widget = forms.HiddenInput()
+                form.fields['datatype'].widget = forms.HiddenInput()
+                form.fields['language'].widget = forms.HiddenInput()
             # statement = form.save()
             # return HttpResponseRedirect('/uri_statement/{}/'.format(statement.id))
-        statement_class = data['statement_class']
-        datatype = data['datatype']
-        if statement_class=='lit':
-            form.fields['object'].widget = forms.HiddenInput()
-            if not datatype=='string':
-                form.fields['language'].widget = forms.HiddenInput()
-        else: # statement_class=='uri'
-            form.fields['literal'].widget = forms.HiddenInput()
-            form.fields['datatype'].widget = forms.HiddenInput()
-            form.fields['language'].widget = forms.HiddenInput()      
         return render(request, self.template_name, {'form': form, 'subject':subject_id, 'statement':statement_id})
