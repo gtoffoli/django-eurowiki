@@ -78,10 +78,11 @@ INSTALLED_APPS = [
 	# ...
     'rest_framework',
     'datatrans',
+
     'commons',
     'roles',
-    'zinnia',
-	'pybb',
+     'zinnia',
+	 'pybb',
     'actstream',
 	# ...
     'rdflib_django',
@@ -98,10 +99,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-	'django.middleware.security.SecurityMiddleware',
-	'commons.middleware.ActiveUserMiddleware',
-	'pybb.middleware.PybbMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    # 'commons.middleware.ActiveUserMiddleware',
+    # 'pybb.middleware.PybbMiddleware',
  ]
 
 ROOT_URLCONF = 'eurowiki.urls'
@@ -206,7 +206,7 @@ LANGUAGES = (
 )
 LANGUAGE_CODES = [l[0] for l in LANGUAGES]
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -224,6 +224,7 @@ if IS_LINUX:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'eurowiki/static')
+    LOCALE_PATHS = (os.path.join(BASE_DIR, 'eurowiki/locale'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

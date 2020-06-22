@@ -9,66 +9,62 @@
 
 <div class="table-responsive">
     <table class="table ew-table">
-       <tbody>
-       <tr>
-       {% for country in countries_selected %}
-           <td style="width:20%"> 
-               {% if countries_selected|length == 1 %}
-               {% with source=country.banner_url %}
-               {% if source %}<div class="ew-banner"><img src="{{ source }}" class="img-fluid"></div>{% endif %}
-               {% endwith %}
-               {% endif %}
-               <h1 class="ew-title" style="white-space: nowrap;">{{ country.label }} <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%"></i></a></h1>
-               <div class="p-2" style="{% if countries_selected|length == 1 %}max-height: calc(100vh - 27.2rem);{% else %}max-height: calc(100vh - 16.2rem);{% endif %} overflow-y: auto;">
-                   {% with props=country.properties %}
-                   {% for p, o, lang, c, r, previous_p in props %}
-						{% if previous_p.is_repeatable and p.id != previous_p.id %}
-                          		</details>
-						{% endif %}
-						{% if not p.is_repeatable or p.id != previous_p.id %}
-                          		<details>
-						{% endif %}
-                       {% if p.is_literal %}
-                           {% if p.is_image %}
-                               <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
-                               <div class="mb-3"><img src="{{ o.url }}" style="width:120px; height: auto;"></div>
-                           {% else %}
-                               <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{% trans "title" %}/{% trans "name" %}</summary>
-                               <div class="mb-3">{{ o.label }}</div>
-                           {% endif %}
-                       {% else %}
-							{% if not p.is_repeatable or p.id != previous_p.id %}
-                           		<summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
-							{% endif %}
-                           <div>
-                               <div class="mb-3 p-2"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{{ o.preferred_label }}
-                               {% if o.is_wikidata %}
-                               <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" aria-hidden="true"></i></a>
-                               {% endif %}
-                               
-                               </div>
-                               {% include "_props_subtree.html" %}
-                               {% if r %}
-                                   	{% with o=r %}
-                                   	{% include "_props_subtree.html" %} 
-                               		{% endwith %}
-                               {% endif %}
-                           </div>
-                       {% endif %}
-						{% if not p.is_repeatable %}
-                          		</details>
-						{% endif %}
-
-
-                   {% endfor %}{% endwith %}
-<div class="d-flex justify-content-center mb-3">
+        <tbody>
+        <tr>
+        {% for country in countries_selected %}
+            <td style="width:20%"> 
+                {% if countries_selected|length == 1 %}
+                {% with source=country.banner_url %}
+                {% if source %}<div class="ew-banner"><img src="{{ source }}" class="img-fluid"></div>{% endif %}
+                {% endwith %}
+                {% endif %}
+                <h1 class="ew-title" style="white-space: nowrap;">{{ country.label }} <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%"></i></a></h1>
+                <div class="p-2" style="{% if countries_selected|length == 1 %}max-height: calc(100vh - 27.2rem);{% else %}max-height: calc(100vh - 16.2rem);{% endif %} overflow-y: auto;">
+                    {% with props=country.properties %}
+                    {% for p, o, lang, c, r, previous_p in props %}
+                    {% if not previous.is_repeatable and previous_p.id != p.id  %}
+                    </details>
+                    {% endif %}
+                   {% if previous_p.id != p.id %}
+                    <details>
+                   {% endif %}
+                        {% if p.is_literal %}
+{% comment %} MMR                        
+                            {% if p.is_image %}
+                                <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
+                                <div class="mb-3"><img src="{{ o.url }}" style="width:120px; height: auto;"></div>
+                            {% else %}
+                                <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{% trans "title" %}/{% trans "name" %}</summary>
+                                <div class="mb-3">{{ o.label }}</div>
+                            {% endif %}
+{% endcomment %}                            
+                        {% else %}
+                            {% if previous_p.id != p.id %}
+                            <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
+                            {% endif %}
+                            <div class="level_one">
+                                <div class="mb-3 p-2" style="word-wrap: break-word;"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{{ o.preferred_label }}
+                                {% if o.is_wikidata %}
+                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                {% endif %}
+                                </div>
+                                {% include "_props_subtree.html" %}
+                                {% if r %}
+                                {% with o=r %}
+                                    {% include "_props_subtree.html" %}
+                                    {% endwith %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}{% endwith %}
+                </div>
+                <div class="d-flex justify-content-center mb-3">
 	<div class="ml-3"><a class="btn btn-light" href="/statement/{{ country.id }}/new/">{% trans "add property"|capfirst %}</a></div>
 </div>
-               </div>
-           </td>
-       {% endfor %}
-       </tr>
-       </tbody>
-   </table>
+            </td>
+        {% endfor %}
+        </tr>
+        </tbody>
+    </table>
 </div>
 {% endblock body %}
