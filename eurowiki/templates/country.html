@@ -8,11 +8,11 @@
 {% block body %}
 
 <div class="table-responsive">
-    <table class="table ew-table">
+    <table class="table ew-table mb-0">
         <tbody>
         <tr>
         {% for country in countries_selected %}
-            <td style="width:20%"> 
+            <td> 
                 {% if countries_selected|length == 1 %}
                 {% with source=country.banner_url %}
                 {% if source %}<div class="ew-banner"><img src="{{ source }}" class="img-fluid"></div>{% endif %}
@@ -35,7 +35,7 @@
                                 <div class="mb-3"><img src="{{ o.url }}" style="width:120px; height: auto;"></div>
                             {% else %}
                                 <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{% trans "title" %}/{% trans "name" %}</summary>
-                                <div class="mb-3">{{ o.label }}</div>
+                                <div class="mb-3 break-long-words">{{ o.label }}</div>
                             {% endif %}
 {% endcomment %}                            
                         {% else %}
@@ -43,7 +43,7 @@
                             <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
                             {% endif %}
                             <div class="level_one">
-                                <div class="mb-3 p-2" style="word-wrap: break-word;"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{{ o.preferred_label }}
+                                <div class="mb-3 p-2"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{{ o.preferred_label }}
                                 {% if o.is_wikidata %}
                                 <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" aria-hidden="true"></i></a>
                                 {% endif %}
@@ -58,13 +58,22 @@
                         {% endif %}
                     {% endfor %}{% endwith %}
                 </div>
-                <div class="d-flex justify-content-center mb-3">
-	<div class="ml-3"><a class="btn btn-light" href="/statement/{{ country.id }}/new/">{% trans "add property"|capfirst %}</a></div>
-</div>
+            </td>
+        {% endfor %}
+        </tr>
+        <tr>
+        {% for country in countries_selected %}
+            <td>
+                <div class="d-flex justify-content-center pt-3">
+                    <div><a class="btn btn-light" href="/statement/{{ country.id }}/new/">{% trans "add property"|capfirst %}</a></div>
+                </div>
+{% comment %} MMR non rimuovere div seguente - escamotage per fissare larghezza minima uguale per le colonne [td] {% endcomment %}                
+                <div style="white-space: nowrap; color:#fff">----------------------------------------------------------------</div>
             </td>
         {% endfor %}
         </tr>
         </tbody>
     </table>
 </div>
+
 {% endblock body %}

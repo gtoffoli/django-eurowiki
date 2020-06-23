@@ -237,3 +237,22 @@ ew-like-button > a:hover {
     outline: none;
 }
 
+.break-long-words {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* 
+@media (max-width: 1024px) {
+  .label-break-long-words {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+    word-break: break-word;
+    hyphens: auto;
+  }
+}
+*/

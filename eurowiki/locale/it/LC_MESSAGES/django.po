@@ -7,90 +7,197 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-15 18:55+0200\n"
-"PO-Revision-Date: 2020-05-15 19:01+0200\n"
+"POT-Creation-Date: 2020-06-23 10:17+0200\n"
+"PO-Revision-Date: 2020-06-23 10:23+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "Language: it\n"
 "X-Generator: Poedit 2.3.1\n"
 
-#: .\search_indexes.py:44
+#: .\eurowiki\forms.py:8
+msgid "Literal Statement"
+msgstr ""
+
+#: .\eurowiki\forms.py:8
+msgid "URI Statement"
+msgstr ""
+
+#: .\eurowiki\forms.py:11
+msgid "string"
+msgstr ""
+
+#: .\eurowiki\forms.py:12
+msgid "integer"
+msgstr ""
+
+#: .\eurowiki\forms.py:13
+msgid "date"
+msgstr ""
+
+#: .\eurowiki\forms.py:14
+msgid "year"
+msgstr ""
+
+#: .\eurowiki\forms.py:15
+msgid "day of year"
+msgstr ""
+
+#: .\eurowiki\forms.py:26
+msgid "subject"
+msgstr ""
+
+#: .\eurowiki\forms.py:27
+msgid "statement class"
+msgstr ""
+
+#: .\eurowiki\forms.py:28
+msgid "predicate"
+msgstr ""
+
+#: .\eurowiki\forms.py:29
+msgid "object node"
+msgstr ""
+
+#: .\eurowiki\forms.py:30
+msgid "literal value"
+msgstr ""
+
+#: .\eurowiki\forms.py:31
+msgid "data type"
+msgstr ""
+
+#: .\eurowiki\forms.py:32
+msgid "string language"
+msgstr ""
+
+#: .\eurowiki\forms.py:33
+msgid "context"
+msgstr "contesto"
+
+#: .\eurowiki\search_indexes.py:44
 msgid "In"
 msgstr ""
 
-#: .\templates\account\login.html:7 .\templates\account\login.html:32
-#: .\templates\account\login.html:56
+#: .\eurowiki\templates\_props_subtree.html:22
+#: .\eurowiki\templates\_props_subtree_edit - Copia.html:17
+#: .\eurowiki\templates\_props_subtree_edit.html:22
+#: .\eurowiki\templates\country.html:46 .\eurowiki\templates\item_edit
+#: Copia.html:37 .\eurowiki\templates\item_edit.html:37
+msgid "edit"
+msgstr "edita"
+
+#: .\eurowiki\templates\account\login.html:7
+#: .\eurowiki\templates\account\login.html:32
+#: .\eurowiki\templates\account\login.html:56
 msgid "Sign In"
 msgstr ""
 
-#: .\templates\account\login.html:38
+#: .\eurowiki\templates\account\login.html:38
 msgid "Please sign in with one of your existing third party accounts:"
 msgstr "Per favore, accedi con uno dei tuoi account social:"
 
-#: .\templates\account\login.html:46
+#: .\eurowiki\templates\account\login.html:46
 msgid "or"
-msgstr ""
+msgstr "oppure"
 
-#: .\templates\account\login.html:58
+#: .\eurowiki\templates\account\login.html:58
 msgid "Forgot Password?"
 msgstr ""
 
-#: .\templates\autocomplete.html:26
+#: .\eurowiki\templates\autocomplete.html:10
 msgid "no item"
 msgstr "nessun elemento"
 
-#: .\templates\edit_literal_statement.html:4
-#: .\templates\edit_literal_statement.html:10
-msgid "Literal statement"
+#: .\eurowiki\templates\country.html:4
+msgid "view countries"
+msgstr "visualizza i paesi"
+
+#: .\eurowiki\templates\country.html:62 .\eurowiki\templates\item.html:49
+#: .\eurowiki\templates\item_edit - Copia.html:55
+#: .\eurowiki\templates\item_edit.html:57
+msgid "add property"
 msgstr ""
 
-#: .\templates\edit_named_graph.html:4 .\templates\edit_named_graph.html:10
-msgid "Named graph"
+#: .\eurowiki\templates\edit_statement.html:5
+#: .\eurowiki\templates\edit_statement.html:10
+msgid "edit statement"
 msgstr ""
 
-#: .\templates\edit_namespace.html:4 .\templates\edit_namespace.html:10
-#: .\templates\namespace_model.html:4 .\templates\uri_statement.html:4
-msgid "Namespace"
+#: .\eurowiki\templates\eurowiki_base.html:74
+msgid "search"
 msgstr ""
 
-#: .\templates\edit_uri_statement.html:5 .\templates\edit_uri_statement.html:10
-msgid "URI statement"
-msgstr ""
-
-#: .\templates\eurowiki_base.html:91
+#: .\eurowiki\templates\eurowiki_base.html:98
 msgid "Log out"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:95
+#: .\eurowiki\templates\eurowiki_base.html:102
 msgid "Log in"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:139
-msgid "Search ... (at least 3 characters)"
-msgstr "Cerca ... (almeno 3 caratteri)"
+#: .\eurowiki\templates\eurowiki_base.html:180
+#: .\eurowiki\templates\eurowiki_base.html:193
+msgid "uncheck"
+msgstr "deseleziona"
 
-#: .\templates\list_literal_statements.html:4
-#: .\templates\list_literal_statements.html:8
+#: .\eurowiki\templates\eurowiki_base.html:181
+#: .\eurowiki\templates\eurowiki_base.html:194
+msgid "view"
+msgstr ""
+
+#: .\eurowiki\templates\eurowiki_base.html:208
+msgid "built by"
+msgstr "creato da"
+
+#: .\eurowiki\templates\eurowiki_base.html:208
+msgid "with"
+msgstr "con"
+
+#: .\eurowiki\templates\eurowiki_base.html:208
+msgid "and"
+msgstr "e"
+
+#: .\eurowiki\templates\eurowiki_base.html:245
+msgid "Select at least 1 country"
+msgstr ""
+
+#: .\eurowiki\templates\item_edit - Copia.html:55
+#: .\eurowiki\templates\item_edit.html:56
+msgid "save"
+msgstr ""
+
+#: .\eurowiki\templates\list_literal_statements.html:4
+#: .\eurowiki\templates\list_literal_statements.html:8
 msgid "Literal statements"
 msgstr ""
 
-#: .\templates\list_namespaces.html:4 .\templates\list_namespaces.html:8
+#: .\eurowiki\templates\list_namespaces.html:4
+#: .\eurowiki\templates\list_namespaces.html:8
 msgid "Namespaces"
 msgstr ""
 
-#: .\templates\list_statements.html:4 .\templates\list_statements.html:8
+#: .\eurowiki\templates\list_statements.html:4
+#: .\eurowiki\templates\list_statements.html:8
 msgid "Statements"
 msgstr ""
 
-#: .\templates\list_uri_statements.html:4
-#: .\templates\list_uri_statements.html:8
+#: .\eurowiki\templates\list_uri_statements.html:4
+#: .\eurowiki\templates\list_uri_statements.html:8
 msgid "Uri statements"
 msgstr ""
 
-#: .\templates\statement.html:4
+#: .\eurowiki\templates\namespace_model.html:4
+#: .\eurowiki\templates\uri_statement.html:4
+msgid "Namespace"
+msgstr ""
+
+#: .\eurowiki\templates\statement.html:4
 msgid "Statement"
 msgstr ""
+
+#~ msgid "Search ... (at least 3 characters)"
+#~ msgstr "Cerca ... (almeno 3 caratteri)"

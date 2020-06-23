@@ -46,7 +46,7 @@ a:hover {
 <div class="d-flex justify-content-center align-items-center">{% trans 'or'|upper %}</div>
 {% endif %}
 <div class="d-flex justify-content-center align-items-center">
-    <form class="login" method="POST" action="{% url 'account_login' %}">
+    <form class="login" method="POST" action="/accounts/login/{% if not "accounts" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">
         {% csrf_token %}
         {{ form|crispy }}
         {% if redirect_field_value %}
