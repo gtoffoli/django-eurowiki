@@ -97,8 +97,10 @@ PREDICATE_LABELS =  OrderedDict([
     ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
     ('P17', {'en': 'country', 'it': 'paese',}), # country
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
+    ('P248', {'en': 'source', 'it': 'fonte',}), # (statement) source, fonte (dell'affermazione)
     ('P854', {'en': 'online reference', 'it': 'riferimento online',}),
     ('P953', {'en': 'online full text', 'it': 'testo completo online',}), # 'full work available at', 'testo completo disponibile all'indirizzo'
+    ('P2441', {'en': 'literal translation', 'it': 'traduzione letterale',}),
     ('P170', {'en': 'creator/author', 'it': 'creatore/autore',}),
 
     ('P948', {'en': 'page banner', 'it': 'banner di pagina',}), #
@@ -153,7 +155,7 @@ PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
 EU_COUNTRY_PROPERTIES = ['P85', 'P163', 'P237', 'P1546', 'PUE6', 'PUE10', 'P38', 'P92',] # mandatory 1st level properties for countries
-LITERAL_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment',] # properties occurring in Literal Statements
+LITERAL_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment', 'P248',] # properties occurring in Literal Statements
 RDF_I18N_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment',] # RDF properties having a literal value language-awware
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948',] # properties from whose value an online address can be computed 
 URL_PROPERTIES = ['P854', 'P953',]
@@ -180,14 +182,14 @@ OTHER_EXTERNAL_RESOURCES = {
 }
 
 EW_TREE = OrderedDict([
-    ('P85', ('P1476', 'PUE1', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), # national anthem: title, text auth., composer, ...
-    ('P163', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'P828', 'PUE9', 'P854',),), # national flag: descr., img, prop., delib., date, ...
-    ('P237', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), # national emblem: descr., img, prop., delib., date, ...
-    ('P1546', ('P1541', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), #national motto: text
-    ('PUE6', ('PUE2', 'PUE3', 'P790', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), # national monuments
-    ('PUE10', ('PUE1', 'PUE2', 'P837', 'PUE4', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854',),), # national (holi)days: title, day,  prop., delib., date, ...
-    ('P38', ('PUE3', 'P790', 'P571', 'P828', 'PUE7', 'PUE8','PUE9', 'P854',),), # currency and coinage
-    ('P92', ('P953', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854',),), # national constitution
-    ('Bag', ('', 'P832',),), # container of members (monuments and days)
+    ('P85', ('P1476', 'PUE1', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national anthem: title, text auth., composer, ...
+    ('P163', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'P828', 'PUE9', 'P854', 'P248',),), # national flag: descr., img, prop., delib., date, ...
+    ('P237', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national emblem: descr., img, prop., delib., date, ...
+    ('P1546', ('P1541', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), #national motto: text
+    ('PUE6', ('PUE2', 'PUE3', 'P790', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national monuments
+    ('PUE10', ('PUE1', 'PUE2', 'P837', 'PUE4', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national (holi)days: title, day,  prop., delib., date, ...
+    ('P38', ('PUE3', 'P790', 'P571', 'P828', 'PUE7', 'PUE8','PUE9', 'P854', 'P248',),), # currency and coinage
+    ('P92', ('P953', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248',),), # national constitution
+    # ('Bag', ('', 'P832',),), # container of members (monuments and days)
 ])
 EW_TREE_KEYS = list(EW_TREE.keys())
