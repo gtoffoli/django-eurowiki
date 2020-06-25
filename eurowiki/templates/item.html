@@ -16,7 +16,7 @@
 </h2>
 
 {% with props=item.properties %}
-{% for p, o, lang, c, r, previous_p in props %}
+{% for p, o, lang, languages, c, r, previous_p in props %}
 
 	{% if p.is_literal %}
 		{% if p.is_image %}

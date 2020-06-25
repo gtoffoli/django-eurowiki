@@ -11,6 +11,7 @@ from django.utils.translation import get_language
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.contrib.auth.models import User
 
 from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
@@ -18,6 +19,18 @@ from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 from .classes import Country, Item
 from .forms import StatementForm
 from .utils import make_uriref, id_from_uriref, friend_uri, friend_graph
+
+
+try:
+    from commons.models import Project
+    euro_project = Project.objects.get(pk=settings.EURO_PROJECT_ID)
+except:
+    euro_project = None
+    
+def user_is_member(self, project=euro_project):
+    return self.is_authenticated and ((project and project.is_member(self)) or (not project and self.is_full_member()))
+User.is_euro_member = user_is_member
+
 
 def eu_countries(language=settings.LANGUAGE_CODE):
     return [Country(id=qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()]

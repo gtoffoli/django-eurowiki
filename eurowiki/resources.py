@@ -111,7 +111,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P94', {'en': 'emblem image', 'it': 'immagine dello stemma',}), #
     ('P1541', {'en': 'motto text', 'it': 'testo del motto',}), # motto text (of country)
     ('P1546', {'en': 'national motto', 'it': 'motto nazionale',}), # motto (of country)
-    ('P832', {'en': 'public holiday', 'it': 'festa pubblica',}),
+    ('P832', {'en': 'public holiday', 'it': 'festa nazionale',}),
     ('P1476', {'en': 'title', 'it': 'titolo',}), # original title
     ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
     ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
@@ -154,12 +154,12 @@ EW_PREDICATE_LABELS = OrderedDict([
 PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
-EU_COUNTRY_PROPERTIES = ['P85', 'P163', 'P237', 'P1546', 'PUE6', 'PUE10', 'P38', 'P92',] # mandatory 1st level properties for countries
+EU_COUNTRY_PROPERTIES = ['P85', 'P163', 'P237', 'P1546', 'PUE6', 'P832', 'P38', 'P92',] # mandatory 1st level properties for countries
 LITERAL_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment', 'P248',] # properties occurring in Literal Statements
 RDF_I18N_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment',] # RDF properties having a literal value language-awware
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948',] # properties from whose value an online address can be computed 
 URL_PROPERTIES = ['P854', 'P953',]
-REPEATABLE_PROPERTIES = ['PUE6', 'PUE10',] # predicates allowing multiple properties for same subject 
+REPEATABLE_PROPERTIES = ['PUE6', 'P832',] # predicates allowing multiple properties for same subject 
 
 # this sample dictionary should allow to compute URIs, based on prefix to namespace mapping
 OTHER_EXTERNAL_RESOURCES = {
@@ -187,9 +187,37 @@ EW_TREE = OrderedDict([
     ('P237', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national emblem: descr., img, prop., delib., date, ...
     ('P1546', ('P1541', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), #national motto: text
     ('PUE6', ('PUE2', 'PUE3', 'P790', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national monuments
-    ('PUE10', ('PUE1', 'PUE2', 'P837', 'PUE4', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national (holi)days: title, day,  prop., delib., date, ...
+    ('P832', ('PUE1', 'PUE2', 'P837', 'PUE4', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national (holi)days: title, day,  prop., delib., date, ...
     ('P38', ('PUE3', 'P790', 'P571', 'P828', 'PUE7', 'PUE8','PUE9', 'P854', 'P248',),), # currency and coinage
     ('P92', ('P953', 'PUE3', 'P790', 'PUE4', 'PUE8', 'P571', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248',),), # national constitution
     # ('Bag', ('', 'P832',),), # container of members (monuments and days)
 ])
 EW_TREE_KEYS = list(EW_TREE.keys())
+
+EURO_LANGUAGES = (
+    ('en', 'English'),
+    ('it', 'Italiano'),
+    ('de', 'German'),
+    ('es', 'Spanish'),
+    ('fr', 'French'),
+    ('bg', 'Bulgarian'),
+    ('cs', 'Czech'),
+    ('da', 'Danish'),
+    ('el', 'Greek'),
+    ('et', 'Estonian'),
+    ('fi', 'Finnish'),
+    ('ga', 'Irish'),
+    ('hr', 'Croatian'),
+    ('hu', 'Hungarian'),
+    ('lt', 'Lithuanian'),
+    ('lv', 'Latvian'),
+    ('mt', 'Maltese'),
+    ('nl', 'Dutch'),
+    ('pl', 'Polish'),
+    ('pt', 'Portuguese'),
+    ('ro', 'Romanian'),
+    ('sk', 'Slovak'),
+    ('sl', 'Slovenian'),
+    ('sv', 'Swedish'),
+)
+EURO_LANGUAGE_CODES = [l[0] for l in EURO_LANGUAGES]

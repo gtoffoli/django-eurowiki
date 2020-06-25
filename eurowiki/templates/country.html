@@ -6,7 +6,7 @@
 {% block body_class %}item_view{% endblock body_class %}
 
 {% block body %} 
-{%  with can_edit=request.user.is_authenticated  can_view=request.user.is_authenticated %}
+{%  with can_edit=request.user.is_euro_member can_view=request.user.is_authenticated %}
 <div class="table-responsive">
     <table class="table ew-table mb-0">
         <tbody>
@@ -21,7 +21,7 @@
                 <h1 class="ew-title" style="white-space: nowrap;">{{ country.label }} <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%"></i></a></h1>
                 <div class="p-2" style="{% if countries_selected|length == 1 %}max-height: calc(100vh - 27.2rem);{% else %}max-height: calc(100vh - 16.2rem);{% endif %} overflow-y: auto;">
                     {% with props=country.properties %}
-                    {% for p, o, lang, c, r, previous_p in props %}
+                    {% for p, o, lang, languages, c, r, previous_p in props %}
                     {% if not previous.is_repeatable and previous_p.id != p.id  %}
                     </details>
                     {% endif %}

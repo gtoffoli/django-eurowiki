@@ -1,7 +1,7 @@
 {% load i18n static %}
 
 {% with props=o.properties %}
-{% for p, o, lang, c, r, previous_p in props %}
+{% for p, o, lang, languages, c, r, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}

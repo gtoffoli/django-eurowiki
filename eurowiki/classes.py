@@ -101,12 +101,14 @@ class Item(EurowikiBase):
         property_dict = {}
         context_dict = {}
         reified_dict = {}
+        languages_dict = {}
         for prop_id in settings.RDF_I18N_PROPERTIES:
             lang_code_dict[prop_id] = None
             value_dict[prop_id] = None
             property_dict[prop_id] = None
             context_dict[prop_id] = None
             reified_dict[prop_id] = None
+            languages_dict[prop_id] = []
         props = []
         # iterate on our pseudo-quads
         for p, o, c, r in p_o_c_r_iterable:
@@ -139,16 +141,21 @@ class Item(EurowikiBase):
                             context_dict[prop_id] = c
                             reified_dict[prop_id] = r
                         if lang:
+                            languages_dict[prop_id].append(lang)
                             continue
             else:
                 o = Item(uriref=o, graph=self.graph, in_predicate=p)
                 if r:
                     r = Item(bnode=r, graph=self.graph, in_predicate=p)
-            props.append([p, o, None, c, r])
+            # props.append([p, o, None, c, r])
+            props.append([p, o, None, [], c, r])
         # append proper version of language-aware string literals
         for prop_id in settings.RDF_I18N_PROPERTIES:
             if value_dict[prop_id]:
-                props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
+                # props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
+                props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
+                if languages_dict[prop_id]:
+                    print(languages_dict[prop_id])
         # sort properties at the end of all processing
         props = sorted(props, key=lambda prop: keys.index(prop[0].id))
         # record the previous property in the tuple itself, so that it can be accessed in template 

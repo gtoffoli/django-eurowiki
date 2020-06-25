@@ -196,6 +196,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# project membership
+
+EURO_PROJECT_SLUG = "university-4-europe-european-national-identities-profiles-towards-euroforge"
+EURO_PROJECT_ID = 334
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
