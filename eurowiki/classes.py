@@ -50,7 +50,6 @@ class EurowikiBase(object):
 class Item(EurowikiBase):
 
     def url(self):
-        # return '/item/{}/'.format(self.id)
         return '/item/{}/'.format(self.id)
 
     def labels(self):
@@ -128,12 +127,13 @@ class Item(EurowikiBase):
                             value_dict[prop_id] = o.value
                             context_dict[prop_id] = c
                             reified_dict[prop_id] = r
-                        elif not value_dict[prop_id] and lang==settings.LANGUAGE_CODE:
-                            lang_code_dict[prop_id] = lang
-                            property_dict[prop_id] = p
-                            value_dict[prop_id] = o.value
-                            context_dict[prop_id] = c
-                            reified_dict[prop_id] = r
+                        elif lang==settings.LANGUAGE_CODE:
+                            if not value_dict[prop_id]:
+                                lang_code_dict[prop_id] = lang
+                                property_dict[prop_id] = p
+                                value_dict[prop_id] = o.value
+                                context_dict[prop_id] = c
+                                reified_dict[prop_id] = r
                         elif lang and (not value_dict[prop_id] or (lang_code_dict[prop_id] in settings.LANGUAGE_CODES and lang in settings.LANGUAGE_CODES and settings.LANGUAGE_CODES.index(lang)<settings.LANGUAGE_CODES.index(lang_code_dict[prop_id]))):
                             lang_code_dict[prop_id] = lang
                             property_dict[prop_id] = p
@@ -142,17 +142,15 @@ class Item(EurowikiBase):
                             reified_dict[prop_id] = r
                         if lang:
                             languages_dict[prop_id].append(lang)
-                            continue
+                        continue
             else:
                 o = Item(uriref=o, graph=self.graph, in_predicate=p)
                 if r:
                     r = Item(bnode=r, graph=self.graph, in_predicate=p)
-            # props.append([p, o, None, c, r])
             props.append([p, o, None, [], c, r])
         # append proper version of language-aware string literals
         for prop_id in settings.RDF_I18N_PROPERTIES:
             if value_dict[prop_id]:
-                # props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
                 props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
                 if languages_dict[prop_id]:
                     print(languages_dict[prop_id])
