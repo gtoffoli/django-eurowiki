@@ -1,7 +1,8 @@
 import urllib.request
 import json
 import hashlib
-from rdflib.term import URIRef
+from rdflib.term import URIRef, BNode
+
 from rdflib_django.models import NamedGraph, URIStatement
 from django.conf import settings
 
@@ -24,6 +25,12 @@ def make_uriref(value, prefix=None):
             return URIRef(value, base=base)
     else:
         return URIRef(value)
+
+def make_node(value, prefix=None):
+    if value.startswith('_:'):
+        return BNode(value.replace('_:', ''))
+    else:
+        return make_uriref(value, prefix=prefix)
 
 def id_from_uriref(uriref):
     label = uriref.split('/')[-1]

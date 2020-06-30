@@ -114,7 +114,8 @@ class Item(EurowikiBase):
             if not keys.count(id_from_uriref(p)):
                 continue
             p = Predicate(uriref=p, graph=self.graph)
-            if p.is_literal():
+            # if p.is_literal():
+            if p.is_literal() and not isinstance(o, BNode): # temporary patch
                 if p.is_image():
                     o = Image(o)
                 else:
@@ -135,6 +136,12 @@ class Item(EurowikiBase):
                                 context_dict[prop_id] = c
                                 reified_dict[prop_id] = r
                         elif lang and (not value_dict[prop_id] or (lang_code_dict[prop_id] in settings.LANGUAGE_CODES and lang in settings.LANGUAGE_CODES and settings.LANGUAGE_CODES.index(lang)<settings.LANGUAGE_CODES.index(lang_code_dict[prop_id]))):
+                            lang_code_dict[prop_id] = lang
+                            property_dict[prop_id] = p
+                            value_dict[prop_id] = o.value
+                            context_dict[prop_id] = c
+                            reified_dict[prop_id] = r
+                        elif not property_dict[prop_id]:
                             lang_code_dict[prop_id] = lang
                             property_dict[prop_id] = p
                             value_dict[prop_id] = o.value

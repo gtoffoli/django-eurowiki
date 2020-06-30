@@ -90,73 +90,78 @@ OTHER_ITEM_LABELS = {
 
 PREDICATE_LABELS =  OrderedDict([
     ('label', {'en': 'name/title', 'it': 'nome/titolo',}), #
+    ('P1476', {'en': 'original title', 'it': 'titolo originale',}), # original title
+    ('PUE1', {'en': 'text', 'it': 'testo',}), #
+    ('P953', {'en': 'online full text', 'it': 'testo completo online',}), # 'full work available at', 'testo completo disponibile all'indirizzo'
+    ('PUE2', {'en': 'description', 'it': 'descrizione',}), #
+    ('P18', {'en': 'image', 'it': 'immagine',}), #
+
+    ('P85', {'en': 'national anthem', 'it': 'inno nazionale',}), # national anthem (of country)
+    ('P163', {'en': 'national flag', 'it': 'bandiera nazionale',}), # 
+    ('P237', {'en': 'coat of arms', 'it': 'stemma',}), # description of emblem
+    ('P1546', {'en': 'national motto', 'it': 'motto nazionale',}), # motto (of country)
+    ('P832', {'en': 'public holiday', 'it': 'festa nazionale',}),
+    ('PUE6', {'en': 'national monument', 'it': 'monumento nazionale',}), # brand-NEW - domain: Q3624078, range: Q4989906 and Q1128637
+    ('P38', {'en': 'currency and coinage', 'it': 'valuta e monetazione',}), # in wikidata: 'currency', 'valuta'
+    ('P92', {'en': 'constitution', 'it': 'costituzione',}), # in wikidata: 'main regulatory text', 'legge fondamentale'
+
+    ('P170', {'en': 'creator/author', 'it': 'creatore/autore',}),
+    ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
+    ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
+
+    ('PUE3', {'en': 'proposed by', 'it': 'proposto da',}), # REPURPOSED - in WD: P748 (appointed by, designato da)
+    ('P790', {'en': 'deliberated by', 'it': 'deliberato da',}), # in wikidata: approved by, approvato da (ente)
+    ('P828', {'en': 'grounds for the adoption', 'it': "motivazione per l'adozione",}), # in wikidata: 'has cause', 'causato da'
+    ('PUE8', {'en': 'year or time of composition or adoption', 'it': 'anno o circostanze di composizione o adozione',}), # brand-new
+    ('P571', {'en': 'adoption date', 'it': 'data di adozione',}), # in wikidata: 'inception, data di fondazione o creazione'
+    ('P580', {'en': 'start date', 'it': 'data di inizio',}), # start time (of validity of a property assertion)
+    ('PUE4', {'en': 'historical origins', 'it': 'origini storiche',}), # brand-NEW
+    ('PUE5', {'en': 'cultural significance', 'it': 'significato culturale',}), # brand-NEW
+    ('PUE9', {'en': 'changes since origin or adoption', 'it': 'modifiche da origine o adozione',}), # brand-new
+
+    ('PUE7', {'en': 'subjects depicted', 'it': 'soggetti raffigurati',}), # multi-value shortcut for a relation path involving P180
+    ('P837', {'en': 'day of year', 'it': 'giorno di ricorrenza',}), # "day in year for periodic occurrence"
+
+    ('PUE11', {'en': 'general principles', 'it': 'principi generali',}), # brand-NEW for constitutions
+    ('PUE12', {'en': 'soverainity cession', 'it': 'cessione di sovranità',}), # brand-NEW for constitutions
+    ('PUE13', {'en': 'mentions to religions', 'it': 'riferimenti alla religione',}), # brand-NEW for constitutions
+    ('PUE14', {'en': 'human rights and minorities', 'it': 'diritti umani e minoranze',}), # brand-NEW for constitutions
+
+    ('P854', {'en': 'online reference', 'it': 'riferimento online',}),
+    ('P248', {'en': 'source', 'it': 'fonte',}), # (statement) source, fonte (dell'affermazione)
+    ('P948', {'en': 'page banner', 'it': 'banner di pagina',}), #
     ('comment', {'en': 'comment', 'it': 'commento',}), #
+])
+
+CURRENTLY_HIDDEN_PREDICATE_LABELS =  OrderedDict([
     ('P242', {'en': 'stated in', 'it': "fonte dell'affermazione",}), # applies only to statements
     ('P279', {'en': 'subclass of', 'it': 'sottoclasse di',}), # subclass of
     ('P361', {'en': 'Part of', 'it': 'Parte di',}), # part of
     ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
     ('P17', {'en': 'country', 'it': 'paese',}), # country
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
-    ('P248', {'en': 'source', 'it': 'fonte',}), # (statement) source, fonte (dell'affermazione)
-    ('P854', {'en': 'online reference', 'it': 'riferimento online',}),
-    ('P953', {'en': 'online full text', 'it': 'testo completo online',}), # 'full work available at', 'testo completo disponibile all'indirizzo'
-    ('P2441', {'en': 'literal translation', 'it': 'traduzione letterale',}),
-    ('P170', {'en': 'creator/author', 'it': 'creatore/autore',}),
-
-    ('P948', {'en': 'page banner', 'it': 'banner di pagina',}), #
-    ('P85', {'en': 'national anthem', 'it': 'inno nazionale',}), # national anthem (of country)
-    ('P163', {'en': 'national flag', 'it': 'bandiera nazionale',}), # 
     ('P41', {'en': 'flag image', 'it': 'immagine della bandiera',}), #
-    ('P237', {'en': 'coat of arms', 'it': 'stemma',}), # description of emblem
     ('P94', {'en': 'emblem image', 'it': 'immagine dello stemma',}), #
+    ('P2441', {'en': 'literal translation', 'it': 'traduzione letterale',}),
     ('P1541', {'en': 'motto text', 'it': 'testo del motto',}), # motto text (of country)
-    ('P1546', {'en': 'national motto', 'it': 'motto nazionale',}), # motto (of country)
-    ('P832', {'en': 'public holiday', 'it': 'festa nazionale',}),
-    ('P1476', {'en': 'title', 'it': 'titolo',}), # original title
-    ('P86', {'en': 'music composer', 'it': 'compositore',}), # composer (of music)
-    ('P676', {'en': 'text author', 'it': 'autore del testo',}), # text author (of lyrics)
-    ('P180', {'en': 'depicts', 'it': 'raffigura',}), #
-    ('P18', {'en': 'image', 'it': 'immagine',}), #
-    ('P38', {'en': 'currency and coinage', 'it': 'valuta e monetazione',}), # in wikidata: 'currency', 'valuta'
-    ('P92', {'en': 'constitution', 'it': 'costituzione',}), # in wikidata: 'main regulatory text', 'legge fondamentale'
-
-    ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
-    ('P790', {'en': 'deliberated by', 'it': 'deliberato da',}), # in wikidata: approved by, approvato da (ente)
-    ('P828', {'en': 'grounds for the adoption', 'it': "motivazione per l'adozione",}), # in wikidata: 'has cause', 'causato da'
-
-    ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
-    ('P571', {'en': 'adoption date', 'it': 'data di adozione',}), # in wikidata: 'inception, data di fondazione o creazione'
-    ('P577', {'en': 'publication date', 'it': 'data di pubblicazione',}),
-    ('P580', {'en': 'start date', 'it': 'data di inizio',}), # start time (of validity of a property assertion)
-    ('P582', {'en': 'end date', 'it': 'data di fine',}), # end time (of validity of a property assertion)
-    ('P837', {'en': 'day of year', 'it': 'giorno di ricorrenza',}) # "day in year for periodic occurrence"
-])
-# ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
-
-EW_PREDICATE_LABELS = OrderedDict([
-    ('PUE1', {'en': 'text', 'it': 'testo',}), #
-    ('PUE2', {'en': 'description', 'it': 'descrizione',}), #
-    ('PUE3', {'en': 'proposed by', 'it': 'proposto da',}), # REPURPOSED - in WD: P748 (appointed by, designato da)
-    ('PUE4', {'en': 'historical origins', 'it': 'origini storiche',}), # brand-NEW
-    ('PUE5', {'en': 'cultural significance', 'it': 'significato culturale',}), # brand-NEW
-    ('PUE6', {'en': 'national monument', 'it': 'monumento nazionale',}), # brand-NEW - domain: Q3624078, range: Q4989906 and Q1128637
-    ('PUE7', {'en': 'subjects depicted', 'it': 'soggetti raffigurati',}), # multi-value shortcut for a relation path involving P180
-    ('PUE8', {'en': 'year or time of composition or adoption', 'it': 'anno o circostanze di composizione o adozione',}), # brand-new
-    ('PUE9', {'en': 'changes since origin or adoption', 'it': 'modifiche da origine o adozione',}), # brand-new
     ('PUE10', {'en': 'national day', 'it': 'festa nazionale',}), # brand-new (usually one among public holidays)
-    ('PUE11', {'en': 'general principles', 'it': 'principi generali',}), # brand-NEW for constitutions
-    ('PUE12', {'en': 'soverainity cession', 'it': 'cessione di sovranità',}), # brand-NEW for constitutions
-    ('PUE13', {'en': 'mentions to religions', 'it': 'riferimenti alla religione',}), # brand-NEW for constitutions
-    ('PUE14', {'en': 'human rights and minorities', 'it': 'diritti umani e minoranze',}), # brand-NEW for constitutions
+    ('P180', {'en': 'depicts', 'it': 'raffigura',}), #
+    ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
+    ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
+    ('P577', {'en': 'publication date', 'it': 'data di pubblicazione',}),
+    ('P582', {'en': 'end date', 'it': 'data di fine',}), # end time (of validity of a property assertion)
 ])
 
-# ORDERED_PREDICATE_KEYS = list(WD_PREDICATE_LABELS.keys())+list(EW_PREDICATE_LABELS.keys())
+"""
+EW_PREDICATE_LABELS = OrderedDict([
+])
 PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
+"""
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
 EU_COUNTRY_PROPERTIES = ['P85', 'P163', 'P237', 'P1546', 'PUE6', 'P832', 'P38', 'P92',] # mandatory 1st level properties for countries
-LITERAL_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment', 'P248',] # properties occurring in Literal Statements
-RDF_I18N_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment',] # RDF properties having a literal value language-awware
+LITERAL_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment', 'P248',] # properties occurring in Literal Statements
+RDF_I18N_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'comment',] # RDF properties having a literal value language-awware
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948',] # properties from whose value an online address can be computed 
 URL_PROPERTIES = ['P854', 'P953',]
 REPEATABLE_PROPERTIES = ['PUE6', 'P832',] # predicates allowing multiple properties for same subject 

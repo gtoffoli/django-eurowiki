@@ -18,7 +18,8 @@ from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
 from .classes import Country, Item
 from .forms import StatementForm
-from .utils import make_uriref, id_from_uriref, friend_uri, friend_graph
+from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
+from .utils import make_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 
 try:
@@ -138,23 +139,29 @@ class editStatement(View):
             statement_class = 'literal'
             initial = { 'statement_class': 'literal', 'subject': subject_id, 'datatype': 'string', 'language': language }
             form = self.form_class(initial=initial)
-        if subject_id:
             form.fields['object'].widget = forms.HiddenInput()
             # form.fields['datatype'].widget = forms.HiddenInput()
+        if statement_class == 'literal':
+            form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
+        else: # uri
+            if subject_id in settings.EU_COUNTRY_KEYS:
+                form.fields['predicate'].choices = COUNTRY_PREDICATE_CHOICES
+            else:
+                form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
         return render(request, self.template_name, {'form':form, 'subject':subject_id, 'statement':statement_id})
 
     def post(self, request, statement_id=None, subject_id=None):
         form = self.form_class(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            predicate = data['predicate']
+            context = data['context']
             statement_class = data['statement_class']
             if statement_class == 'literal':
                 form.fields['object'].widget = forms.HiddenInput()
-                predicate = data['predicate']
                 value = data['literal']
                 dt = data['datatype']
                 language = language = data['language']
-                context = data['context']
                 if dt == 'string':
                     datatype = XSD.string
                     if predicate in settings.RDF_I18N_PROPERTIES:
@@ -163,6 +170,7 @@ class editStatement(View):
                         o = Literal(value)
                 else:
                     form.fields['language'].widget = forms.HiddenInput()
+                    form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
                     if dt == 'integer':
                         datatype = XSD.integer
                     elif dt == 'date':
@@ -176,17 +184,32 @@ class editStatement(View):
                     assert value
                     if dt == 'string':
                         assert language
-                    s = make_uriref(subject_id)
+                    s = make_node(subject_id)
                     p = make_uriref(predicate)
                     c = NamedGraph.objects.get(identifier=make_uriref(context))
+                    value = object
                     statement = LiteralStatement(subject=s, predicate=p, object=o, context=c)
                     statement.save()
-                    print('statement:', statement)
                     return HttpResponseRedirect('/item/{}/'.format(subject_id))
             else:  # statement_class=='uri'
                 form.fields['literal'].widget = forms.HiddenInput()
                 form.fields['datatype'].widget = forms.HiddenInput()
                 form.fields['language'].widget = forms.HiddenInput()
+                if subject_id in settings.EU_COUNTRY_KEYS:
+                    form.fields['predicate'].choices = COUNTRY_PREDICATE_CHOICES
+                else:
+                    form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
+                if request.POST.get('save', ''):
+                    object_id = data['object']
+                    assert object_id
+                    s = make_node(subject_id)
+                    p = make_uriref(predicate)
+                    o = make_node(object_id)
+                    c = NamedGraph.objects.get(identifier=make_uriref(context))
+                    statement = URIStatement(subject=s, predicate=p, object=o, context=c)
+                    statement.save()
+                    print('--- statement:', statement)
+                    return HttpResponseRedirect('/item/{}/'.format(subject_id))
             # statement = form.save()
             # return HttpResponseRedirect('/uri_statement/{}/'.format(statement.id))
         return render(request, self.template_name, {'form': form, 'subject':subject_id, 'statement':statement_id})
