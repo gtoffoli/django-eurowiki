@@ -12,7 +12,7 @@
 	{% endif %}
 </h1>
 <div style="max-height: calc(100vh - 16.2rem); overflow-y:auto">
-{% with props=item.properties %}
+{% with props=item.edit_properties %}
 {% for p, o, lang, languages, c, r, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 0px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}

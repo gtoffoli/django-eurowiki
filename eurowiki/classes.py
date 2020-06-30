@@ -61,14 +61,16 @@ class Item(EurowikiBase):
             return properties[0][1]
         return self.label()
 
-    def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
+    # def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
+    def properties(self, keys=[], exclude_keys=['label',], language=None, edit=False):
         if not keys:
             in_prop_id = self.in_predicate and self.in_predicate.id or None
             if in_prop_id and in_prop_id in settings.EW_TREE_KEYS:
                 keys = settings.EW_TREE[in_prop_id]
             else:
                 keys = settings.ORDERED_PREDICATE_KEYS
-        if exclude_keys:
+        # if exclude_keys:
+        if exclude_keys and not edit:
             keys = [key for key in keys if not key in exclude_keys]
         if not language:
             language = get_language()[:2]
@@ -122,33 +124,36 @@ class Item(EurowikiBase):
                     prop_id = p.id
                     if prop_id in settings.RDF_I18N_PROPERTIES:
                         lang = o.language
-                        if lang==language:
-                            lang_code_dict[prop_id] = lang
-                            property_dict[prop_id] = p
-                            value_dict[prop_id] = o.value
-                            context_dict[prop_id] = c
-                            reified_dict[prop_id] = r
-                        elif lang==settings.LANGUAGE_CODE:
-                            if not value_dict[prop_id]:
+                        if edit:
+                            props.append([p, o.value, lang, [], c, r])
+                        else:
+                            if lang==language:
                                 lang_code_dict[prop_id] = lang
                                 property_dict[prop_id] = p
                                 value_dict[prop_id] = o.value
                                 context_dict[prop_id] = c
                                 reified_dict[prop_id] = r
-                        elif lang and (not value_dict[prop_id] or (lang_code_dict[prop_id] in settings.LANGUAGE_CODES and lang in settings.LANGUAGE_CODES and settings.LANGUAGE_CODES.index(lang)<settings.LANGUAGE_CODES.index(lang_code_dict[prop_id]))):
-                            lang_code_dict[prop_id] = lang
-                            property_dict[prop_id] = p
-                            value_dict[prop_id] = o.value
-                            context_dict[prop_id] = c
-                            reified_dict[prop_id] = r
-                        elif not property_dict[prop_id]:
-                            lang_code_dict[prop_id] = lang
-                            property_dict[prop_id] = p
-                            value_dict[prop_id] = o.value
-                            context_dict[prop_id] = c
-                            reified_dict[prop_id] = r
-                        if lang:
-                            languages_dict[prop_id].append(lang)
+                            elif lang==settings.LANGUAGE_CODE:
+                                if not value_dict[prop_id]:
+                                    lang_code_dict[prop_id] = lang
+                                    property_dict[prop_id] = p
+                                    value_dict[prop_id] = o.value
+                                    context_dict[prop_id] = c
+                                    reified_dict[prop_id] = r
+                            elif lang and (not value_dict[prop_id] or (lang_code_dict[prop_id] in settings.LANGUAGE_CODES and lang in settings.LANGUAGE_CODES and settings.LANGUAGE_CODES.index(lang)<settings.LANGUAGE_CODES.index(lang_code_dict[prop_id]))):
+                                lang_code_dict[prop_id] = lang
+                                property_dict[prop_id] = p
+                                value_dict[prop_id] = o.value
+                                context_dict[prop_id] = c
+                                reified_dict[prop_id] = r
+                            elif not property_dict[prop_id]:
+                                lang_code_dict[prop_id] = lang
+                                property_dict[prop_id] = p
+                                value_dict[prop_id] = o.value
+                                context_dict[prop_id] = c
+                                reified_dict[prop_id] = r
+                            if lang:
+                                languages_dict[prop_id].append(lang)
                         continue
             else:
                 o = Item(uriref=o, graph=self.graph, in_predicate=p)
@@ -156,11 +161,12 @@ class Item(EurowikiBase):
                     r = Item(bnode=r, graph=self.graph, in_predicate=p)
             props.append([p, o, None, [], c, r])
         # append proper version of language-aware string literals
-        for prop_id in settings.RDF_I18N_PROPERTIES:
-            if value_dict[prop_id]:
-                props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
-                if languages_dict[prop_id]:
-                    print(languages_dict[prop_id])
+        if not edit:
+            for prop_id in settings.RDF_I18N_PROPERTIES:
+                if value_dict[prop_id]:
+                    props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
+                    if languages_dict[prop_id]:
+                        print(languages_dict[prop_id])
         # sort properties at the end of all processing
         props = sorted(props, key=lambda prop: keys.index(prop[0].id))
         # record the previous property in the tuple itself, so that it can be accessed in template 
@@ -171,6 +177,9 @@ class Item(EurowikiBase):
             previous_p = prop[0]
             props_with_pp.append(prop)
         return props_with_pp
+
+    def edit_properties(self):
+        return self.properties(edit=True)
 
 class Country(Item):
 

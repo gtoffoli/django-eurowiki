@@ -135,19 +135,23 @@ PREDICATE_LABELS =  OrderedDict([
 
 CURRENTLY_HIDDEN_PREDICATE_LABELS =  OrderedDict([
     ('P242', {'en': 'stated in', 'it': "fonte dell'affermazione",}), # applies only to statements
+    ('P31', {'en': 'instance of', 'it': 'istanza di',}), # instance of
     ('P279', {'en': 'subclass of', 'it': 'sottoclasse di',}), # subclass of
+
     ('P361', {'en': 'Part of', 'it': 'Parte di',}), # part of
     ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
     ('P17', {'en': 'country', 'it': 'paese',}), # country
+    ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
+    ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
+    ('P180', {'en': 'depicts', 'it': 'raffigura',}), #
+    ('PUE10', {'en': 'national day', 'it': 'festa nazionale',}), # brand-new (usually one among public holidays)
+
     ('P41', {'en': 'flag image', 'it': 'immagine della bandiera',}), #
     ('P94', {'en': 'emblem image', 'it': 'immagine dello stemma',}), #
+
     ('P2441', {'en': 'literal translation', 'it': 'traduzione letterale',}),
     ('P1541', {'en': 'motto text', 'it': 'testo del motto',}), # motto text (of country)
-    ('PUE10', {'en': 'national day', 'it': 'festa nazionale',}), # brand-new (usually one among public holidays)
-    ('P180', {'en': 'depicts', 'it': 'raffigura',}), #
-    ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
-    ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
     ('P577', {'en': 'publication date', 'it': 'data di pubblicazione',}),
     ('P582', {'en': 'end date', 'it': 'data di fine',}), # end time (of validity of a property assertion)
 ])
@@ -181,23 +185,22 @@ OTHER_EXTERNAL_RESOURCES = {
     'Q326724', # Bastille Day (instance of Q57598, - P17 Q142)
     'Q506234', # Altare della Patria (instance of Q4989906 and Q1128637, - P17 Q38)
   ],
-  "wd": [
-    ('P31', {'en': 'instance of', 'it': 'istanza di',}), # instance of
-  ],
 }
 
 EW_TREE = OrderedDict([
-    ('P85', ('P1476', 'PUE1', 'PUE2', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national anthem: title, text auth., composer, ...
-    ('P163', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828', 'PUE9', 'P854', 'P248',),), # national flag: descr., img, prop., delib., date, ...
-    ('P237', ('P18', 'PUE2', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national emblem: descr., img, prop., delib., date, ...
-    ('P1546', ('P1541', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), #national motto: text
-    ('PUE6', ('PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national monuments
-    ('P832', ('PUE1', 'PUE2', 'P837', 'PUE4', 'PUE5', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248',),), # national (holi)days: title, day,  prop., delib., date, ...
-    ('P38', ('PUE3', 'P790', 'P571', 'PUE4', 'P828', 'PUE7', 'PUE8','PUE9', 'P854', 'P248',),), # currency and coinage
-    ('P92', ('P953', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248',),), # national constitution
+    ('P85', ('P1476', 'PUE1', 'PUE2', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national anthem: title, text auth., composer, ...
+    ('P163', ('P18', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828', 'PUE9', 'P854', 'P248', 'comment',),), # national flag: descr., img, prop., delib., date, ...
+    ('P237', ('P18', 'PUE2', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national emblem: descr., img, prop., delib., date, ...
+    ('P1546', ('P1541', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), #national motto: text
+    ('PUE6', ('PUE2', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national monuments
+    ('P832', ('PUE1', 'PUE2', 'P837', 'PUE4', 'PUE5', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national (holi)days: title, day,  prop., delib., date, ...
+    ('P38', ('PUE3', 'P790', 'P571', 'PUE4', 'P828', 'PUE7', 'PUE8','PUE9', 'P854', 'P248', 'comment',),), # currency and coinage
+    ('P92', ('P953', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'PUE9', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248', 'comment',),), # national constitution
     # ('Bag', ('', 'P832',),), # container of members (monuments and days)
 ])
 EW_TREE_KEYS = list(EW_TREE.keys())
+
+LITERAL_LEAF_KEYS = ('label', 'PUE2', 'P854', 'P248', 'comment',)
 
 EURO_LANGUAGES = (
     ('en', 'English'),

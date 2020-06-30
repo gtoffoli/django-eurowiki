@@ -190,7 +190,10 @@ class editStatement(View):
                     value = object
                     statement = LiteralStatement(subject=s, predicate=p, object=o, context=c)
                     statement.save()
-                    return HttpResponseRedirect('/item/{}/'.format(subject_id))
+                    if subject_id in settings.EU_COUNTRY_KEYS:
+                        return HttpResponseRedirect('/country/{}/'.format(subject_id))
+                    else:
+                        return HttpResponseRedirect('/item/{}/'.format(subject_id))
             else:  # statement_class=='uri'
                 form.fields['literal'].widget = forms.HiddenInput()
                 form.fields['datatype'].widget = forms.HiddenInput()
@@ -208,8 +211,10 @@ class editStatement(View):
                     c = NamedGraph.objects.get(identifier=make_uriref(context))
                     statement = URIStatement(subject=s, predicate=p, object=o, context=c)
                     statement.save()
-                    print('--- statement:', statement)
-                    return HttpResponseRedirect('/item/{}/'.format(subject_id))
+                    if subject_id in settings.EU_COUNTRY_KEYS:
+                        return HttpResponseRedirect('/country/{}/'.format(subject_id))
+                    else:
+                        return HttpResponseRedirect('/item/{}/'.format(subject_id))
             # statement = form.save()
             # return HttpResponseRedirect('/uri_statement/{}/'.format(statement.id))
         return render(request, self.template_name, {'form': form, 'subject':subject_id, 'statement':statement_id})
