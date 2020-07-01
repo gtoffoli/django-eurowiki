@@ -114,12 +114,15 @@ def view_item(request, item_code):
     return render(request, 'item.html', {'item' : item})
 
 def edit_item(request, item_code):
+    country=request.GET.get('c')
+    predicate=request.GET.get('p')
+    predicate1=request.GET.get('p1')
     if len(item_code)==35:
         bnode = BNode(item_code)
         item = Item(bnode=bnode)
     else:
         item = Item(id=item_code)
-    return render(request, 'item_edit.html', {'item' : item})
+    return render(request, 'item_edit.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'predicate1' : predicate1})
 
 @method_decorator(login_required, name='post')
 class editStatement(View):
@@ -193,7 +196,7 @@ class editStatement(View):
                     if subject_id in settings.EU_COUNTRY_KEYS:
                         return HttpResponseRedirect('/country/{}/'.format(subject_id))
                     else:
-                        return HttpResponseRedirect('/item/{}/'.format(subject_id))
+                        return HttpResponseRedirect('/item/{}/edit'.format(subject_id))
             else:  # statement_class=='uri'
                 form.fields['literal'].widget = forms.HiddenInput()
                 form.fields['datatype'].widget = forms.HiddenInput()

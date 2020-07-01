@@ -1,7 +1,6 @@
 {% load i18n static %}
 
 {% with wd=o.id props=o.properties %}
-
 {% for p, o, lang, languages, c, r, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
@@ -20,15 +19,15 @@
     {% else %}
         <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%;">
-            <div class="mb-3" style="font-size:90%;">{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{% endif %}<span>{{ o.preferred_label }}</span>
+            <div class="mb-3" style="font-size:90%;">{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/?c={{par1}}&p={{par2}}&p1={{p.id}}" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{% endif %}<span>{{ o.preferred_label }}</span>
                 {% if o.is_wikidata %}
                 <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link"></i></a>
                 {% endif %}
             </div>
-            {% include "_props_subtree.html" %}
+            {% include "_props_subtree.html" with par1=par1 par2=par2 %}
             {% if r %}
                	{% with o=r %}
-                {% include "_props_subtree.html" %}
+                {% include "_props_subtree.html" with par1=par1 par2=par2 %}
             	{% endwith %}
             {% endif %}
         </div>
