@@ -33,11 +33,12 @@ urlpatterns = [
     url(r'^literal_statements/$', views.list_literal_statements, name='list_literal_statements'),
     url(r'^literal_statement/(?P<statement_id>[\d-]+)/$', views.view_literal_statement, name='literal_statement'),
 
-     url(r'^country/(?P<item_code>\w[\d]+)/$', views.view_country, name='view_country'),
-     #url(r'^countries/compare/$', views.compare_countries, name='compare_countries'),
-     url(r'^countries/view/$', views.view_countries, name='view_countries'),
-     url(r'^item/(?P<item_code>[\w\d]+)/$', views.view_item, name='view_item'),
-     url(r'^item/(?P<item_code>[\w\d]+)/edit/$', views.edit_item, name='edit_item'),
+    url(r'^country/(?P<item_code>\w[\d]+)/$', views.view_country, name='view_country'),
+    #url(r'^countries/compare/$', views.compare_countries, name='compare_countries'),
+    url(r'^countries/view/$', views.view_countries, name='view_countries'),
+    url(r'^item/(?P<item_code>[\w\d]+)/$', views.view_item, name='view_item'),
+    # url(r'^item/(?P<item_code>[\w\d]+)/edit/$', views.edit_item, name='edit_item'),
+    url(r'^item/(?P<item_code>[\w\d]+)/edit/$', views.editItem.as_view(), name='edit_item'),
 
     url(r'^statement/(?P<subject_id>[\w\d]+)/new/$', views.editStatement.as_view(), name='statement_new'),
     url(r'^statement/(?P<statement_id>[\d-]+)/edit/$', views.editStatement.as_view(), name='statement_edit'),

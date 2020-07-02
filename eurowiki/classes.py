@@ -41,6 +41,9 @@ class EurowikiBase(object):
                 lbl = self.id
         return lbl
 
+    def is_bnode(self):
+        return self.bnode and not self.uriref
+
     def is_wikidata(self):
         return self.uriref and self.uriref.count(settings.WIKIDATA_BASE)
 
@@ -50,7 +53,10 @@ class EurowikiBase(object):
 class Item(EurowikiBase):
 
     def url(self):
-        return '/item/{}/'.format(self.id)
+        if self.is_bnode():
+            return '/item/{}/'.format(self.bnode)
+        else:
+            return '/item/{}/'.format(self.id)
 
     def labels(self):
         return settings.OTHER_ITEM_LABELS.get(self.id, {})
@@ -59,6 +65,8 @@ class Item(EurowikiBase):
         properties = self.properties(keys=['P1476', 'title', 'label',], exclude_keys=[], language=language)
         if properties:
             return properties[0][1]
+        if self.is_bnode():
+            return self.bnode
         return self.label()
 
     # def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
@@ -116,8 +124,8 @@ class Item(EurowikiBase):
             if not keys.count(id_from_uriref(p)):
                 continue
             p = Predicate(uriref=p, graph=self.graph)
-            # if p.is_literal():
-            if p.is_literal() and not isinstance(o, BNode): # temporary patch
+            # if p.is_literal() and not isinstance(o, BNode): # temporary patch
+            if p.is_literal():
                 if p.is_image():
                     o = Image(o)
                 else:

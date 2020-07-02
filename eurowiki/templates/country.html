@@ -43,15 +43,15 @@
                             <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
                             {% endif %}
                             <div class="level_one">
-                                <div class="mb-3 p-2">{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/?c={{ country.id }}&p={{ p.id}}" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{% endif %}<span></span>{{ o.preferred_label }}</span>
+                                <div class="mb-3 p-2">{% if can_edit %}<span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/?c={{ country.id }}&p={{ p.id }}" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{% endif %}<span>{{ o.preferred_label }}</span>
                                 {% if o.is_wikidata %}
-                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" preferred_label="true"></i></a>
                                 {% endif %}
                                 </div>
-                                {% include "_props_subtree.html" with par1=country.id par2=p.id %}
+                                {% include "_props_subtree.html" with par1=country par2=p %}
                                 {% if r %}
                                 {% with o=r %}
-                                    {% include "_props_subtree.html" with par1=country.id par2=p.id %}
+                                    {% include "_props_subtree.html" with par1=country par2=p %}
                                     {% endwith %}
                                 {% endif %}
                             </div>

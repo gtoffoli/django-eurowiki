@@ -9,6 +9,9 @@ from django.conf import settings
 wikidata_get_claims_template = 'https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&rank=normal&property={}&entity={}'
 wikidata_image_src_template = 'https://upload.wikimedia.org/wikipedia/commons/{}/{}/{}'
 
+def is_bnode_id(item_code):
+    return item_code.count('_') or len(item_code)==35 or len(item_code)==9
+
 def make_uriref(value, prefix=None):
     if not prefix:
         if value.startswith('Q'):

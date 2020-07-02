@@ -16,10 +16,10 @@ from django.contrib.auth.models import User
 from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
-from .classes import Country, Item
+from .classes import Country, Item, Predicate
 from .forms import StatementForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
-from .utils import make_node, make_uriref, id_from_uriref, friend_uri, friend_graph
+from .utils import is_bnode_id, make_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 
 try:
@@ -106,7 +106,7 @@ def view_countries(request):
     return render(request, 'country.html', {'countries_selected' : countries})
 
 def view_item(request, item_code):
-    if len(item_code)==35:
+    if is_bnode_id(item_code):
         bnode = BNode(item_code)
         item = Item(bnode=bnode)
     else:
@@ -123,6 +123,27 @@ def edit_item(request, item_code):
     else:
         item = Item(id=item_code)
     return render(request, 'item_edit.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'predicate1' : predicate1})
+
+@method_decorator(login_required, name='post')
+class editItem(View):
+    template_name = 'edit_item.html'
+
+    def get(self, request, item_code):
+        c = request.GET.get('c')
+        country = Country(id=c)
+        p = request.GET.get('p')
+        predicate = Predicate(id=p)
+        p1 = request.GET.get('p1')
+        predicate1 = p1 and Predicate(id=p1) or None
+        if is_bnode_id(item_code):
+            bnode = BNode(item_code)
+            item = Item(bnode=bnode)
+        else:
+            item = Item(id=item_code)
+        return render(request, self.template_name, {'item': item, 'country': country, 'predicate': predicate, 'predicate1': predicate1})
+
+    def post(self, request):
+        pass
 
 @method_decorator(login_required, name='post')
 class editStatement(View):
