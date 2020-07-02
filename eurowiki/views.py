@@ -143,8 +143,44 @@ class editItem(View):
         return render(request, self.template_name, {'item': item, 'country': country, 'predicate': predicate, 'predicate1': predicate1})
 
     def post(self, request):
-        pass
-
+        save = request.POST.get('save', False)
+        save_continue = request.POST.get('continue', False)
+        item_code = request.POST['item']
+        if is_bnode_id(item_code):
+            bnode = BNode(item_code)
+            item = Item(bnode=bnode)
+            subject = item.bnode
+        else:
+            item = Item(id=item_code)
+            subject = item.uriref
+        country_id = request.POST['country']
+        country = Country(id=country_id)
+        predicate_id = request.POST['predicate']
+        predicate = Predicate(id=predicate_id)
+        predicate1_id = request.POST.get('predicate1', '')
+        predicate1 = predicate1_id and Predicate(id=predicate1_id) or None
+        if save or save_continue:
+            graph = get_conjunctive_graph()
+        field_dict = {}
+        for name, value in request.POST.items():
+            if name.count('_'):
+                field_dict[name] = value
+        for name in field_dict.keys():
+            if save or save_continue:
+                p, lang = name.split('_')
+                new_value = field_dict[name]
+                triples = list(graph.triples((subject, Predicate(id=p).uriref, None)))
+                print('editItem POST', p, ':', len(triples), 'triples')
+                for triple in triples:
+                    literal = triple[2]
+                    """
+                    if lang and lang==literal.language:
+                        pass
+                    elif not lang:
+                        pass
+                    """
+        return HttpResponseRedirect('/country/{}/'.format(country_id))
+ 
 @method_decorator(login_required, name='post')
 class editStatement(View):
     form_class = StatementForm
