@@ -1,10 +1,22 @@
 import urllib.request
 import json
 import hashlib
-from rdflib.term import URIRef, BNode
+from rdflib.term import URIRef, BNode, Literal
 
 from rdflib_django.models import NamedGraph, URIStatement
 from django.conf import settings
+
+
+def literal_datatype_id(self):
+    if self.datatype:
+        return self.datatype.replace(settings.RDF_PREFIXES['xsd'], '')
+    else:
+        return ''
+Literal.datatype_id = literal_datatype_id
+
+def datatype_from_id(datatype_id):
+    return '{}{}'.format(settings.RDF_PREFIXES['xsd'], datatype_id)
+
 
 wikidata_get_claims_template = 'https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&rank=normal&property={}&entity={}'
 wikidata_image_src_template = 'https://upload.wikimedia.org/wikipedia/commons/{}/{}/{}'
@@ -14,12 +26,16 @@ def is_bnode_id(item_code):
 
 def make_uriref(value, prefix=None):
     if not prefix:
-        if value.startswith('Q'):
+        if value.startswith('QU'):
+            prefix = 'ew'
+        elif value.startswith('Q'):
             prefix = 'wd'
+        elif value.startswith('PU'):
+            prefix = 'ewt'
         elif value.startswith('P'):
             prefix = 'wdt'
         elif value in ['label', 'comment',]:
-            prefix = 'rdfs'
+            prefix = 'rdfs'         
     if prefix:
         base = settings.RDF_PREFIXES[prefix]
         if base.count('-') and base.endswith('#'): # overccome issue in rdflib URIRef

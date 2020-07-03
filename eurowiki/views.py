@@ -19,7 +19,7 @@ from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 from .classes import Country, Item, Predicate
 from .forms import StatementForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
-from .utils import is_bnode_id, make_node, make_uriref, id_from_uriref, friend_uri, friend_graph
+from .utils import datatype_from_id, is_bnode_id, make_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 
 try:
@@ -155,31 +155,42 @@ class editItem(View):
             subject = item.uriref
         country_id = request.POST['country']
         country = Country(id=country_id)
-        predicate_id = request.POST['predicate']
-        predicate = Predicate(id=predicate_id)
+        predicate0_id = request.POST['predicate']
+        predicate0 = Predicate(id=predicate0_id)
         predicate1_id = request.POST.get('predicate1', '')
         predicate1 = predicate1_id and Predicate(id=predicate1_id) or None
+        query_string = '?c={}&p={}&p1={}'.format(country_id, predicate0_id, predicate1_id)
         if save or save_continue:
-            graph = get_conjunctive_graph()
+            conjunctive_graph = get_conjunctive_graph()
         field_dict = {}
         for name, value in request.POST.items():
             if name.count('_'):
                 field_dict[name] = value
         for name in field_dict.keys():
             if save or save_continue:
-                p, lang = name.split('_')
+                predicate_id, datatype_id, language = name.split('_')
+                predicate = Predicate(id=predicate_id).uriref
                 new_value = field_dict[name]
-                triples = list(graph.triples((subject, Predicate(id=p).uriref, None)))
-                print('editItem POST', p, ':', len(triples), 'triples')
-                for triple in triples:
-                    literal = triple[2]
-                    """
-                    if lang and lang==literal.language:
-                        pass
-                    elif not lang:
-                        pass
-                    """
-        return HttpResponseRedirect('/country/{}/'.format(country_id))
+                quads = list(conjunctive_graph.quads((subject, predicate, None)))
+                for quad in quads:
+                    (subject, predicate, object, graph) = quad
+                    old_value = object.value
+                    if datatype_id and datatype_id == object.datatype_id():
+                        if new_value != old_value:
+                            graph.add((subject, predicate, Literal(new_value, datatype=object.datatype)))
+                            conjunctive_graph.remove(quad)
+                    elif language and language == object.language:
+                        if new_value != old_value:
+                            graph.add((subject, predicate, Literal(new_value, lang=object.language)))
+                            conjunctive_graph.remove(quad)
+                    elif not language and not object.language:
+                        if new_value != old_value:
+                            graph.add((subject, predicate, Literal(new_value)))
+                            conjunctive_graph.remove(quad)
+        if save:
+            return HttpResponseRedirect('/item/{}/{}'.format(item_code, query_string))
+        elif save_continue:
+            return HttpResponseRedirect('/item/{}/edit/{}'.format(item_code, query_string))
  
 @method_decorator(login_required, name='post')
 class editStatement(View):
