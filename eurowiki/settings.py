@@ -306,6 +306,4 @@ TINYMCE_DEFAULT_CONFIG = {
     'relative_urls' : False,
 }
 
-DEFAULT_STORE = "http://www.eurowiki.eu/store/"
-
 from eurowiki.resources import * # EXTERNAL_SOURCES an EXTERNAL_RESOURCES, complementing rdflib store
