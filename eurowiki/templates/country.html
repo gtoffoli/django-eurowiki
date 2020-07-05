@@ -40,12 +40,12 @@
 {% endcomment %}                            
                         {% else %}
                             {% if previous_p.id != p.id %}
-                            <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
+                            <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
                             {% endif %}
                             <div class="level_one">
-                                <div class="mb-3 p-2">{% if can_edit %}<span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/?c={{ country.id }}&p={{ p.id }}" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{% endif %}<span>{{ o.preferred_label }}</span>
+                                <div class="h5 mb-3 p-2" style="font-size:1.1rem">{% if can_edit %}<span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/?c={{ country.id }}&p={{ p.id }}" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}?c={{ country.id }}&p={{ p.id }}" title="{% trans "view" %} {% trans "item" %}">{{ o.preferred_label }}</a>
                                 {% if o.is_wikidata %}
-                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" preferred_label="true"></i></a>
+                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
                                 {% endif %}
                                 </div>
                                 {% include "_props_subtree.html" with par1=country par2=p %}

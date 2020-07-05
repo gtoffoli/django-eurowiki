@@ -78,7 +78,7 @@
             <ul class="navbar-nav ml-md-auto">
                 <li class="nav-item">
                     <form action="/i18n/setlang/" method="post">{% csrf_token %}
-                        <input type="hidden" name="next" value="{{ path_no_language }}">
+                        <input type="hidden" name="next" value="{{request.get_full_path}}">
                         <select name="language" onchange='this.form.submit()' class="form-control">
                         {% for lang in LANGUAGES %}
                             <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE|slice:":2" %}selected="selected"{% endif %}>{{ lang.1 }}</option>
@@ -89,7 +89,7 @@
                 <li class="nav-item pr-0">
                     {% if user.is_authenticated %}
                     <div class="mb-0">
-                        <form method="post" action="{% url 'account_logout' %}?next={% if not "new" in request.get_full_path and not "edit" in request.get_full_path %}?next={{request.get_full_path}}{% else %}/{% endif %}">
+                        <form method="post" action="{% url 'account_logout' %}?next={% if not "new" in request.get_full_path and not "edit" in request.get_full_path %}{{request.get_full_path|urlencode}}{% else %}/{% endif %}">
                             <div style="color:white">{{ user.get_display_name }}</div>
                             {% csrf_token %}
                             {% if redirect_field_value %}
@@ -99,7 +99,7 @@
                         </form>
                      </div> 
                     {% else %}
-                        <a class="btn btn-ew-login mb-0" href="{% url 'account_login' %}?next={{ request.path }}">{% trans 'Log in' %} <i class="fa fa-sign-in" aria-hidden="true"></i></a>
+                        <a class="btn btn-ew-login mb-0" href="{% url 'account_login' %}?next={{ request.get_full_path|urlencode:"" }}">{% trans 'Log in' %} <i class="fa fa-sign-in" aria-hidden="true"></i></a>
                     {% endif %}
                 </li>
             </ul>

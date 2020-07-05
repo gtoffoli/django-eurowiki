@@ -1,5 +1,8 @@
 ﻿/* eurowiki.css */
 
+a:hover {
+    text-decoration: none;
+}
 /* MAIN NAVBAR */
 
 .ew-navbar {

@@ -6,43 +6,69 @@
 {% block body_class %}item_edit{% endblock body_class %}
 
 {% block body %}
+<!--h1 class="ew-title" style="white-space: nowrap;"><a href="/country/{{ country.id }}/">{{ country.label }}</a></h1-->
+<h1 class="ew-title" style="white-space: nowrap;"><a href="/country/{{ country.id }}/" title="{% trans "view" %} {% trans "country" %}">{{ country.label }}</a> <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%"></i></a></h1>
+{% if not predicate1 %}
+<div class="h5 summary_label p-2">{{ predicate.label|capfirst }}</div>
+<h5 class="p-2" style="font-size: 1.1rem">
+    <a href="/item/{{item.id}}?c={{ country.id }}&p={{ predicate.id }}" title="{% trans "view" %} {% trans "item" %}">{{item.preferred_label}}</a>
+    {% if item.is_wikidata %}
+        <a href="{{ item.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
+    {% endif %}
+</h5>
+{% else %}
+<div class="h5 p-2" style="font-size: 1.1rem">
+    {% if parent %}
+        <span class="mr-1"><a href="/item/{{parent.id}}/edit/?c={{ country.id }}&p={{ predicate.id }}" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span><a href="/item/{{parent.id}}/?c={{country.id}}&p={{predicate.id}}" title="{% trans "view" %} {% trans "item" %}">{{parent.preferred_label}}</a>
+        {% if parent.is_wikidata %}
+            <a href="{{ parent.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
+        {% endif %}
+    [{% endif %} {{ predicate.label }}{% if parent %} ]{% endif %}
+</div>
+<div class="h6 p-2 summary_label">{{ predicate1.label|capfirst}}</div>
+<h6 class="p-2"><a href="/item/{{item.id}}?c={{ country.id }}&p={{ predicate.id }}{% if predicate1 and parent %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}" title="{% trans "view" %} {% trans "item" %}">{{item.preferred_label}}</a>
+    {% if item.is_wikidata %}
+        <a href="{{ item.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" preferred_label="true"></i></a>
+        {% endif %}
+</h6>
+{% endif %}
 <form action="/item/edit/" method="POST" novalidate="">{% csrf_token %}
-<h1 class="ew-title" style="white-space: nowrap;"><a href="/country/{{ country.id }}/">{{ country.label }}</a></h1>
-<input type="hidden" name="item" value="{% if item.is_bnode %}{{ item.bnode }}{% else %}{{ item.id }}{% endif %}">
 <input type="hidden" name="country" value="{{country.id}}">
-<h5 style="padding-left: 0.5em;">{{ predicate.label|capfirst }}</h5>
 <input type="hidden" name="predicate" value="{{predicate.id}}">
+<input type="hidden" name="item" value="{% if item.is_bnode %}{{ item.bnode }}{% else %}{{ item.id }}{% endif %}">
+{% if parent %}
+	<input type="hidden" name="parent" value="{{parent.id}}">
+{% endif %}
 {% if predicate1 %}
-	<h6 style="padding-left: 0.5em;">{{ predicate1.label|capfirst }}</h6>
 	<input type="hidden" name="predicate1" value="{{predicate1.id}}">
 {% endif %}
-<div style="max-height: calc(100vh - 16.2rem); overflow-y:auto">
-{% with props=item.edit_properties %}
+<div style="max-height: calc(100vh - 20.2rem); overflow-y:auto">
+{% with wd=item.id props=item.edit_properties %}
 {% for p, o, lang, languages, c, r, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 0px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
         <div class="p-2" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></div>
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
-        <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
-        <div class="p-2" style="flex-basis: 85%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
+        <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
+        <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
         </div>
         {% else %}
             <div class="p-2" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></div>
             <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
-            <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}{% if o.datatype_id %}&lt;{{ o.datatype_id }}&gt;{% endif %}</div>
-            <div class="p-2" style="flex-basis: 85%; font-size:90%;">
+            <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}{% if o.datatype_id %}&lt;{{ o.datatype_id }}&gt;{% endif %}</div>
+            <div class="p-2" style="flex-basis: 80%; font-size:90%;">
             	<textarea name="{{ p.id }}_{{ o.datatype_id }}_{{ lang }}" style="width: 100%">{{ o }}</textarea></div>
             </div>
         {% endif %}
     {% else %}
          <div class="p-2" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></div>
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
-        <div class="summary_label p-2 pr-3" style="flex-basis: 15%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
-        <div class="p-2" style="flex-basis: 85%;">
-            <div class="mb-3" style="font-size:90%;"><span class="mr-1"><a href="{{ o.url }}edit/?c={{ country.id }}&p={{ predicate.id }}&p1={{ p.id }}" title="{% trans "edit" %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>{{ o.preferred_label }}
+        <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
+        <div class="p-2" style="flex-basis: 80%;">
+            <div class="h6 mb-3"><span class="mr-1"><a href="{{ o.url }}edit/?c={{ country.id }}&p={{ predicate.id }}&e={{wd}}&p1={{ p.id }}" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}?c={{ country.id }}&p={{ predicate.id }}&e={{wd}}&p1={{p.id}}" title="{% trans "view" %} {% trans "item"%}">{{ o.preferred_label }}</a>
                 {% if o.is_wikidata %}
-                <a href="{{ o.wd_url }}" target="_blank"><i class="fa fa-external-link"></i></a>
+                <a href="{{ o.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%"></i></a>
                 {% endif %}
             </div>
             {% include "_props_subtree.html" with par1=country par2=predicate %}
@@ -60,9 +86,9 @@
 </div>
 
 <div class="d-flex justify-content-center mb-3">
-	<div><input type="submit" class="btn btn-light" name="save" value="{% trans "save" %}"></div>
-	<div class="ml-3"><input type="submit" class="btn btn-light" name="continue" value="{% trans "save & continue" %}"></div>
-	<div class="ml-3"><a class="btn btn-light" href="/statement/{{ item.id }}/new/">{% trans "add property" %}</a></div>
+	<div><input type="submit" class="btn btn-light" name="save" value="{% trans "save"|capfirst %}"></div>
+	<div class="ml-3"><input type="submit" class="btn btn-light" name="continue" value="{% trans "save & continue"|capfirst %}"></div>
+	<div class="ml-3"><a class="btn btn-light" href="/statement/{{ item.id }}/new/">{% trans "add property"|capfirst %}</a></div>
 </div>
 </form>
 {% endblock body %}

@@ -106,13 +106,21 @@ def view_countries(request):
     return render(request, 'country.html', {'countries_selected' : countries})
 
 def view_item(request, item_code):
+    c = request.GET.get('c')
+    country = Country(id=c)
+    p = request.GET.get('p')
+    predicate = Predicate(id=p)
+    e = request.GET.get('e')
+    parent = e and Item(id=e) or None
+    p1 = request.GET.get('p1')
+    predicate1 = p1 and Predicate(id=p1) or None
     if is_bnode_id(item_code):
         bnode = BNode(item_code)
         item = Item(bnode=bnode)
     else:
         item = Item(id=item_code)
-    return render(request, 'item.html', {'item' : item})
-
+    return render(request, 'item.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'parent': parent, 'predicate1' : predicate1})
+"""
 def edit_item(request, item_code):
     country=request.GET.get('c')
     predicate=request.GET.get('p')
@@ -123,7 +131,7 @@ def edit_item(request, item_code):
     else:
         item = Item(id=item_code)
     return render(request, 'item_edit.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'predicate1' : predicate1})
-
+"""
 @method_decorator(login_required, name='post')
 class editItem(View):
     template_name = 'edit_item.html'
@@ -133,6 +141,8 @@ class editItem(View):
         country = Country(id=c)
         p = request.GET.get('p')
         predicate = Predicate(id=p)
+        e = request.GET.get('e')
+        parent = e and Item(id=e) or None
         p1 = request.GET.get('p1')
         predicate1 = p1 and Predicate(id=p1) or None
         if is_bnode_id(item_code):
@@ -140,7 +150,7 @@ class editItem(View):
             item = Item(bnode=bnode)
         else:
             item = Item(id=item_code)
-        return render(request, self.template_name, {'item': item, 'country': country, 'predicate': predicate, 'predicate1': predicate1})
+        return render(request, self.template_name, {'item': item, 'country': country, 'predicate': predicate, 'parent': parent, 'predicate1': predicate1})
 
     def post(self, request):
         save = request.POST.get('save', False)
@@ -157,9 +167,11 @@ class editItem(View):
         country = Country(id=country_id)
         predicate0_id = request.POST['predicate']
         predicate0 = Predicate(id=predicate0_id)
+        parent_id = request.POST.get('parent', '')
+        parent = parent_id and Item(id=parent_id) or None
         predicate1_id = request.POST.get('predicate1', '')
         predicate1 = predicate1_id and Predicate(id=predicate1_id) or None
-        query_string = '?c={}&p={}&p1={}'.format(country_id, predicate0_id, predicate1_id)
+        query_string = '?c={}&p={}&e={}&p1={}'.format(country_id, predicate0_id, parent_id, predicate1_id)
         if save or save_continue:
             conjunctive_graph = get_conjunctive_graph()
         field_dict = {}
@@ -198,6 +210,14 @@ class editStatement(View):
     template_name = 'edit_statement.html'
 
     def get(self, request, statement_id=None, subject_id=None):
+        c = request.GET.get('c')
+        country = Country(id=c)
+        p = request.GET.get('p')
+        predicate0 = Predicate(id=p)
+        e = request.GET.get('e')
+        parent = e and Item(id=e) or None
+        p1 = request.GET.get('p1')
+        predicate1 = p1 and Predicate(id=p1) or None
         language = get_language()[:2]
         if statement_id:
             statement_class = 'literal' # estrarre dallo statement
