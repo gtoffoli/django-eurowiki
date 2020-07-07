@@ -275,7 +275,7 @@ class editStatement(View):
             if datatype in ['integer', 'gYear']:
                 form.fields['literal'].widget = forms.TextInput(attrs={'type': 'number'})
             elif datatype == 'date':
-                form.fields['literal'].widget = forms.TextInput(attrs={'type': 'text', 'placeholder':"yyyy/mm/dd", 'pattern':"(?:(?:0[1-9]|1[0-2])[\/\\-. ]?(?:0[1-9]|[12][0-9])|(?:(?:0[13-9]|1[0-2])[\/\\-. ]?30)|(?:(?:0[13578]|1[02])[\/\\-. ]?31))[\/\\-. ]?(?:19|20)[0-9]{2}"})
+                form.fields['literal'].widget = forms.TextInput(attrs={'type': 'text', 'placeholder':"yyyy-mm-dd", })
             elif datatype == 'string':
                 form.fields['literal'].widget = forms.Textarea(attrs={'rows': 2})
             else:
