@@ -259,3 +259,12 @@ ew-like-button > a:hover {
   }
 }
 */
+
+/* BREADCRUMB */
+.ew-breadcrumb {
+  background-color: rgba(0, 51, 153, .04);
+}
+
+.ew-breadcrumb-item + .ew-breadcrumb-item::before {
+    content:"→";
+}

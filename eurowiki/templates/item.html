@@ -71,7 +71,7 @@
 </div>
 {% if can_edit %}
  <div class="d-flex justify-content-center pt-3">
-    <div><a class="btn btn-light" href="/statement/{{ item.id }}/new/?c={{ country.id }}&p={{ predicate.id }}{% if predicate1 and parent %}&e={{parent.id}}&p1={predicate1.id}}{% endif %}">{% trans "add property"|capfirst %}</a></div>
+    <div><a class="btn btn-light" href="/statement/{{ item.id }}/new/?f=view&c={{ country.id }}&p={{ predicate.id }}{% if predicate1 and parent %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}">{% trans "add"|capfirst %} {% trans "statement" %}</a></div>
 </div>
 {% endif %}
 {% endwith %}

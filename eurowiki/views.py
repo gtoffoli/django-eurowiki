@@ -120,18 +120,7 @@ def view_item(request, item_code):
     else:
         item = Item(id=item_code)
     return render(request, 'item.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'parent': parent, 'predicate1' : predicate1})
-"""
-def edit_item(request, item_code):
-    country=request.GET.get('c')
-    predicate=request.GET.get('p')
-    predicate1=request.GET.get('p1')
-    if len(item_code)==35:
-        bnode = BNode(item_code)
-        item = Item(bnode=bnode)
-    else:
-        item = Item(id=item_code)
-    return render(request, 'item_edit.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'predicate1' : predicate1})
-"""
+
 @method_decorator(login_required, name='post')
 class editItem(View):
     template_name = 'edit_item.html'
@@ -210,14 +199,21 @@ class editStatement(View):
     template_name = 'edit_statement.html'
 
     def get(self, request, statement_id=None, subject_id=None):
+        data_dict = {}
+        fun = request.GET.get('f')
+        data_dict['fun'] = fun
         c = request.GET.get('c')
-        country = Country(id=c)
+        country = c and Country(id=c) or None
+        data_dict['country'] = country
         p = request.GET.get('p')
-        predicate0 = Predicate(id=p)
+        predicate0 = p and Predicate(id=p) or None
+        data_dict['predicate0'] = predicate0
         e = request.GET.get('e')
         parent = e and Item(id=e) or None
+        data_dict['parent'] = parent
         p1 = request.GET.get('p1')
         predicate1 = p1 and Predicate(id=p1) or None
+        data_dict['predicate1'] = predicate1
         language = get_language()[:2]
         if statement_id:
             statement_class = 'literal' # estrarre dallo statement
@@ -239,14 +235,51 @@ class editStatement(View):
                 form.fields['predicate'].choices = COUNTRY_PREDICATE_CHOICES
             else:
                 form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
-        return render(request, self.template_name, {'form':form, 'subject':subject_id, 'statement':statement_id})
+        data_dict['form']=form
+        data_dict['subject']=subject_id
+        if country:
+            data_dict['subject_full'] = subject_id and Item(id=subject_id) or None
+        else:
+            country = Country(id=subject_id)
+            country_label = country.label()
+            data_dict['subject_full']=country_label
+        data_dict['statement']=statement_id
+        return render(request, self.template_name, data_dict)
 
     def post(self, request, statement_id=None, subject_id=None):
         form = self.form_class(request.POST)
+        data_dict = {}
+        fun = request.POST.get('fun', '')
+        data_dict['fun'] = fun
+        country_id = request.POST.get('country', '')
+        country = country_id and Country(id=country_id) or None
+        data_dict['country'] = country
+        predicate0_id = request.POST.get('predicate0', '')
+        predicate0 = predicate0_id and Predicate(id=predicate0_id) or None
+        data_dict['predicate0'] = predicate0
+        parent_id = request.POST.get('parent', '')
+        parent = parent_id and Item(id=parent_id) or None
+        data_dict['parent'] = parent
+        predicate1_id = request.POST.get('predicate1', '')
+        predicate1 = predicate1_id and Predicate(id=predicate1_id) or None
+        if parent and predicate1:
+            query_string = '?f={}&c={}&p={}&e={}&p1={}'.format(fun, country_id, predicate0_id, parent_id, predicate1_id)
+        else:
+            query_string = '?f={}&c={}&p={}'.format(fun, country_id, predicate0_id)
+        data_dict['predicate1'] = predicate1
         if form.is_valid():
             data = form.cleaned_data
             predicate = data['predicate']
             context = data['context']
+            datatype = data['datatype']
+            if datatype in ['integer', 'gYear']:
+                form.fields['literal'].widget = forms.TextInput(attrs={'type': 'number'})
+            elif datatype == 'date':
+                form.fields['literal'].widget = forms.TextInput(attrs={'type': 'text', 'placeholder':"yyyy/mm/dd", 'pattern':"(?:(?:0[1-9]|1[0-2])[\/\\-. ]?(?:0[1-9]|[12][0-9])|(?:(?:0[13-9]|1[0-2])[\/\\-. ]?30)|(?:(?:0[13578]|1[02])[\/\\-. ]?31))[\/\\-. ]?(?:19|20)[0-9]{2}"})
+            elif datatype == 'string':
+                form.fields['literal'].widget = forms.Textarea(attrs={'rows': 2})
+            else:
+                form.fields['literal'].widget = forms.TextInput()
             statement_class = data['statement_class']
             if statement_class == 'literal':
                 form.fields['object'].widget = forms.HiddenInput()
@@ -284,7 +317,10 @@ class editStatement(View):
                     if subject_id in settings.EU_COUNTRY_KEYS:
                         return HttpResponseRedirect('/country/{}/'.format(subject_id))
                     else:
-                        return HttpResponseRedirect('/item/{}/edit'.format(subject_id))
+                        if fun == 'edit':
+                            return HttpResponseRedirect('/item/{}/edit{}'.format(subject_id, query_string))
+                        else: 
+                            return HttpResponseRedirect('/item/{}/{}'.format(subject_id, query_string))
             else:  # statement_class=='uri'
                 form.fields['literal'].widget = forms.HiddenInput()
                 form.fields['datatype'].widget = forms.HiddenInput()
@@ -308,4 +344,13 @@ class editStatement(View):
                         return HttpResponseRedirect('/item/{}/'.format(subject_id))
             # statement = form.save()
             # return HttpResponseRedirect('/uri_statement/{}/'.format(statement.id))
-        return render(request, self.template_name, {'form': form, 'subject':subject_id, 'statement':statement_id})
+        data_dict['form']=form
+        data_dict['subject']=subject_id
+        if country:
+            data_dict['subject_full'] = subject_id and Item(id=subject_id) or None
+        else:
+            country = Country(id=subject_id)
+            country_label = country.label()
+            data_dict['subject_full']=country_label
+        data_dict['statement']=statement_id
+        return render(request, self.template_name, data_dict)

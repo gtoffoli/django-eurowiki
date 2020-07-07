@@ -2,12 +2,24 @@
 {% load static i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "edit statement"|capfirst %}{% endblock head_title %}
+{% block head_title %}{% trans "edit"|capfirst %} {% trans "statement" %}{% endblock head_title %}
 
-{% block body_class %}statement{% endblock body_class %}
+{% block body_class %}edit_statement{% endblock body_class %}
 {% block body %}
+<nav aria-label="breadcrumb ew-breadcrumb">
+    <ol class="breadcrumb ew-breadcrumb">
+        {% if country %}
+            <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/country/{{country.id}}" title="{% trans "view" %} {% trans "country" %}">{{country.label}}</a></li>
+            {% if parent %}<li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/item/{{parent.id}}/?c={{country.id}}&p={{predicate0.id}}" title="{% trans "view" %} {% trans "item" %}">{{parent.preferred_label|truncatechars:30}} <small>[{{predicate0.label}}]</small></a></li>{% endif %}
+            <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/item/{{subject}}/{%if fun == 'edit' %}edit{% endif %}?c={{country.id}}&p={{predicate0.id}}{% if parent and predicate1 %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}" title="{% if fun == 'edit' %}{% trans "edit" %}{% else %}{% trans "view" %}{% endif %} {% trans "item" %}">{{subject_full.preferred_label}} ({{subject}}) <small>{% if predicate1 and parent %}[{{predicate1.label}}]{% else %}[{{predicate0.label}}]{% endif %}</small></a></li>
+        {% else %}
+            <li class="h6 breadcrumb-item ew-breadcrumb-item active"><a href="/country/{{subject}}">{{subject_full}} ({{subject}})</a></li>
+        {% endif %}
+        <li class="h6 breadcrumb-item ew-breadcrumb-item active">{% trans "edit"|capfirst %} {% trans "statement" %}</li>
+    </ol>
+</nav>
 
-<h2 class="text-center">{% trans "edit statement"|capfirst %}</h2>
+<h3 class="text-center">{% trans "edit"|capfirst %} {% trans "statement" %}</h3>
 
 {% if subject %}
 <form action="/statement/{{ subject }}/new/" method="post" novalidate>
@@ -15,8 +27,17 @@
 <form action="/statement/{{ statement }}/edit/" method="post" novalidate>
 {% endif %}
     {% csrf_token %}
+    {% if fun %}<input type="hidden" name="fun" value="{{fun}}">{% endif %}
+    {% if country %}<input type="hidden" name="country" value="{{country.id}}">{% endif %}
+    {% if predicate0 %}<input type="hidden" name="predicate0" value="{{predicate0.id}}">{% endif %}
+    {% if parent %}<input type="hidden" name="parent" value="{{parent.id}}">{% endif %}
+    {% if predicate1 %}<input type="hidden" name="predicate1" value="{{predicate1.id}}">{% endif %}
+
+<input type="hidden" name="predicate" value="{{predicate.id}}">
     {{ form|crispy }}
-    <button type="submit" class="btn btn-primary" name="save" value="save">Save</button>
+    <div class="d-flex justify-content-center mb-3">
+    <button type="submit" class="btn btn-light" name="save" value="save">{% trans "save"|capfirst %}</button>
+    </div>
 </form>
 
 {% endblock body %}

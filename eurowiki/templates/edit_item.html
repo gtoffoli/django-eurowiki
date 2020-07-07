@@ -1,7 +1,7 @@
 {% extends "eurowiki_base.html" %}
 {% load static i18n %}
 
-{% block head_title %}{% endblock head_title %}
+{% block head_title %}{% trans "edit" %} {{ item.preferred_label }}{% endblock head_title %}
 
 {% block body_class %}item_edit{% endblock body_class %}
 
@@ -88,7 +88,7 @@
 <div class="d-flex justify-content-center mb-3">
 	<div><input type="submit" class="btn btn-light" name="save" value="{% trans "save"|capfirst %}"></div>
 	<div class="ml-3"><input type="submit" class="btn btn-light" name="continue" value="{% trans "save & continue"|capfirst %}"></div>
-	<div class="ml-3"><a class="btn btn-light" href="/statement/{{ item.id }}/new/">{% trans "add property"|capfirst %}</a></div>
+  <div><a class="btn btn-light" href="/statement/{{ item.id }}/new/?f=edit&c={{ country.id }}&p={{ predicate.id }}{% if predicate1 and parent %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}">{% trans "add"|capfirst %} {% trans "statement" %}</a></div>
 </div>
 </form>
 {% endblock body %}

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-23 10:17+0200\n"
-"PO-Revision-Date: 2020-06-23 10:23+0200\n"
+"POT-Creation-Date: 2020-07-07 20:05+0200\n"
+"PO-Revision-Date: 2020-07-07 20:06+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,35 +46,35 @@ msgstr ""
 msgid "day of year"
 msgstr ""
 
-#: .\eurowiki\forms.py:26
+#: .\eurowiki\forms.py:30
 msgid "subject"
-msgstr ""
+msgstr "Soggetto"
 
-#: .\eurowiki\forms.py:27
+#: .\eurowiki\forms.py:31
 msgid "statement class"
 msgstr ""
 
-#: .\eurowiki\forms.py:28
+#: .\eurowiki\forms.py:32
 msgid "predicate"
 msgstr ""
 
-#: .\eurowiki\forms.py:29
+#: .\eurowiki\forms.py:33
 msgid "object node"
 msgstr ""
 
-#: .\eurowiki\forms.py:30
-msgid "literal value"
-msgstr ""
-
-#: .\eurowiki\forms.py:31
+#: .\eurowiki\forms.py:34
 msgid "data type"
 msgstr ""
 
-#: .\eurowiki\forms.py:32
+#: .\eurowiki\forms.py:35
+msgid "literal value"
+msgstr ""
+
+#: .\eurowiki\forms.py:36
 msgid "string language"
 msgstr ""
 
-#: .\eurowiki\forms.py:33
+#: .\eurowiki\forms.py:37
 msgid "context"
 msgstr "contesto"
 
@@ -82,13 +82,51 @@ msgstr "contesto"
 msgid "In"
 msgstr ""
 
-#: .\eurowiki\templates\_props_subtree.html:22
-#: .\eurowiki\templates\_props_subtree_edit - Copia.html:17
-#: .\eurowiki\templates\_props_subtree_edit.html:22
-#: .\eurowiki\templates\country.html:46 .\eurowiki\templates\item_edit
-#: Copia.html:37 .\eurowiki\templates\item_edit.html:37
+#: .\eurowiki\templates\_props_subtree - Copia.html:22
+#: .\eurowiki\templates\_props_subtree.html:22 .\eurowiki\templates\country
+#: Copia.html:46 .\eurowiki\templates\country.html:46
+#: .\eurowiki\templates\edit_item Copia.html:42
+#: .\eurowiki\templates\edit_item.html:4 .\eurowiki\templates\edit_item.html:22
+#: .\eurowiki\templates\edit_item.html:69
+#: .\eurowiki\templates\edit_statement.html:5
+#: .\eurowiki\templates\edit_statement.html:14
+#: .\eurowiki\templates\edit_statement.html:18
+#: .\eurowiki\templates\edit_statement.html:22 .\eurowiki\templates\item
+#: Copia.html:37 .\eurowiki\templates\item.html:14
+#: .\eurowiki\templates\item.html:22 .\eurowiki\templates\item.html:29
+#: .\eurowiki\templates\item.html:55
 msgid "edit"
 msgstr "edita"
+
+#: .\eurowiki\templates\_props_subtree.html:22
+#: .\eurowiki\templates\country.html:46 .\eurowiki\templates\edit_item.html:14
+#: .\eurowiki\templates\edit_item.html:22
+#: .\eurowiki\templates\edit_item.html:29
+#: .\eurowiki\templates\edit_item.html:69
+#: .\eurowiki\templates\edit_statement.html:13
+#: .\eurowiki\templates\edit_statement.html:14
+#: .\eurowiki\templates\item.html:14 .\eurowiki\templates\item.html:22
+#: .\eurowiki\templates\item.html:29 .\eurowiki\templates\item.html:55
+#, fuzzy
+#| msgid "no item"
+msgid "item"
+msgstr "nessun elemento"
+
+#: .\eurowiki\templates\_props_subtree.html:22
+#: .\eurowiki\templates\country.html:46 .\eurowiki\templates\edit_item.html:10
+#: .\eurowiki\templates\edit_item.html:14
+#: .\eurowiki\templates\edit_item.html:22
+#: .\eurowiki\templates\edit_item.html:29
+#: .\eurowiki\templates\edit_item.html:69
+#: .\eurowiki\templates\edit_statement.html:12
+#: .\eurowiki\templates\edit_statement.html:13
+#: .\eurowiki\templates\edit_statement.html:14
+#: .\eurowiki\templates\eurowiki_base.html:181
+#: .\eurowiki\templates\eurowiki_base.html:194
+#: .\eurowiki\templates\item.html:10 .\eurowiki\templates\item.html:22
+#: .\eurowiki\templates\item.html:55
+msgid "view"
+msgstr ""
 
 #: .\eurowiki\templates\account\login.html:7
 #: .\eurowiki\templates\account\login.html:32
@@ -112,18 +150,51 @@ msgstr ""
 msgid "no item"
 msgstr "nessun elemento"
 
+#: .\eurowiki\templates\country - Copia.html:4
 #: .\eurowiki\templates\country.html:4
 msgid "view countries"
 msgstr "visualizza i paesi"
 
-#: .\eurowiki\templates\country.html:62 .\eurowiki\templates\item.html:49
-#: .\eurowiki\templates\item_edit - Copia.html:55
-#: .\eurowiki\templates\item_edit.html:57
+#: .\eurowiki\templates\country - Copia.html:69 .\eurowiki\templates\edit_item
+#: Copia.html:64
 msgid "add property"
 msgstr ""
 
+#: .\eurowiki\templates\country.html:69 .\eurowiki\templates\edit_item.html:91
+#: .\eurowiki\templates\item.html:74
+#, fuzzy
+#| msgid "and"
+msgid "add"
+msgstr "e"
+
+#: .\eurowiki\templates\country.html:69 .\eurowiki\templates\edit_item.html:91
 #: .\eurowiki\templates\edit_statement.html:5
-#: .\eurowiki\templates\edit_statement.html:10
+#: .\eurowiki\templates\edit_statement.html:18
+#: .\eurowiki\templates\edit_statement.html:22
+#: .\eurowiki\templates\item.html:74
+msgid "statement"
+msgstr ""
+
+#: .\eurowiki\templates\edit_item - Copia.html:62
+#: .\eurowiki\templates\edit_item.html:89
+#: .\eurowiki\templates\edit_statement.html:39
+msgid "save"
+msgstr ""
+
+#: .\eurowiki\templates\edit_item - Copia.html:63
+#: .\eurowiki\templates\edit_item.html:90
+#, fuzzy
+#| msgid "view countries"
+msgid "save & continue"
+msgstr "visualizza i paesi"
+
+#: .\eurowiki\templates\edit_item.html:10
+#: .\eurowiki\templates\edit_statement.html:12
+#: .\eurowiki\templates\item.html:10
+msgid "country"
+msgstr ""
+
+#: .\eurowiki\templates\edit_statement - Copia.html:5 Copia.html:10
 msgid "edit statement"
 msgstr ""
 
@@ -144,11 +215,6 @@ msgstr ""
 msgid "uncheck"
 msgstr "deseleziona"
 
-#: .\eurowiki\templates\eurowiki_base.html:181
-#: .\eurowiki\templates\eurowiki_base.html:194
-msgid "view"
-msgstr ""
-
 #: .\eurowiki\templates\eurowiki_base.html:208
 msgid "built by"
 msgstr "creato da"
@@ -163,11 +229,6 @@ msgstr "e"
 
 #: .\eurowiki\templates\eurowiki_base.html:245
 msgid "Select at least 1 country"
-msgstr ""
-
-#: .\eurowiki\templates\item_edit - Copia.html:55
-#: .\eurowiki\templates\item_edit.html:56
-msgid "save"
 msgstr ""
 
 #: .\eurowiki\templates\list_literal_statements.html:4
@@ -188,15 +249,6 @@ msgstr ""
 #: .\eurowiki\templates\list_uri_statements.html:4
 #: .\eurowiki\templates\list_uri_statements.html:8
 msgid "Uri statements"
-msgstr ""
-
-#: .\eurowiki\templates\namespace_model.html:4
-#: .\eurowiki\templates\uri_statement.html:4
-msgid "Namespace"
-msgstr ""
-
-#: .\eurowiki\templates\statement.html:4
-msgid "Statement"
 msgstr ""
 
 #~ msgid "Search ... (at least 3 characters)"
