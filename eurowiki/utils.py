@@ -22,7 +22,9 @@ wikidata_get_claims_template = 'https://www.wikidata.org/w/api.php?action=wbgetc
 wikidata_image_src_template = 'https://upload.wikimedia.org/wikipedia/commons/{}/{}/{}'
 
 def is_bnode_id(item_code):
-    return item_code.count('_') or len(item_code)==35 or len(item_code)==9
+    if not item_code:
+        return False
+    return item_code.count('_') or len(item_code)==35 or (len(item_code)==9 and item_code[0]!='Q')
 
 def make_uriref(value, prefix=None):
     if not prefix:

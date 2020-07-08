@@ -2,27 +2,34 @@
 {% load static i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "edit"|capfirst %} {% trans "statement" %}{% endblock head_title %}
+{% block head_title %}{% trans "add"|capfirst %} {% trans "statement" %}{% endblock head_title %}
 
 {% block body_class %}edit_statement{% endblock body_class %}
 {% block body %}
 <nav aria-label="breadcrumb ew-breadcrumb">
     <ol class="breadcrumb ew-breadcrumb">
+{% comment %}
         {% if country %}
             <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/country/{{country.id}}" title="{% trans "view" %} {% trans "country" %}">{{country.label}}</a></li>
             {% if parent %}<li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/item/{{parent.id}}/?c={{country.id}}&p={{predicate0.id}}" title="{% trans "view" %} {% trans "item" %}">{{parent.preferred_label|truncatechars:30}} <small>[{{predicate0.label}}]</small></a></li>{% endif %}
-            <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/item/{{subject}}/{%if fun == 'edit' %}edit{% endif %}?c={{country.id}}&p={{predicate0.id}}{% if parent and predicate1 %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}" title="{% if fun == 'edit' %}{% trans "edit" %}{% else %}{% trans "view" %}{% endif %} {% trans "item" %}">{{subject_full.preferred_label}} ({{subject}}) <small>{% if predicate1 and parent %}[{{predicate1.label}}]{% else %}[{{predicate0.label}}]{% endif %}</small></a></li>
+            <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/item/{{subject.id}}/{%if fun == 'edit' %}edit{% endif %}?c={{country.id}}&p={{predicate0.id}}{% if parent and predicate1 %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}" title="{% if fun == 'edit' %}{% trans "add" %}{% else %}{% trans "view" %}{% endif %} {% trans "item" %}">{{subject.preferred_label}} ({{subject}}) <small>{% if predicate1 and parent %}[{{predicate1.label}}]{% else %}[{{predicate0.label}}]{% endif %}</small></a></li>
         {% else %}
-            <li class="h6 breadcrumb-item ew-breadcrumb-item active"><a href="/country/{{subject}}">{{subject_full}} ({{subject}})</a></li>
+            <li class="h6 breadcrumb-item ew-breadcrumb-item active"><a href="/country/{{subject}}">{{subject.id}} ({{subject}})</a></li>
         {% endif %}
-        <li class="h6 breadcrumb-item ew-breadcrumb-item active">{% trans "edit"|capfirst %} {% trans "statement" %}</li>
+{% endcomment %}
+        <li class="h6 breadcrumb-item ew-breadcrumb-item" style="vertical-align: middle;"><a href="/country/{{country.id}}/" title="{% trans "view" %} {{country.label}}">{{country.label}}</a></li>
+        {% if not is_country %}
+            {% if parent %}<li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/item/{{parent.id}}/?c={{country.id}}&p={{predicate0.id}}" title="{% trans "view" %} {% trans "item" %}">{{parent.preferred_label|truncatechars:30}} <small>[{{predicate0.label}}]</small></a></li>{% endif %}
+            <li class="h6 breadcrumb-item ew-breadcrumb-item active"><a href="/item/{{subject.id}}/?c={{country.id}}&p={{predicate0.id}}{% if parent and predicate1 %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}" title="{% trans "view" %} {{subject.preferred_label}}">{{subject.preferred_label|truncatechars:30}}{% if predicate1 %} <small>[{{predicate1.label}}]</small>{% endif %}</a></li>
+        {% endif %}
+        <li class="h6 breadcrumb-item ew-breadcrumb-item active">{% trans "add"|capfirst %} {% trans "statement" %}</li>
     </ol>
 </nav>
 
-<h3 class="text-center">{% trans "edit"|capfirst %} {% trans "statement" %}</h3>
+<h3 class="text-center">{% trans "add"|capfirst %} {% trans "statement" %}</h3>
 
 {% if subject %}
-<form action="/statement/{{ subject }}/new/" method="post" novalidate>
+<form action="/statement/{{ subject.id }}/new/" method="post" novalidate>
 {% else %}
 <form action="/statement/{{ statement }}/edit/" method="post" novalidate>
 {% endif %}
@@ -33,7 +40,7 @@
     {% if parent %}<input type="hidden" name="parent" value="{{parent.id}}">{% endif %}
     {% if predicate1 %}<input type="hidden" name="predicate1" value="{{predicate1.id}}">{% endif %}
 
-<input type="hidden" name="predicate" value="{{predicate.id}}">
+	<input type="hidden" name="predicate" value="{{predicate.id}}">
     {{ form|crispy }}
     <div class="d-flex justify-content-center mb-3">
     <button type="submit" class="btn btn-light" name="save" value="save">{% trans "save"|capfirst %}</button>

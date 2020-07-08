@@ -4,7 +4,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from rdflib.term import BNode
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
-from .utils import make_uriref, id_from_uriref, wd_get_image_url
+from .utils import is_bnode_id, make_uriref, id_from_uriref, wd_get_image_url
 
 class EurowikiBase(object):
 
@@ -19,6 +19,7 @@ class EurowikiBase(object):
             self.uriref = make_uriref(id)
         else:
             self.bnode = bnode
+            self.id = bnode # added 200708
         if graph_identifier:
             graph = get_named_graph(graph_identifier)
         elif not graph:
@@ -164,7 +165,11 @@ class Item(EurowikiBase):
                                 languages_dict[prop_id].append(lang)
                         continue
             else:
-                o = Item(uriref=o, graph=self.graph, in_predicate=p)
+                # o = Item(uriref=o, graph=self.graph, in_predicate=p)
+                if isinstance(o, BNode):
+                    o = Item(bnode=o, graph=self.graph, in_predicate=p)
+                else:
+                    o = Item(uriref=o, graph=self.graph, in_predicate=p)
                 if r:
                     r = Item(bnode=r, graph=self.graph, in_predicate=p)
             props.append([p, o, None, [], c, r])
@@ -173,8 +178,6 @@ class Item(EurowikiBase):
             for prop_id in settings.RDF_I18N_PROPERTIES:
                 if value_dict[prop_id]:
                     props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
-                    if languages_dict[prop_id]:
-                        print(languages_dict[prop_id])
         # sort properties at the end of all processing
         props = sorted(props, key=lambda prop: keys.index(prop[0].id))
         # record the previous property in the tuple itself, so that it can be accessed in template 

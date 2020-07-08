@@ -111,12 +111,15 @@ def view_item(request, item_code):
     p = request.GET.get('p')
     predicate = Predicate(id=p)
     e = request.GET.get('e')
-    parent = e and Item(id=e) or None
+    # parent = e and Item(id=e) or None
+    if is_bnode_id(e):
+        parent = Item(bnode=BNode(e))
+    else:
+        parent = e and Item(id=e) or None
     p1 = request.GET.get('p1')
     predicate1 = p1 and Predicate(id=p1) or None
     if is_bnode_id(item_code):
-        bnode = BNode(item_code)
-        item = Item(bnode=bnode)
+        item = Item(bnode=BNode(item_code))
     else:
         item = Item(id=item_code)
     return render(request, 'item.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'parent': parent, 'predicate1' : predicate1})
@@ -131,12 +134,15 @@ class editItem(View):
         p = request.GET.get('p')
         predicate = Predicate(id=p)
         e = request.GET.get('e')
-        parent = e and Item(id=e) or None
+        # parent = e and Item(id=e) or None
+        if is_bnode_id(e):
+            parent = Item(bnode=BNode(e))
+        else:
+            parent = e and Item(id=e) or None
         p1 = request.GET.get('p1')
         predicate1 = p1 and Predicate(id=p1) or None
         if is_bnode_id(item_code):
-            bnode = BNode(item_code)
-            item = Item(bnode=bnode)
+            item = Item(bnode=BNode(item_code))
         else:
             item = Item(id=item_code)
         return render(request, self.template_name, {'item': item, 'country': country, 'predicate': predicate, 'parent': parent, 'predicate1': predicate1})
@@ -146,8 +152,7 @@ class editItem(View):
         save_continue = request.POST.get('continue', False)
         item_code = request.POST['item']
         if is_bnode_id(item_code):
-            bnode = BNode(item_code)
-            item = Item(bnode=bnode)
+            item = Item(bnode=BNode(item_code))
             subject = item.bnode
         else:
             item = Item(id=item_code)
@@ -157,7 +162,11 @@ class editItem(View):
         predicate0_id = request.POST['predicate']
         predicate0 = Predicate(id=predicate0_id)
         parent_id = request.POST.get('parent', '')
-        parent = parent_id and Item(id=parent_id) or None
+        # parent = parent_id and Item(id=parent_id) or None
+        if is_bnode_id(parent_id):
+            parent = Item(bnode=BNode(parent_id))
+        else:
+            parent = Item(id=parent_id)
         predicate1_id = request.POST.get('predicate1', '')
         predicate1 = predicate1_id and Predicate(id=predicate1_id) or None
         query_string = '?c={}&p={}&e={}&p1={}'.format(country_id, predicate0_id, parent_id, predicate1_id)
@@ -208,9 +217,6 @@ class editStatement(View):
         p = request.GET.get('p')
         predicate0 = p and Predicate(id=p) or None
         data_dict['predicate0'] = predicate0
-        e = request.GET.get('e')
-        parent = e and Item(id=e) or None
-        data_dict['parent'] = parent
         p1 = request.GET.get('p1')
         predicate1 = p1 and Predicate(id=p1) or None
         data_dict['predicate1'] = predicate1
@@ -222,28 +228,48 @@ class editStatement(View):
             else:
                 statement = get_object_or_404(LiteralStatement, pk=statement_id)
             form = self.form_class(instance=statement)
-        if subject_id:
+            data_dict['form'] = form
+        elif subject_id:
             statement_class = 'literal'
             initial = { 'statement_class': 'literal', 'subject': subject_id, 'datatype': 'string', 'language': language }
             form = self.form_class(initial=initial)
             form.fields['object'].widget = forms.HiddenInput()
-            # form.fields['datatype'].widget = forms.HiddenInput()
+            if is_bnode_id(subject_id):
+                subject = Item(bnode=BNode(subject_id))
+            else:
+                subject = Item(id=subject_id)
+            data_dict['subject'] = subject
+        is_country = subject_id in settings.EU_COUNTRY_KEYS
+        data_dict['is_country'] = is_country
+        if is_country:
+            data_dict['country'] = Country(id=subject_id)
+            parent = None
+        else:
+            e = request.GET.get('e')
+            # parent = e and Item(id=e) or None
+            if is_bnode_id(e):
+                parent = Item(bnode=BNode(e))
+            else:
+                parent = Item(id=e)
+        data_dict['parent'] = parent
         if statement_class == 'literal':
             form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
         else: # uri
-            if subject_id in settings.EU_COUNTRY_KEYS:
+            if is_country:
                 form.fields['predicate'].choices = COUNTRY_PREDICATE_CHOICES
             else:
                 form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
-        data_dict['form']=form
-        data_dict['subject']=subject_id
+        data_dict['form'] = form
+        """
+        data_dict['subject'] = subject_id
         if country:
             data_dict['subject_full'] = subject_id and Item(id=subject_id) or None
         else:
             country = Country(id=subject_id)
             country_label = country.label()
             data_dict['subject_full']=country_label
-        data_dict['statement']=statement_id
+        """
+        data_dict['statement'] = statement_id
         return render(request, self.template_name, data_dict)
 
     def post(self, request, statement_id=None, subject_id=None):
@@ -258,7 +284,11 @@ class editStatement(View):
         predicate0 = predicate0_id and Predicate(id=predicate0_id) or None
         data_dict['predicate0'] = predicate0
         parent_id = request.POST.get('parent', '')
-        parent = parent_id and Item(id=parent_id) or None
+        # parent = parent_id and Item(id=parent_id) or None
+        if is_bnode_id(parent_id):
+            parent = Item(bnode=BNode(parent_id))
+        else:
+            parent = parent_id and Item(id=parent_id) or None
         data_dict['parent'] = parent
         predicate1_id = request.POST.get('predicate1', '')
         predicate1 = predicate1_id and Predicate(id=predicate1_id) or None
@@ -272,8 +302,8 @@ class editStatement(View):
             predicate = data['predicate']
             context = data['context']
             datatype = data['datatype']
-            if datatype in ['integer', 'gYear']:
-                form.fields['literal'].widget = forms.TextInput(attrs={'type': 'number'})
+            if datatype in ['integer', 'gYear',]:
+                form.fields['literal'].widget = forms.TextInput(attrs={'type': 'number', 'placeholder':"yyyy",})
             elif datatype == 'date':
                 form.fields['literal'].widget = forms.TextInput(attrs={'type': 'text', 'placeholder':"yyyy-mm-dd", })
             elif datatype == 'string':
@@ -286,7 +316,8 @@ class editStatement(View):
                 value = data['literal']
                 dt = data['datatype']
                 language = language = data['language']
-                if dt == 'string':
+                # if dt == 'string':
+                if dt in ['string', 'gMonthDay',]:
                     datatype = XSD.string
                     if predicate in settings.RDF_I18N_PROPERTIES:
                         o = Literal(value, lang=language)
@@ -306,8 +337,10 @@ class editStatement(View):
                     o = Literal(value, datatype=datatype)
                 if request.POST.get('save', ''):
                     assert value
+                    """
                     if dt == 'string':
                         assert language
+                    """
                     s = make_node(subject_id)
                     p = make_uriref(predicate)
                     c = NamedGraph.objects.get(identifier=make_uriref(context))
@@ -351,6 +384,6 @@ class editStatement(View):
         else:
             country = Country(id=subject_id)
             country_label = country.label()
-            data_dict['subject_full']=country_label
-        data_dict['statement']=statement_id
+            data_dict['subject_full'] = country_label
+        data_dict['statement'] = statement_id
         return render(request, self.template_name, data_dict)
