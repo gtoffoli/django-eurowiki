@@ -266,5 +266,6 @@ ew-like-button > a:hover {
 }
 
 .ew-breadcrumb-item + .ew-breadcrumb-item::before {
-    content:"→";
+    /*content:"→";*/
+    content: "";
 }

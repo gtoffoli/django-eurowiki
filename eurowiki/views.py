@@ -238,6 +238,7 @@ class editStatement(View):
                 subject = Item(bnode=BNode(subject_id))
             else:
                 subject = Item(id=subject_id)
+            form.fields['subject'].widget = forms.HiddenInput()
             data_dict['subject'] = subject
         is_country = subject_id in settings.EU_COUNTRY_KEYS
         data_dict['is_country'] = is_country
@@ -247,10 +248,19 @@ class editStatement(View):
         else:
             e = request.GET.get('e')
             # parent = e and Item(id=e) or None
+            """ MMR 200709
             if is_bnode_id(e):
                 parent = Item(bnode=BNode(e))
             else:
                 parent = Item(id=e)
+            """
+            if e:
+                if is_bnode_id(e):
+                    parent = Item(bnode=BNode(e))
+                else:
+                    parent = Item(id=e)
+            else:
+                parent = None
         data_dict['parent'] = parent
         if statement_class == 'literal':
             form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
@@ -297,6 +307,8 @@ class editStatement(View):
         else:
             query_string = '?f={}&c={}&p={}'.format(fun, country_id, predicate0_id)
         data_dict['predicate1'] = predicate1
+        # MMR 200709 added hidden field subject
+        form.fields['subject'].widget = forms.HiddenInput()
         if form.is_valid():
             data = form.cleaned_data
             predicate = data['predicate']
@@ -378,6 +390,7 @@ class editStatement(View):
             # statement = form.save()
             # return HttpResponseRedirect('/uri_statement/{}/'.format(statement.id))
         data_dict['form']=form
+        """ MMR 200709
         data_dict['subject']=subject_id
         if country:
             data_dict['subject_full'] = subject_id and Item(id=subject_id) or None
@@ -385,5 +398,11 @@ class editStatement(View):
             country = Country(id=subject_id)
             country_label = country.label()
             data_dict['subject_full'] = country_label
+        """
+        if is_bnode_id(subject_id):
+            subject = Item(bnode=BNode(subject_id))
+        else:
+            subject = Item(id=subject_id)
+        data_dict['subject'] = subject
         data_dict['statement'] = statement_id
         return render(request, self.template_name, data_dict)
