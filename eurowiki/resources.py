@@ -123,6 +123,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('PUE9', {'en': 'changes since origin or adoption', 'it': 'modifiche da origine o adozione',}), # brand-new
 
     ('PUE7', {'en': 'subjects depicted', 'it': 'soggetti raffigurati',}), # multi-value shortcut for a relation path involving P180
+    ('P547', {'en': 'commemorates', 'it': 'commemora',}), # 
     ('P837', {'en': 'day of year', 'it': 'giorno di ricorrenza',}), # "day in year for periodic occurrence"
     ('PUE15', {'en': 'commemorative coins', 'it': 'monete commemorative',}), # brand-NEW for currency and coinage
     ('PUE16', {'en': 'celebration mode', 'it': 'modalità di celebrazione',}), # brand-NEW for holidays
