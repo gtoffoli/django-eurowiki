@@ -20,7 +20,30 @@
                 {% endif %}
                 <h1 class="ew-title" style="white-space: nowrap;">{{ country.label }} <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%"></i></a></h1>
                 <div class="p-2" style="{% if countries_selected|length == 1 %}max-height: calc(100vh - 27.2rem);{% else %}max-height: calc(100vh - 16.2rem);{% endif %} overflow-y: auto;">
-                    {% with props=country.properties %}
+                {% with props=country.properties %}
+                {% if filter_predicate %}
+                    {% for p, o, lang, languages, c, r, previous_p in props %}
+                    {% if p.id == filter_predicate %}
+                    <details open>
+                        <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
+                            <div class="level_one">
+                                <div class="h5 mb-3 p-2" style="font-size:1.1rem">{% if can_edit %}<span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/?c={{ country.id }}&p={{ p.id }}" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}?c={{ country.id }}&p={{ p.id }}" title="{% trans "view" %} {% trans "item" %}">{{ o.preferred_label }}</a>
+                                {% if o.is_wikidata %}
+                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
+                                {% endif %}
+                                </div>
+                                {% include "_props_subtree.html" with par1=country par2=p %}
+                                {% if r %}
+                                {% with o=r %}
+                                    {% include "_props_subtree.html" with par1=country par2=p %}
+                                    {% endwith %}
+                                {% endif %}
+                            </div>
+                    </details>
+                    {{ break}}
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
                     {% for p, o, lang, languages, c, r, previous_p in props %}
                     {% if not previous.is_repeatable and previous_p.id != p.id  %}
                     </details>
@@ -29,7 +52,7 @@
                     <details>
                    {% endif %}
                         {% if p.is_literal %}
-{% comment %} MMR                        
+{% comment %} MMR
                             {% if p.is_image %}
                                 <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
                                 <div class="mb-3"><img src="{{ o.url }}" style="width:120px; height: auto;"></div>
@@ -56,7 +79,9 @@
                                 {% endif %}
                             </div>
                         {% endif %}
-                    {% endfor %}{% endwith %}
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
                 </div>
             </td>
         {% endfor %}

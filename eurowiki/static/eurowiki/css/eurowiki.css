@@ -114,7 +114,7 @@ a:hover {
 @media (min-width: 768px) {
   @supports ((position: -webkit-sticky) or (position: sticky)) {
     .ew-links {
-      max-height: calc(100vh - 15rem); /*14.5rem*/
+      max-height: calc(100vh - 17rem); /*14.5rem 15*/
       overflow-y: auto;
     }
   }

@@ -122,63 +122,19 @@
                         <button class="btn btn-link ew-bar-menu-toggle d-md-none p-0 ml-0" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
                     </div>
                     <nav class="nav-links collapse" id="ew-menu-nav">
-{% comment %}
-<div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_list"><i class="fa fa-list" aria-hidden="true"></i> <span style="font-size: 80%">{% trans 'list view'|capfirst %}</span></a></div><div class="mb-1 pl-3 d-inline-block ew-like-button"><a href="#" id="active_select"><i class="fa fa-check-square-o" aria-hidden="true"></i> <span style="font-size: 80%">{% trans 'compare'|capfirst %}</span></a></div>
-<div class="ew-links">
-                        <ul class="nav pl-3" id="list_countries" style="display:{% if countries_selected|length <= 1 %}block{%else%}none{% endif %}">
-                        {% for country in COUNTRIES %}
-                            <li {% if request.path ==  country.url %}class="active"{% endif %}><a href="{{ country.url }}">{{ country.label }}</a></li>
-                        {% endfor %}
-                        </ul>
-                        <form action="/countries/compare/" method="post" id="compare_countries" style="display:{% if countries_selected|length > 1 %}block{%else%}none{% endif %}">
-                        {% csrf_token %}
-                        <div class="mt-1">
-                        <button type="submit" class="btn btn-secondary" style="font-size: 90%">compare</button>
-                        </div>
-                        <div class="form-group">
-                        <ul class="nav pl-3">
-                        {% for country in COUNTRIES %}
-                            <li><input type="checkbox" name="group" value="{{country.id}}" {% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}checked{% endif %}{% endfor %}{% endif %}> <label class="mb-0">{{ country.label }}</label></li>
-                        {% endfor %}
-                        </ul>
-                        </div>
-                        <div class="form-group">
-                        <button type="submit" class="btn btn-secondary" style="font-size: 90%">compare</button>
-                        </div>
-                        </form>
-</div>
-### MMR seconda versione 
-                        
-                        <form action="/countries/view/" method="post" id="view_countries">
-                        {% csrf_token %}
-                        <!--div class="mt-1">
-                        <button type="submit" class="btn">{% trans "view" %} <i class="fa fa-eye"></i></button>
-                        </div-->
-                        <div class="mt-2">
-                            <input type="checkbox" name="checkall" id="checkall" onClick="check_uncheck_checkbox(this.checked);" />Check All
-                        <button type="submit" class="btn" style="border: 1px solid #000; border-rounded: 3px"><small>{% trans "view" %}</small> <i class="fa fa-eye"></i></button>
-                        </div>
-                        <div class="ew-links">
-                        <div class="form-group">
-                        <ul class="nav pl-3">
-                        {% for country in COUNTRIES %}
-                            <li><input type="checkbox" name="group" value="{{country.id}}" {% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}checked{% endif %}{% endfor %}{% endif %}> <label class="mb-0">{{ country.label }}</label></li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                        
-                        </div>
-                        <div class="mt-2">
-                            <input type="checkbox" name="checkall" id="checkall" onClick="check_uncheck_checkbox(this.checked);" />Check All
-                        <button type="submit" class="btn" style="border: 1px solid #000; border-rounded: 3px"><small>{% trans "view" %}</small> <i class="fa fa-eye"></i></button>
-                        </div>
-                        </form>
-{% endcomment %}
                         <form action="/countries/view/" method="post" id="view_countries">
                             {% csrf_token %}
                             <div class="d-flex justify-content-end mt-2">
-                                <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "uncheck" %}</small> </button>
+                                <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "uncheck" %}</small></button>
                                 <button type="submit" class="btn"><i class="fa fa-eye"></i> <small>{% trans "view" %}</small></button>
+                            </div>
+                            <div class="d-flex justify-content-end mb-2">
+                                <select class="small" name="filter_prop">
+                                    <option value ="">{% trans "filter for"|capfirst %}</option>
+                                    {% for p in COUNTRY_PREDICATES %}
+                                    <option value ="{{p.0}}" {% if filter_predicate == p.0 %}selected{% endif %}>{{p.1|capfirst}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="ew-links">
                                 <div class="form-group">
@@ -189,6 +145,16 @@
                                     </ul>
                                 </div>
                             </div>
+{% comment %}
+                            <div class="d-flex justify-content-end mt-2">
+                                <label class="small mr-2">{% trans "Filtro" %}</label>
+                                <select class="small">
+                                    {% for p in predicates %}
+                                    <option value ="{{p.0}}">{{p.1}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+{% endcomment %}
                             <div class="d-flex justify-content-end mt-2">
                                 <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "uncheck" %}</small> </button>
                                 <button type="submit" class="btn"><i class="fa fa-eye"></i> <small>{% trans "view" %}</small></button>

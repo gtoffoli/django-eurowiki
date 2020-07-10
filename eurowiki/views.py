@@ -32,7 +32,6 @@ def user_is_member(self, project=euro_project):
     return self.is_authenticated and ((project and project.is_member(self)) or (not project and self.is_full_member()))
 User.is_euro_member = user_is_member
 
-
 def eu_countries(language=settings.LANGUAGE_CODE):
     return [Country(id=qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()]
 
@@ -92,18 +91,20 @@ def view_country(request, item_code):
     countries = []
     country = Country(id=item_code)
     countries.append(country)
-    return render(request, 'country.html', {'countries_selected' : countries})
+    return render(request, 'country.html', {'countries_selected' : countries, 'filter_predicate': None})
 
 def view_countries(request):
     countries= []
+    filter_predicate = None
     post=request.POST
     if post:
         countries_code = post.getlist('group',[])
+        filter_predicate = post.get('filter_prop')
         for country_code in countries_code:
             assert country_code[0]=='Q'
             country = Country(id=country_code)
             countries.append(country)
-    return render(request, 'country.html', {'countries_selected' : countries})
+    return render(request, 'country.html', {'countries_selected' : countries, 'filter_predicate': filter_predicate})
 
 def view_item(request, item_code):
     c = request.GET.get('c')
@@ -221,6 +222,21 @@ class editStatement(View):
         predicate1 = p1 and Predicate(id=p1) or None
         data_dict['predicate1'] = predicate1
         language = get_language()[:2]
+        is_country = subject_id in settings.EU_COUNTRY_KEYS
+        data_dict['is_country'] = is_country
+        if is_country:
+            data_dict['country'] = Country(id=subject_id)
+            parent = None
+        else:
+            e = request.GET.get('e')
+            if e:
+                if is_bnode_id(e):
+                    parent = Item(bnode=BNode(e))
+                else:
+                    parent = Item(id=e)
+            else:
+                parent = None
+        data_dict['parent'] = parent
         if statement_id:
             statement_class = 'literal' # estrarre dallo statement
             if statement_class=='uri':
@@ -240,28 +256,7 @@ class editStatement(View):
                 subject = Item(id=subject_id)
             form.fields['subject'].widget = forms.HiddenInput()
             data_dict['subject'] = subject
-        is_country = subject_id in settings.EU_COUNTRY_KEYS
-        data_dict['is_country'] = is_country
-        if is_country:
-            data_dict['country'] = Country(id=subject_id)
-            parent = None
-        else:
-            e = request.GET.get('e')
-            # parent = e and Item(id=e) or None
-            """ MMR 200709
-            if is_bnode_id(e):
-                parent = Item(bnode=BNode(e))
-            else:
-                parent = Item(id=e)
-            """
-            if e:
-                if is_bnode_id(e):
-                    parent = Item(bnode=BNode(e))
-                else:
-                    parent = Item(id=e)
-            else:
-                parent = None
-        data_dict['parent'] = parent
+
         if statement_class == 'literal':
             form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
         else: # uri

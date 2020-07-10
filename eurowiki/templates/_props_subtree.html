@@ -6,7 +6,7 @@
     {% if p.is_literal %}
         {% if p.is_image %}
             <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
-            <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
+            <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top; {% if par2.id == 'P163' %}border: 1px solid rgba(0, 51, 153, .1);{% endif %}"></div>
         {% else %}
             <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
             <div class="p-2" style="flex-basis: 80%; font-size:90%;">{% if languages %}<div class="mb-1">{% if languages|length == 1 %}<span class="pt-0 pb-0 pl-1 pr-1" style="border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ languages.0 }}</span>{% else %}<select class="sel_lang">{% for l in languages %}<option value='{{wd}}_{{p.id}}_{{ l }}' {% if l == lang %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>{% endif %}</div>{% endif %}{% if p.is_url %}<a href="{{ o }}" target="_blank"><span class="break-long-words">{{ o }}</span></a>{% else %}{{ o|linebreaks }}{% endif %}</div>
