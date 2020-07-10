@@ -19,7 +19,7 @@ from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 from .classes import Country, Item, Predicate
 from .forms import StatementForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
-from .utils import datatype_from_id, is_bnode_id, make_node, make_uriref, id_from_uriref, friend_uri, friend_graph
+from .utils import datatype_from_id, is_bnode_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 
 try:
@@ -124,6 +124,22 @@ def view_item(request, item_code):
     else:
         item = Item(id=item_code)
     return render(request, 'item.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'parent': parent, 'predicate1' : predicate1})
+
+def removeItem(request, item_code, parent_code=None, graph_identifier=None):
+    if item_code in settings.EU_COUNTRY_KEYS:
+        return HttpResponseRedirect('/country/{}/'.format(parent_code))
+    if graph_identifier:
+        graph = get_named_graph(graph_identifier)
+    else:
+        graph = get_conjunctive_graph()
+    node = make_node(item_code)
+    remove_node(node, graph)
+    if parent_code in settings.EU_COUNTRY_KEYS:
+        return HttpResponseRedirect('/country/{}/'.format(parent_code))
+    elif parent_code:
+        return HttpResponseRedirect('/item/{}/'.format(parent_code))
+    else:
+        return HttpResponseRedirect('/')
 
 @method_decorator(login_required, name='post')
 class editItem(View):
