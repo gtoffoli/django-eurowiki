@@ -48,13 +48,17 @@
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 0px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
-        <div class="p-2" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></div>
+        <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
         <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
         </div>
         {% else %}
-            <div class="p-2" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></div>
+        	{% if o.datatype_id %}
+            <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o }}&dt={{ o.datatype_id }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+        	{% else %}
+            <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&lang={{ lang }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+        	{% endif %}
             <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
             <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}{% if o.datatype_id %}&lt;{{ o.datatype_id }}&gt;{% endif %}</div>
             <div class="p-2" style="flex-basis: 80%; font-size:90%;">
@@ -62,7 +66,7 @@
             </div>
         {% endif %}
     {% else %}
-         <div class="p-2" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></div>
+        <div class="p-2"><a href="/item/{{ item.id }}/remprop/?p={{ p.id }}&o={{ o.id }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
         <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%;">

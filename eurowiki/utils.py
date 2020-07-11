@@ -55,19 +55,19 @@ def make_node(value, prefix=None):
 
 def remove_node(node, graph):
     # remove out properties and items
-    out_triples = graph.triples(node, None, None)
+    out_triples = graph.triples((node, None, None))
     for out_triple in out_triples:
         o = out_triple[2]
         if isinstance(o, Literal):
             graph.remove(out_triple)
             continue
-        convergent_triples = graph.triples(None, None, o)
+        convergent_triples = graph.triples((None, None, o))
         if len(list(convergent_triples)) > 1:
             continue
         remove_node(o, graph)
         graph.remove(out_triple)
     # remove in properties
-    in_triples = graph.triples(None, None, node)
+    in_triples = graph.triples((None, None, node))
     for in_triple in in_triples:
         graph.remove(in_triple)
 

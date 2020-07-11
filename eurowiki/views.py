@@ -1,7 +1,7 @@
 # see https://stackoverflow.com/questions/2112715/how-do-i-fix-pydev-undefined-variable-from-import-errors (Eclipse)
 # Window -> Preferences -> PyDev -> Editor -> Code Analysis -> Undefined -> Undefined Variable From Import -> Ignore
 from rdflib.namespace import XSD
-from rdflib.term import Literal, BNode
+from rdflib.term import Literal, BNode, URIRef
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -140,6 +140,40 @@ def removeItem(request, item_code, parent_code=None, graph_identifier=None):
         return HttpResponseRedirect('/item/{}/'.format(parent_code))
     else:
         return HttpResponseRedirect('/')
+
+@login_required
+def removeProperty(request, item_code, graph_identifier=None):
+    if graph_identifier:
+        graph = get_named_graph(graph_identifier)
+    else:
+        graph = get_conjunctive_graph()
+    subject = make_node(item_code)
+    country_id = request.GET.get('c')
+    property = make_node(request.GET.get('p'))
+    datatype_id = request.GET.get('dt')
+    object_value_or_id = request.GET.get('o')
+    language = request.GET.get('lang', None)
+    triples = graph.triples((subject, property, None))
+    for triple in triples:
+        object = triple[2]
+        if isinstance(object, Literal):
+            if datatype_id:
+                if datatype_id == object.datatype_id() and object_value_or_id == str(object.value):
+                    graph.remove(triple)
+            elif language and language == object.language:
+                graph.remove(triple)
+            elif not language and not object.language:
+                graph.remove(triple)
+        else:
+            if isinstance(object, BNode):
+                if object_value_or_id == object:
+                    remove_node(object, graph)
+                    graph.remove(triple)
+            elif isinstance(object, URIRef):
+                if id_from_uriref(object) == object_value_or_id:
+                    remove_node(object, graph)
+                    graph.remove(triple)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @method_decorator(login_required, name='post')
 class editItem(View):

@@ -172,12 +172,12 @@ class Item(EurowikiBase):
                     o = Item(uriref=o, graph=self.graph, in_predicate=p)
                 if r:
                     r = Item(bnode=r, graph=self.graph, in_predicate=p)
-            props.append([p, o, None, [], c, r])
+            props.append([p, o, '', [], c, r])
         # append proper version of language-aware string literals
         if not edit:
             for prop_id in settings.RDF_I18N_PROPERTIES:
                 if value_dict[prop_id]:
-                    props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id], languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
+                    props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id] or '', languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
         # sort properties at the end of all processing
         props = sorted(props, key=lambda prop: keys.index(prop[0].id))
         # record the previous property in the tuple itself, so that it can be accessed in template 
