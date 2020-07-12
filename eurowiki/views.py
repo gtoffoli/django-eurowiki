@@ -483,8 +483,9 @@ class editStatement(View):
                 statement_class = 'uri'
             else:
                 statement_class = 'literal'
+            context = settings.DEFAULT_CONTEXT
             #MMR 200711 initial = { 'statement_class': 'literal', 'subject': subject_id, 'datatype': 'string', 'language': language }
-            initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': language }
+            initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': language, 'context': context }
             form = self.form_class(initial=initial)
             # MMR 200711 form.fields['object'].widget = forms.HiddenInput()
             if is_bnode_id(subject_id):
@@ -501,11 +502,11 @@ class editStatement(View):
                     form.fields['statement_class'].widget = forms.HiddenInput()
                 elif predicate0 and predicate0.id in settings.EW_TREE_KEYS:
                     list_tmp = settings.EW_TREE[predicate0.id]
-                predicate_list = [LITERAL_PREDICATE_CHOICES[0]]
+                predicate_list = [LITERAL_PREDICATE_CHOICES[0]] # 'label' is expected to be in 1st position !!!
                 for p in list_tmp:
                     for v in LITERAL_PREDICATE_CHOICES:
                         if p == v[0]:
-                           predicate_list.append(v)
+                            predicate_list.append(v)
                 form.fields['predicate'].choices = predicate_list
             else:
                 form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
@@ -514,13 +515,12 @@ class editStatement(View):
             if is_country:
                 form.fields['statement_class'].widget = forms.HiddenInput()
                 props = country.properties()
-                if props:
-                    predicate_list = COUNTRY_PREDICATE_CHOICES
-                    for p, o, lang, languages, c, r, previous_p in props:
-                        predicate_list = [v for v in predicate_list if p.id != v[0]]
-                    form.fields['predicate'].choices = predicate_list
-                else:
-                    form.fields['predicate'].choices = COUNTRY_PREDICATE_CHOICES
+                predicate_list = COUNTRY_PREDICATE_CHOICES
+                for p, o, lang, languages, c, r, previous_p in props:
+                    if p.id in ['P832', 'PUE6',]: # multiple instances of national holidays and monuments are allowed
+                        continue
+                    predicate_list = [v for v in predicate_list if p.id != v[0]]
+                form.fields['predicate'].choices = predicate_list
                 form.fields['datatype'].widget = forms.HiddenInput()
                 form.fields['literal'].widget = forms.HiddenInput()
                 form.fields['language'].widget = forms.HiddenInput()

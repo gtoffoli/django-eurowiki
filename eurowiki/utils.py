@@ -54,12 +54,17 @@ def id_from_uriref(uriref):
     return label
 
 def make_node(value, prefix=None):
-    if value.startswith('_:'):
+    # if value.startswith('_:'):
+    if is_bnode_id(value):
         return BNode(value.replace('_:', ''))
     else:
         return make_uriref(value, prefix=prefix)
 
 def remove_node(node, graph):
+    # do not remove if node is object of other statements
+    convergent_triples = graph.triples((None, None, node))
+    if len(list(convergent_triples)) > 1:
+        return
     # remove out properties and items
     out_triples = graph.triples((node, None, None))
     for out_triple in out_triples:
@@ -67,15 +72,9 @@ def remove_node(node, graph):
         if isinstance(o, Literal):
             graph.remove(out_triple)
             continue
-        convergent_triples = graph.triples((None, None, o))
-        if len(list(convergent_triples)) > 1:
-            continue
-        remove_node(o, graph)
-        graph.remove(out_triple)
-    # remove in properties
-    in_triples = graph.triples((None, None, node))
-    for in_triple in in_triples:
-        graph.remove(in_triple)
+        else:
+            remove_node(o, graph)
+            graph.remove(out_triple)
 
 def node_id(node):
     if isinstance(node, BNode):

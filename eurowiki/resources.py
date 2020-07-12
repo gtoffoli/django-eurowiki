@@ -10,6 +10,7 @@ DEFAULT_STORE = "http://www.eurowiki.eu"
 # this dictionary should allow to derive sources from namespace prefix
 WIKIDATA_BASE = 'http://www.wikidata.org'
 EUROWIKI_BASE = 'http://www.eurowiki.eu'
+DEFAULT_CONTEXT = EUROWIKI_BASE
 RDF_PREFIXES = {
     "xsd": 'http://www.w3.org/2001/XMLSchema#',
     "rdf": 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
