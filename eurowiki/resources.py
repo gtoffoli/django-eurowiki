@@ -207,6 +207,17 @@ EW_TREE = OrderedDict([
 ])
 EW_TREE_KEYS = list(EW_TREE.keys())
 
+EW_SUBTREE = OrderedDict([
+    ('P170',('PUE2', 'comment')),
+    ('P676',('PUE2', 'comment')),
+    ('P86',('PUE2', 'comment')),
+    ('P790',('PUE2', 'comment')),
+    ('PUE3',('PUE2', 'comment')),
+    ('P547',('PUE2', 'comment')),
+])
+
+EW_SUBTREE_KEYS = list(EW_SUBTREE.keys())
+
 LITERAL_LEAF_KEYS = ('label', 'PUE2', 'P854', 'P248', 'comment',)
 
 EURO_LANGUAGES = (

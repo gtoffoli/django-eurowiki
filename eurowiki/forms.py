@@ -14,7 +14,7 @@ DATATYPE_CHOICES = (
     ('gYear', _('year')),
     ('gMonthDay',  _('day of year')),
 )
-LANGUAGE_CHOICES = settings.LANGUAGES
+LANGUAGE_CHOICES = settings.EURO_LANGUAGES
 language = get_language()[:2]
 PREDICATE_CHOICES = [(key, settings.PREDICATE_LABELS[key].get(language, key)) for key in settings.ORDERED_PREDICATE_KEYS]
 LITERAL_PREDICATE_CHOICES = [p for p in PREDICATE_CHOICES if p[0] in settings.LITERAL_PROPERTIES]

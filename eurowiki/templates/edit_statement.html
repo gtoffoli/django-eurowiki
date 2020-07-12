@@ -24,11 +24,14 @@
 
 <h3 class="text-center">{% trans "add"|capfirst %} {% trans "statement" %}</h3>
 
+{% comment %}
 {% if subject %}
 <form action="/statement/{{ subject.id }}/new/" method="post" novalidate>
 {% else %}
 <form action="/statement/{{ statement }}/edit/" method="post" novalidate>
 {% endif %}
+{% endcomment %}
+<form action="/statement/{{ subject.id }}/new/" method="post" novalidate>
     {% csrf_token %}
     {% if fun %}<input type="hidden" name="fun" value="{{fun}}">{% endif %}
     {% if country %}<input type="hidden" name="country" value="{{country.id}}">{% endif %}
