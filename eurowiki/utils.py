@@ -47,6 +47,12 @@ def make_uriref(value, prefix=None):
     else:
         return URIRef(value)
 
+def id_from_uriref(uriref):
+    label = uriref.split('/')[-1]
+    if label.count('#'):
+        label = label.split('#')[-1]      
+    return label
+
 def make_node(value, prefix=None):
     if value.startswith('_:'):
         return BNode(value.replace('_:', ''))
@@ -71,11 +77,11 @@ def remove_node(node, graph):
     for in_triple in in_triples:
         graph.remove(in_triple)
 
-def id_from_uriref(uriref):
-    label = uriref.split('/')[-1]
-    if label.count('#'):
-        label = label.split('#')[-1]      
-    return label
+def node_id(node):
+    if isinstance(node, BNode):
+        return BNode
+    else:
+        return id_from_uriref(node.toPython())
 
 # (re-)generate human-friendly nodeIDs, following a certain pattern; to be tested
 def item_uriref_generator(prefix='ew', context=None):

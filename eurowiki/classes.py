@@ -2,9 +2,9 @@ from django.conf import settings
 from django.core.cache import cache
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
-from rdflib.term import BNode
+from rdflib.term import URIRef, BNode
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
-from .utils import is_bnode_id, make_uriref, id_from_uriref, wd_get_image_url
+from .utils import is_bnode_id, node_id, make_uriref, id_from_uriref, wd_get_image_url
 
 class EurowikiBase(object):
 
@@ -59,6 +59,12 @@ class Item(EurowikiBase):
         else:
             return '/item/{}/'.format(self.id)
 
+    def node(self):
+        return self.uriref or self.bnode
+
+    def node_id(self):
+        return node_id(self.node())
+
     def labels(self):
         return settings.OTHER_ITEM_LABELS.get(self.id, {})
 
@@ -69,6 +75,34 @@ class Item(EurowikiBase):
         if self.is_bnode():
             return self.bnode
         return self.label()
+
+    # return a list of couples (item, predicate) leading from a country root to the target item
+    def lineage(self, graph_identifier=None):
+        if graph_identifier:
+            graph = get_named_graph(graph_identifier)
+        else:
+            graph = get_conjunctive_graph()
+        couples = []
+        object = self.node()
+        assert object
+        triples = list(graph.triples((None, None, object)))
+        n_triples = len(triples)
+        while n_triples and node_id(object) not in settings.EU_COUNTRY_KEYS:
+            if n_triples > 1:
+                triple =  triples[0] # choose more smartly?
+            else:
+                triple =  triples[0]
+            subject, predicate, object = triple
+            if isinstance(subject, URIRef):
+                item = Item(uriref=subject)
+            else:
+                item = Item(bnode=subject)
+            couples.append((item, Predicate(uriref=predicate)))
+            object = subject
+            triples = list(graph.triples((None, None, object)))
+            n_triples = len(triples)
+        couples.reverse()
+        return couples
 
     # def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
     def properties(self, keys=[], exclude_keys=['label',], language=None, edit=False):
@@ -165,7 +199,6 @@ class Item(EurowikiBase):
                                 languages_dict[prop_id].append(lang)
                         continue
             else:
-                # o = Item(uriref=o, graph=self.graph, in_predicate=p)
                 if isinstance(o, BNode):
                     o = Item(bnode=o, graph=self.graph, in_predicate=p)
                 else:
