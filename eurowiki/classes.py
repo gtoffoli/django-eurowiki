@@ -8,6 +8,22 @@ from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 from .utils import is_bnode_id, node_id, make_uriref, id_from_uriref, wd_get_image_url
 from .session import get_history
 
+RDF_STATEMENT = make_uriref('Statement', prefix='rdf')
+RDF_SUBJECT = make_uriref('subject', prefix='rdf')
+RDF_PREDICATE = make_uriref('predicate', prefix='rdf')
+RDF_OBJECT = make_uriref('object', prefix='rdf')
+
+def get_reified_triples(object, graph):
+    reified_triples = []
+    reified_statements = list(graph.triples((None, object, RDF_STATEMENT)))
+    for statement in reified_statements:
+        statement_id = statement[0]
+        statement_s = graph.value(subject=statement_id, predicate=RDF_SUBJECT, any=False)
+        statement_p = graph.value(subject=statement_id, predicate=RDF_PREDICATE, any=False)
+        statement_o = graph.value(subject=statement_id, predicate=RDF_OBJECT, any=False)
+        reified_triples.append((statement_s, statement_p, statement_o))
+    return reified_triples
+
 class EurowikiBase(object):
 
     def __init__(self, uriref=None, id=None, bnode=None, graph=None, graph_identifier=None, in_predicate=None):
@@ -107,7 +123,7 @@ class Item(EurowikiBase):
         return couples
 
     # return a list of paths, each being a list of couples (item, predicate) leading from a country root to the target item
-    def lineages(self, graph_identifier=None, request=None):
+    def lineages(self, request, graph_identifier=None):
         if graph_identifier:
             graph = get_named_graph(graph_identifier)
         else:
@@ -123,16 +139,12 @@ class Item(EurowikiBase):
         paths = [[[self, None]]] # start with only 1 path containing only a pseudo-edge
         while paths:
             path = paths[0] # 1st path
-            """
-            item = path and path[0] or self
-            object = item.node()
-            """
             object = path[0][0].node() # left element (subject) of first edge becomes target object of previous triples
             triples = list(graph.triples((None, None, object)))
+            triples += get_reified_triples(object, graph)
             n_triples = len(triples)
             i = 0
             while n_triples and node_id(object) not in settings.EU_COUNTRY_KEYS:
-                print('triples:', triples)
                 i += 1
                 if i > MAX_ITERATIONS: # endless loops could result from bugs or wrong network
                     exit
@@ -158,9 +170,10 @@ class Item(EurowikiBase):
 
                 object = s
                 triples = list(graph.triples((None, None, object)))
+                triples += get_reified_triples(object, graph)
                 n_triples = len(triples)
-            out_paths.append(path)
-            paths = deepcopy(paths[1:])
+            out_paths.append(path[:-1])
+            paths = paths[1:]
             print_paths(out_paths)
         return out_paths
 
@@ -181,10 +194,6 @@ class Item(EurowikiBase):
         p_o_c_r_iterable = [[quad[1], quad[2], quad[3], None] for quad in self.graph.quads((self.uriref or self.bnode, None, None))]
         p_o_c_r_iterable = [[p, o, c, r] for p, o, c, r in p_o_c_r_iterable if id_from_uriref(p) in keys]
         # handle reified properties and build a triple for each
-        RDF_STATEMENT = make_uriref('Statement', prefix='rdf')
-        RDF_SUBJECT = make_uriref('subject', prefix='rdf')
-        RDF_PREDICATE = make_uriref('predicate', prefix='rdf')
-        RDF_OBJECT = make_uriref('object', prefix='rdf')
         quads = self.graph.quads((None, RDF_SUBJECT, self.uriref or self.bnode))
         for quad in quads:
             reified = quad[0]
