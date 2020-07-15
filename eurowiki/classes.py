@@ -1,3 +1,4 @@
+from copy import deepcopy
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.functional import cached_property
@@ -5,6 +6,7 @@ from django.utils.translation import get_language
 from rdflib.term import URIRef, BNode
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 from .utils import is_bnode_id, node_id, make_uriref, id_from_uriref, wd_get_image_url
+from .session import get_history
 
 class EurowikiBase(object):
 
@@ -19,7 +21,7 @@ class EurowikiBase(object):
             self.uriref = make_uriref(id)
         else:
             self.bnode = bnode
-            self.id = bnode # added 200708
+            self.id = str(bnode) # added 200708
         if graph_identifier:
             graph = get_named_graph(graph_identifier)
         elif not graph:
@@ -103,6 +105,64 @@ class Item(EurowikiBase):
             n_triples = len(triples)
         couples.reverse()
         return couples
+
+    # return a list of paths, each being a list of couples (item, predicate) leading from a country root to the target item
+    def lineages(self, graph_identifier=None, request=None):
+        if graph_identifier:
+            graph = get_named_graph(graph_identifier)
+        else:
+            graph = get_conjunctive_graph()
+        object = self.node()
+        assert object
+        MAX_DISTANCE = 5
+        MAX_ITERATIONS = 5
+        history = get_history(request)
+        print('history:', history)
+        n_nodes = len(history)
+        out_paths = []
+        paths = [[[self, None]]] # start with only 1 path containing only a pseudo-edge
+        while paths:
+            path = paths[0] # 1st path
+            """
+            item = path and path[0] or self
+            object = item.node()
+            """
+            object = path[0][0].node() # left element (subject) of first edge becomes target object of previous triples
+            triples = list(graph.triples((None, None, object)))
+            n_triples = len(triples)
+            i = 0
+            while n_triples and node_id(object) not in settings.EU_COUNTRY_KEYS:
+                print('triples:', triples)
+                i += 1
+                if i > MAX_ITERATIONS: # endless loops could result from bugs or wrong network
+                    exit
+                best_k = 0
+                if n_triples > 1:
+                    if history:
+                        min_distance = MAX_DISTANCE
+                        k_range = range(n_triples)
+                        for k in k_range:
+                            s, p, o = triples[k]
+                            if node_id(s) in history:
+                                distance = n_nodes - history.index(node_id(s))
+                                if distance < min_distance:
+                                    best_k = k
+                s, p, o = triples[best_k]
+                best_edge = [make_item(s), Predicate(uriref=p)]
+                del triples[best_k]
+                if not history:
+                    for triple in triples:
+                        edge = [make_item(triple[0]), Predicate(uriref=triple[1])]
+                        paths.append(deepcopy([edge]) + deepcopy(path))
+                path = deepcopy([best_edge]) + deepcopy(path)
+
+                object = s
+                triples = list(graph.triples((None, None, object)))
+                n_triples = len(triples)
+            out_paths.append(path)
+            paths = deepcopy(paths[1:])
+            print_paths(out_paths)
+        return out_paths
 
     # def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
     def properties(self, keys=[], exclude_keys=['label',], language=None, edit=False):
@@ -266,3 +326,12 @@ class Image(str):
     def url(self):
         return wd_get_image_url(self.name)
 
+def make_item(node):
+    if isinstance(node, URIRef):
+        return Item(uriref=node)
+    else:
+        return Item(bnode=node)
+
+def print_paths(paths):
+    print('paths:', [[edge[0].id for edge in path] for path in paths])
+    
