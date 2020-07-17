@@ -16,14 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
-from . import views # search_indexes
+from . import views
+from . import search_indexes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^tinymce/', include('tinymce.urls')),
-    # url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
+    url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
     url(r'^$', views.homepage, name='homepage'),
     url(r'^search/$', views.search, name='search'),
     

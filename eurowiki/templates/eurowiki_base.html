@@ -109,14 +109,12 @@
         <div class="container-fluid">
             <div class="row flex-xl-nowrap">
                 <div class="col-12 col-md-3 col-xl-2 ew-sidebar">
-{% comment %}
-<form role="search" class="ew-search d-flex align-items-center">
-    <span class="" style="position: relative; width:100%; display: inline-block; direction: ltr;">
-        <input class="form-control" size="32" type="text" style="font-size:90%" name="q" id="navigation_autocomplete">
-    </span>
-    <button class="btn btn-link ew-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
-</form>
-{% endcomment %}
+					<form role="search" class="ew-search d-flex align-items-center">
+					    <span class="" style="position: relative; width:100%; display: inline-block; direction: ltr;">
+					        <input class="form-control" size="32" type="text" style="font-size:80%" name="q" id="navigation_autocomplete">
+					    </span>
+					    <button class="btn btn-link ew-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
+					</form>
                     {% block sidebar %}
                     <div class="ew-bar-menu text-right">
                         <button class="btn btn-link ew-bar-menu-toggle d-md-none p-0 ml-0" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
@@ -177,12 +175,9 @@
         {% block script_style_base %}
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-{% comment %}
         <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script>
-{% endcomment %}
         <script type="text/javascript">
         $(document).ready(function() {
-{% comment %}
           if ($('#navigation_autocomplete').length > 0) {
             $('#navigation_autocomplete').yourlabsAutocomplete({
               url: '{% url 'navigation_autocomplete' %}',
@@ -205,7 +200,6 @@
             $("#compare_countries").css("display", "block");
             $("#list_countries").css("display", "none");
           });
-{% endcomment %}
           $('#view_countries').on('submit', function(event) {
             if ($("input[type=checkbox]:checked").length == 0) {
                // alert("{% trans 'Select at least 1 country' %}");

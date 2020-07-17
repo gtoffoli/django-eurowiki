@@ -4,9 +4,29 @@ from django.core.cache import cache
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
 from rdflib.term import URIRef, BNode
+from rdflib_django.models import LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 from .utils import is_bnode_id, node_id, make_uriref, id_from_uriref, wd_get_image_url
 from .session import get_history
+
+
+def literalstatement_item_code(self):
+    s, p, o = self.as_triple()
+    return node_id(s)
+LiteralStatement.item_code = literalstatement_item_code
+
+def literalstatement_is_country(self):
+    return self.item_code() in settings.EU_COUNTRY_KEYS
+LiteralStatement.item_code = literalstatement_item_code
+
+def literalstatement_indexable_literal(self):
+    s, p, o = self.as_triple()
+    if o.datatype:
+        return ''
+    else:
+        return o.value
+LiteralStatement.indexable_literal = literalstatement_indexable_literal
+
 
 RDF_STATEMENT = make_uriref('Statement', prefix='rdf')
 RDF_SUBJECT = make_uriref('subject', prefix='rdf')

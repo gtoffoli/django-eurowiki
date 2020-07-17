@@ -12,6 +12,8 @@ from haystack.fields import EdgeNgramField
 
 from commons.utils import strings_from_html
 
+"""
+
 # vedi https://github.com/toastdriven/django-haystack/issues/609
 
 from django.contrib.flatpages.models import FlatPage
@@ -30,10 +32,25 @@ class FlatPageIndex(indexes.SearchIndex, indexes.Indexable):
         activate('en')
         return FlatPage
 
-"""
     def index_queryset(self, using=None):
         return self.get_model().objects.filter(url__icontains='help')
 """
+
+from rdflib_django.models import LiteralStatement
+
+class LiteralStatementIndex(indexes.SearchIndex, indexes.Indexable):
+
+    text = indexes.EdgeNgramField(document=True, use_template=True)
+    item_code = indexes.CharField(indexed=False, use_template=True)
+    is_country = indexes.CharField(indexed=False, use_template=True)
+
+    def get_model(self):
+        activate('en')
+        return LiteralStatement
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.filter(predicate__icontains='label')
+
 
 from django.utils.translation import ugettext_lazy as _
 from django import forms
@@ -61,13 +78,13 @@ def navigation_autocomplete(request, template_name='autocomplete.html'):
         from haystack.query import SearchQuerySet
         MAX = 16
         results = SearchQuerySet().filter(text=q)
-        if results.count()>MAX:
+        if results.count() > MAX:
             results = results[:MAX]
             context['more'] = True
         queries = defaultdict(list)
         for result in results:
             klass = result.model.__name__
-            values_list = [result.get_stored_fields()['name'], result.get_stored_fields()['slug']]
+            values_list = [result.get_stored_fields()['text'], result.get_stored_fields()['item_code'], result.get_stored_fields()['is_country']]
             queries[klass].append(values_list)
     context.update(queries)
     return render(request, template_name, context)

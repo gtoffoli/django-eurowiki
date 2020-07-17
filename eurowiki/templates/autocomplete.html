@@ -1,5 +1,9 @@
-﻿{% load i18n %}
+{% load i18n %}
 <div style="overflow: auto; max-height:320px;"><div style="padding:6px">
+{% if LiteralStatement or FlatPage %}
+{% if LiteralStatement %}<dl style="margin-bottom:5px"><dt>Help<dt>
+{% for ls in LiteralStatement  %}<dd><i class="fa fa-caret-right" style="color:#888"></i> <a class="choice" href="/item/{{ ls.1 }}/">{{ ls.0 }}</a></dd>{% endfor %}
+</dl>{% endif %}
 {% if FlatPage %}<dl style="margin-bottom:5px"><dt>Help<dt>
 {% for fp in FlatPage  %}<dd><i class="fa fa-caret-right" style="color:#888"></i> <a class="choice" href="{{ fp.1 }}">{{ fp.0 }}</a></dd>{% endfor %}
 </dl>{% endif %}

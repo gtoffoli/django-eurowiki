@@ -233,7 +233,7 @@ else:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-SITE_ID = 1
+SITE_ID = 2
 SITE_NAME = 'EuroIdentities'
 
 PROJECT_ROOT = os.path.dirname(__file__)
@@ -246,7 +246,14 @@ if SEARCH_BACKEND == 'whoosh':
         'default': {
             'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
             'PATH': os.path.join(PARENT_ROOT, 'whoosh_index'),
-            'EXCLUDED_INDEXES': 'commons.search_indexes.FlatPageIndex',
+            'EXCLUDED_INDEXES': [
+                 'commons.search_indexes.UserProfileIndex',
+                 'commons.search_indexes.ProjectIndex',
+                 'commons.search_indexes.RepoIndex',
+                 'commons.search_indexes.OERIndex',
+                 'commons.search_indexes.LearningPathIndex',
+                 'commons.search_indexes.FlatPageIndex',
+             ],
         },
     }
 

@@ -78,7 +78,8 @@ def remove_node(node, graph):
 
 def node_id(node):
     if isinstance(node, BNode):
-        return BNode
+        # return BNode
+        return str(node)
     else:
         return id_from_uriref(node.toPython())
 
