@@ -6,6 +6,8 @@
 
 {% block body_class %}edit_statement{% endblock body_class %}
 {% block body %}
+
+{% comment %}
 <nav aria-label="breadcrumb ew-breadcrumb">
     <ol class="breadcrumb ew-breadcrumb">
         <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/country/{{country.id}}/" title="{% trans "view" %} {{country.label}}">{{country.label}}</a></li>
@@ -21,6 +23,9 @@
         <li class="h6 breadcrumb-item ew-breadcrumb-item active">{% trans "add"|capfirst %} {% trans "statement" %}</li>
     </ol>
 </nav>
+{% endcomment %}
+
+{% include "_breadcrumb.html" %}
 
 <h3 class="text-center">{% trans "add"|capfirst %} {% trans "statement" %}</h3>
 
@@ -34,11 +39,12 @@
 <form action="/statement/{{ subject.id }}/new/" method="post" novalidate>
     {% csrf_token %}
     {% if fun %}<input type="hidden" name="fun" value="{{fun}}">{% endif %}
+{% comment %}
     {% if country %}<input type="hidden" name="country" value="{{country.id}}">{% endif %}
     {% if predicate0 %}<input type="hidden" name="predicate0" value="{{predicate0.id}}">{% endif %}
     {% if parent %}<input type="hidden" name="parent" value="{{parent.id}}">{% endif %}
     {% if predicate1 %}<input type="hidden" name="predicate1" value="{{predicate1.id}}">{% endif %}
-
+{% endcomment %}
 	<input type="hidden" name="predicate" value="{{predicate.id}}">
     {{ form|crispy }}
     <div class="d-flex justify-content-center mb-3">

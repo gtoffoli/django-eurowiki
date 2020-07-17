@@ -21,7 +21,6 @@ from .forms import StatementForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
 from .utils import datatype_from_id, is_bnode_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
-
 try:
     from commons.models import Project
     euro_project = Project.objects.get(pk=settings.EURO_PROJECT_ID)
@@ -91,6 +90,7 @@ def view_country(request, item_code):
     countries = []
     country = Country(id=item_code)
     countries.append(country)
+    lineages = country.lineages(request)
     return render(request, 'country.html', {'countries_selected' : countries, 'filter_predicate': None})
 
 def view_countries(request):
@@ -104,9 +104,55 @@ def view_countries(request):
             assert country_code[0]=='Q'
             country = Country(id=country_code)
             countries.append(country)
+            lineages = country.lineages(request)
     return render(request, 'country.html', {'countries_selected' : countries, 'filter_predicate': filter_predicate})
 
+def make_breadcrumb(request,item):
+    country_list = []
+    country_parent_list = {}
+    predicate_list = []
+    parent_list = []
+    predicate = None
+    predicate1 = None
+    lineages = item.lineages(request)
+    for lineage in lineages:
+        for e in lineage:
+            if e[0].id in settings.EU_COUNTRY_KEYS:
+                last_country = Country(id=e[0].id)
+                country = [ country for country in country_list if country.id == last_country.id]
+                if not country:
+                    country_list.append (last_country)
+                    parent_list = []
+                predicate_list.append (Predicate(id=e[1].id))
+                label = str(e[0].id)
+            else:
+                predicate1 = e[1] and Predicate(id=e[1].id) or None
+                if predicate1:
+                    l_tmp =[]
+                    if predicate_list:
+                        l_tmp.append(predicate_list.pop())
+                    if is_bnode_id(e[0].id):
+                       l_tmp.append(Item(bnode=BNode(e[0].id)))
+                    else:
+                        l_tmp.append(Item(id=e[0].id) or None)
+                    parent_list.append(l_tmp)
+                    country_parent_list[label] = parent_list
+    for key in country_parent_list:
+        new_list_values = []
+        list_values = country_parent_list[key]
+        for e in COUNTRY_PREDICATE_CHOICES:
+            e = list(e)
+            for v in list_values:
+                if v[0].id == e[0]:
+                    new_list_values.append(v)
+        if new_list_values:
+            country_parent_list[key] = new_list_values
+    if len(predicate_list) == 1:
+        predicate = predicate_list.pop()
+    return [country_list, country_parent_list, predicate, predicate1]
+
 def view_item(request, item_code):
+    """ MMR 200717
     c = request.GET.get('c')
     country = Country(id=c)
     p = request.GET.get('p')
@@ -119,11 +165,13 @@ def view_item(request, item_code):
         parent = e and Item(id=e) or None
     p1 = request.GET.get('p1')
     predicate1 = p1 and Predicate(id=p1) or None
+    """
     if is_bnode_id(item_code):
         item = Item(bnode=BNode(item_code))
     else:
         item = Item(id=item_code)
-    return render(request, 'item.html', {'item' : item, 'country' : country, 'predicate' : predicate, 'parent': parent, 'predicate1' : predicate1})
+    breadcrumb = make_breadcrumb(request,item)
+    return render(request, 'item.html', {'item' : item, 'country_list' : breadcrumb[0], 'country_parent_list': breadcrumb[1], 'predicate' : breadcrumb[2], 'predicate1' : breadcrumb[3]})
 
 def removeItem(request, item_code, parent_code=None, graph_identifier=None):
     if item_code in settings.EU_COUNTRY_KEYS:
@@ -180,6 +228,7 @@ class editItem(View):
     template_name = 'edit_item.html'
 
     def get(self, request, item_code):
+        """ MMR 200717
         c = request.GET.get('c')
         country = Country(id=c)
         p = request.GET.get('p')
@@ -194,11 +243,14 @@ class editItem(View):
             parent = None
         p1 = request.GET.get('p1')
         predicate1 = p1 and Predicate(id=p1) or None
+        """
         if is_bnode_id(item_code):
             item = Item(bnode=BNode(item_code))
         else:
             item = Item(id=item_code)
-        return render(request, self.template_name, {'item': item, 'country': country, 'predicate': predicate, 'parent': parent, 'predicate1': predicate1})
+        breadcrumb = make_breadcrumb(request,item)
+        # return render(request, self.template_name, {'item': item, 'country': country, 'predicate': predicate, 'parent': parent, 'predicate1': predicate1})
+        return render(request, self.template_name, {'item' : item, 'country_list' : breadcrumb[0], 'country_parent_list': breadcrumb[1], 'predicate' : breadcrumb[2], 'predicate1' : breadcrumb[3]})
 
     def post(self, request):
         save = request.POST.get('save', False)
@@ -210,6 +262,7 @@ class editItem(View):
         else:
             item = Item(id=item_code)
             subject = item.uriref
+        """ MMR 200717
         country_id = request.POST['country']
         country = Country(id=country_id)
         predicate0_id = request.POST['predicate']
@@ -225,8 +278,8 @@ class editItem(View):
             parent = None
         predicate1_id = request.POST.get('predicate1', '')
         predicate1 = predicate1_id and Predicate(id=predicate1_id) or None
-        
         query_string = '?c={}&p={}&e={}&p1={}'.format(country_id, predicate0_id, parent_id, predicate1_id)
+        """
         if save or save_continue:
             conjunctive_graph = get_conjunctive_graph()
         field_dict = {}
@@ -255,194 +308,9 @@ class editItem(View):
                             graph.add((subject, predicate, Literal(new_value)))
                             conjunctive_graph.remove(quad)
         if save:
-            return HttpResponseRedirect('/item/{}/{}'.format(item_code, query_string))
+            return HttpResponseRedirect('/item/{}/'.format(item_code))
         elif save_continue:
-            return HttpResponseRedirect('/item/{}/edit/{}'.format(item_code, query_string))
- 
-
-""" MMR 200712 OLD VERSION
-@method_decorator(login_required, name='post')
-class editStatement(View):
-    form_class = StatementForm
-    template_name = 'edit_statement.html'
-
-    def get(self, request, statement_id=None, subject_id=None):
-        data_dict = {}
-        fun = request.GET.get('f')
-        data_dict['fun'] = fun
-        c = request.GET.get('c')
-        country = c and Country(id=c) or None
-        data_dict['country'] = country
-        p = request.GET.get('p')
-        predicate0 = p and Predicate(id=p) or None
-        data_dict['predicate0'] = predicate0
-        p1 = request.GET.get('p1')
-        predicate1 = p1 and Predicate(id=p1) or None
-        data_dict['predicate1'] = predicate1
-        language = get_language()[:2]
-        is_country = subject_id in settings.EU_COUNTRY_KEYS
-        data_dict['is_country'] = is_country
-        if is_country:
-            data_dict['country'] = Country(id=subject_id)
-            parent = None
-        else:
-            e = request.GET.get('e')
-            if e:
-                if is_bnode_id(e):
-                    parent = Item(bnode=BNode(e))
-                else:
-                    parent = Item(id=e)
-            else:
-                parent = None
-        data_dict['parent'] = parent
-        if statement_id:
-            statement_class = 'literal' # estrarre dallo statement
-            if statement_class=='uri':
-                statement = get_object_or_404(URIStatement, pk=statement_id)
-            else:
-                statement = get_object_or_404(LiteralStatement, pk=statement_id)
-            form = self.form_class(instance=statement)
-            data_dict['form'] = form
-        elif subject_id:
-            statement_class = 'literal'
-            initial = { 'statement_class': 'literal', 'subject': subject_id, 'datatype': 'string', 'language': language }
-            form = self.form_class(initial=initial)
-            form.fields['object'].widget = forms.HiddenInput()
-            if is_bnode_id(subject_id):
-                subject = Item(bnode=BNode(subject_id))
-            else:
-                subject = Item(id=subject_id)
-            form.fields['subject'].widget = forms.HiddenInput()
-            data_dict['subject'] = subject
-
-        if statement_class == 'literal':
-            form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
-        else: # uri
-            if is_country:
-                form.fields['predicate'].choices = COUNTRY_PREDICATE_CHOICES
-            else:
-                form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
-        data_dict['form'] = form
-        data_dict['statement'] = statement_id
-        return render(request, self.template_name, data_dict)
-
-    def post(self, request, statement_id=None, subject_id=None):
-        form = self.form_class(request.POST)
-        data_dict = {}
-        fun = request.POST.get('fun', '')
-        data_dict['fun'] = fun
-        country_id = request.POST.get('country', '')
-        country = country_id and Country(id=country_id) or None
-        data_dict['country'] = country 
-        is_country = subject_id in settings.EU_COUNTRY_KEYS
-        data_dict['is_country'] = is_country
-        predicate0_id = request.POST.get('predicate0', '')
-        predicate0 = predicate0_id and Predicate(id=predicate0_id) or None
-        data_dict['predicate0'] = predicate0
-        parent_id = request.POST.get('parent', '')
-        # parent = parent_id and Item(id=parent_id) or None
-        if is_bnode_id(parent_id):
-            parent = Item(bnode=BNode(parent_id))
-        else:
-            parent = parent_id and Item(id=parent_id) or None
-        data_dict['parent'] = parent
-        predicate1_id = request.POST.get('predicate1', '')
-        predicate1 = predicate1_id and Predicate(id=predicate1_id) or None
-        if parent and predicate1:
-            query_string = '?f={}&c={}&p={}&e={}&p1={}'.format(fun, country_id, predicate0_id, parent_id, predicate1_id)
-        else:
-            query_string = '?f={}&c={}&p={}'.format(fun, country_id, predicate0_id)
-        data_dict['predicate1'] = predicate1
-        # MMR 200709 added hidden field subject
-        form.fields['subject'].widget = forms.HiddenInput()
-        if form.is_valid():
-            data = form.cleaned_data
-            predicate = data['predicate']
-            context = data['context']
-            datatype = data['datatype']
-            if datatype in ['integer', 'gYear',]:
-                form.fields['literal'].widget = forms.TextInput(attrs={'type': 'number', 'placeholder':"yyyy",})
-            elif datatype == 'date':
-                form.fields['literal'].widget = forms.TextInput(attrs={'type': 'text', 'placeholder':"yyyy-mm-dd", })
-            elif datatype == 'string':
-                form.fields['literal'].widget = forms.Textarea(attrs={'rows': 2})
-            else:
-                form.fields['literal'].widget = forms.TextInput()
-            statement_class = data['statement_class']
-            if statement_class == 'literal':
-                form.fields['object'].widget = forms.HiddenInput()
-                value = data['literal']
-                dt = data['datatype']
-                language = language = data['language']
-                # if dt == 'string':
-                if dt in ['string', 'gMonthDay',]:
-                    datatype = XSD.string
-                    if predicate in settings.RDF_I18N_PROPERTIES:
-                        o = Literal(value, lang=language)
-                    else:
-                        o = Literal(value)
-                else:
-                    form.fields['language'].widget = forms.HiddenInput()
-                    form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
-                    if dt == 'integer':
-                        datatype = XSD.integer
-                    elif dt == 'date':
-                        datatype = XSD.date
-                    elif dt == 'gYear':
-                        datatype = XSD.integer
-                    elif dt == 'gMonthDay':
-                        datatype = XSD.string
-                    o = Literal(value, datatype=datatype)
-                if request.POST.get('save', ''):
-                    assert value
-                    s = make_node(subject_id)
-                    p = make_uriref(predicate)
-                    c = NamedGraph.objects.get(identifier=make_uriref(context))
-                    value = object
-                    statement = LiteralStatement(subject=s, predicate=p, object=o, context=c)
-                    statement.save()
-                    if subject_id in settings.EU_COUNTRY_KEYS:
-                        return HttpResponseRedirect('/country/{}/'.format(subject_id))
-                    else:
-                        if fun == 'edit':
-                            return HttpResponseRedirect('/item/{}/edit{}'.format(subject_id, query_string))
-                        else: 
-                            return HttpResponseRedirect('/item/{}/{}'.format(subject_id, query_string))
-            else:  # statement_class=='uri'
-                form.fields['literal'].widget = forms.HiddenInput()
-                form.fields['datatype'].widget = forms.HiddenInput()
-                form.fields['language'].widget = forms.HiddenInput()
-                if subject_id in settings.EU_COUNTRY_KEYS:
-                    form.fields['predicate'].choices = COUNTRY_PREDICATE_CHOICES
-                else:
-                    form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
-                if request.POST.get('save', ''):
-                    object_id = data['object']
-                    assert object_id
-                    s = make_node(subject_id)
-                    p = make_uriref(predicate)
-                    o = make_node(object_id)
-                    c = NamedGraph.objects.get(identifier=make_uriref(context))
-                    statement = URIStatement(subject=s, predicate=p, object=o, context=c)
-                    statement.save()
-                    if subject_id in settings.EU_COUNTRY_KEYS:
-                        return HttpResponseRedirect('/country/{}/'.format(subject_id))
-                    else:
-                        if fun == 'edit':
-                            return HttpResponseRedirect('/item/{}/edit{}'.format(subject_id, query_string))
-                        else:
-                            return HttpResponseRedirect('/item/{}/{}'.format(subject_id, query_string))
-            # statement = form.save()
-            # return HttpResponseRedirect('/uri_statement/{}/'.format(statement.id))
-        data_dict['form']=form
-        if is_bnode_id(subject_id):
-            subject = Item(bnode=BNode(subject_id))
-        else:
-            subject = Item(id=subject_id)
-        data_dict['subject'] = subject
-        data_dict['statement'] = statement_id
-        return render(request, self.template_name, data_dict)
-"""
+            return HttpResponseRedirect('/item/{}/edit/'.format(item_code))
 
 @method_decorator(login_required, name='post')
 class editStatement(View):
@@ -453,6 +321,8 @@ class editStatement(View):
         data_dict = {}
         fun = request.GET.get('f')
         data_dict['fun'] = fun
+        
+        """ MMR 200717
         c = request.GET.get('c')
         country = c and Country(id=c) or None
         data_dict['country'] = country
@@ -462,9 +332,11 @@ class editStatement(View):
         p1 = request.GET.get('p1')
         predicate1 = p1 and Predicate(id=p1) or None
         data_dict['predicate1'] = predicate1
+        """
         language = get_language()[:2]
         is_country = subject_id in settings.EU_COUNTRY_KEYS
         data_dict['is_country'] = is_country
+        """
         if is_country:
             data_dict['country'] = country = Country(id=subject_id)
             parent = None
@@ -478,6 +350,7 @@ class editStatement(View):
             else:
                 parent = None
         data_dict['parent'] = parent
+        """
         if subject_id:
             if is_country:
                 statement_class = 'uri'
@@ -487,13 +360,17 @@ class editStatement(View):
             #MMR 200711 initial = { 'statement_class': 'literal', 'subject': subject_id, 'datatype': 'string', 'language': language }
             initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': language, 'context': context }
             form = self.form_class(initial=initial)
-            # MMR 200711 form.fields['object'].widget = forms.HiddenInput()
             if is_bnode_id(subject_id):
                 subject = Item(bnode=BNode(subject_id))
             else:
                 subject = Item(id=subject_id)
             form.fields['subject'].widget = forms.HiddenInput()
             data_dict['subject'] = subject
+            breadcrumb = make_breadcrumb(request,subject)
+            data_dict['country_list'] = breadcrumb[0]
+            data_dict['country_parent_list'] = breadcrumb[1]
+            data_dict['predicate'] = predicate0 = breadcrumb[2]
+            data_dict['predicate1'] = predicate1 = breadcrumb[3]
 
         if statement_class == 'literal':
             if predicate1 or predicate0:
@@ -502,11 +379,16 @@ class editStatement(View):
                     form.fields['statement_class'].widget = forms.HiddenInput()
                 elif predicate0 and predicate0.id in settings.EW_TREE_KEYS:
                     list_tmp = settings.EW_TREE[predicate0.id]
-                predicate_list = [LITERAL_PREDICATE_CHOICES[0]] # 'label' is expected to be in 1st position !!!
+                #MMR 200715 predicate_list = [LITERAL_PREDICATE_CHOICES[0]] # 'label' is expected to be in 1st position !!!
+                v = list(LITERAL_PREDICATE_CHOICES[0]) # 'label' is expected to be in 1st position !!!
+                v[1] = settings.PREDICATE_LABELS[v[0]][language]
+                predicate_list = [ tuple(v)] 
                 for p in list_tmp:
                     for v in LITERAL_PREDICATE_CHOICES:
                         if p == v[0]:
-                            predicate_list.append(v)
+                            v = list(v)
+                            v[1]=settings.PREDICATE_LABELS[v[0]][language]
+                            predicate_list.append(tuple(v))
                 form.fields['predicate'].choices = predicate_list
             else:
                 form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
@@ -515,7 +397,11 @@ class editStatement(View):
             if is_country:
                 form.fields['statement_class'].widget = forms.HiddenInput()
                 props = country.properties()
-                predicate_list = COUNTRY_PREDICATE_CHOICES
+                predicate_list =[]
+                for v in COUNTRY_PREDICATE_CHOICES:
+                    v = list(v)
+                    v[1] = settings.PREDICATE_LABELS[v[0]][language]
+                    predicate_list.append(v)
                 for p, o, lang, languages, c, r, previous_p in props:
                     if p.id in ['P832', 'PUE6',]: # multiple instances of national holidays and monuments are allowed
                         continue
@@ -530,9 +416,10 @@ class editStatement(View):
             """ 
         data_dict['form'] = form
         data_dict['statement'] = statement_id
-        return render(request, self.template_name, data_dict)
+        return render(request, self.template_name, data_dict, )
 
     def post(self, request, statement_id=None, subject_id=None):
+        language = get_language()[:2]
         form = self.form_class(request.POST)
         data_dict = {}
         fun = request.POST.get('fun', '')
@@ -582,11 +469,23 @@ class editStatement(View):
                         form.fields['statement_class'].widget = forms.HiddenInput()
                     elif predicate0 and predicate0.id in settings.EW_TREE_KEYS:
                         list_tmp = settings.EW_TREE[predicate0.id]
+                    """ MMR 200715
                     predicate_list = [LITERAL_PREDICATE_CHOICES[0]]
                     for p in list_tmp:
                         for v in LITERAL_PREDICATE_CHOICES:
                             if p == v[0]:
                                 predicate_list.append(v)
+                    form.fields['predicate'].choices = predicate_list
+                    """
+                    v = list(LITERAL_PREDICATE_CHOICES[0]) # 'label' is expected to be in 1st position !!!
+                    v[1] = settings.PREDICATE_LABELS[v[0]][language]
+                    predicate_list = [ tuple(v)] 
+                    for p in list_tmp:
+                        for v in LITERAL_PREDICATE_CHOICES:
+                            if p == v[0]:
+                                v = list(v)
+                                v[1]=settings.PREDICATE_LABELS[v[0]][language]
+                                predicate_list.append(tuple(v))
                     form.fields['predicate'].choices = predicate_list
                 else:
                     form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
@@ -613,29 +512,52 @@ class editStatement(View):
                         datatype = XSD.string
                     o = Literal(value, datatype=datatype)
                 if request.POST.get('save', ''):
-                    assert value
-                    s = make_node(subject_id)
-                    p = make_uriref(predicate)
-                    c = NamedGraph.objects.get(identifier=make_uriref(context))
-                    value = object
-                    statement = LiteralStatement(subject=s, predicate=p, object=o, context=c)
-                    statement.save()
-                    is_save = True
+                    # MMR 200715 assert value
+                    if value:
+                        s = make_node(subject_id)
+                        p = make_uriref(predicate)
+                        c = NamedGraph.objects.get(identifier=make_uriref(context))
+                        value = object
+                        statement = LiteralStatement(subject=s, predicate=p, object=o, context=c)
+                        statement.save()
+                        is_save = True
             else:  # statement_class=='uri'
                 form.fields['literal'].widget = forms.HiddenInput()
                 form.fields['datatype'].widget = forms.HiddenInput()
                 form.fields['language'].widget = forms.HiddenInput()
-                form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
+                if subject_id in settings.EU_COUNTRY_KEYS:
+                    form.fields['statement_class'].widget = forms.HiddenInput()
+                    props = country.properties()
+                    # MMR 200715 predicate_list = COUNTRY_PREDICATE_CHOICES
+                    predicate_list =[]
+                    for v in COUNTRY_PREDICATE_CHOICES:
+                        v = list(v)
+                        v[1] = settings.PREDICATE_LABELS[v[0]][language]
+                        predicate_list.append(v)
+                    for p, o, lang, languages, c, r, previous_p in props:
+                        if p.id in ['P832', 'PUE6',]: # multiple instances of national holidays and monuments are allowed
+                            continue
+                        predicate_list = [v for v in predicate_list if p.id != v[0]]
+                    form.fields['predicate'].choices = predicate_list
+                else:
+                    # MMR 200715 form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
+                    predicate_list = []
+                    for v in ITEM_PREDICATE_CHOICES:
+                        v = list(v)
+                        v[1] = settings.PREDICATE_LABELS[v[0]][language]
+                        predicate_list.append(v)
+                    form.fields['predicate'].choices = predicate_list
                 if request.POST.get('save', ''):
                     object_id = data['object']
-                    assert object_id
-                    s = make_node(subject_id)
-                    p = make_uriref(predicate)
-                    o = make_node(object_id)
-                    c = NamedGraph.objects.get(identifier=make_uriref(context))
-                    statement = URIStatement(subject=s, predicate=p, object=o, context=c)
-                    statement.save()
-                    is_save = True
+                    if object_id:
+                    #assert object_id
+                        s = make_node(subject_id)
+                        p = make_uriref(predicate)
+                        o = make_node(object_id)
+                        c = NamedGraph.objects.get(identifier=make_uriref(context))
+                        statement = URIStatement(subject=s, predicate=p, object=o, context=c)
+                        statement.save()
+                        is_save = True
             if is_save:
                 if is_country:
                     return HttpResponseRedirect('/country/{}/'.format(subject_id))

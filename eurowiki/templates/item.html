@@ -7,31 +7,15 @@
 
 {% block body %}
 {%  with can_edit=request.user.is_euro_member can_view=request.user.is_authenticated %}
-<h1 class="ew-title" style="white-space: nowrap;"><a href="/country/{{ country.id }}/" title="{% trans "view" %} {% trans "country" %}">{{ country.label }}</a><a href="{{ country.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:55%"></i></a></h1>
-{% if not predicate1 %}
-<div class="h5 summary_label p-2">{{ predicate.label|capfirst }}</div>
+{% include "_breadcrumb.html" %}
+
 <h5 class="p-2" style="font-size: 1.1rem">
-    {% if can_edit %}<span class="mr-1"><a href="/item/{{item.id}}/edit/?c={{ country.id }}&p={{ predicate.id }}" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}{{item.preferred_label}}
+    {% if can_edit %}<span class="mr-1"><a href="/item/{{item.id}}/edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}{{item.preferred_label}}
     {% if item.is_wikidata %}
         <a href="{{ item.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
-    {% endif %}
-</h5>
-{% else %}
-<div class="h5 p-2" style="font-size: 1.1rem">
-    {% if parent %}
-        {% if can_edit %}<span class="mr-1"><a href="/item/{{parent.id}}/edit/?c={{ country.id }}&p={{ predicate.id }}" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}<a href="/item/{{parent.id}}/?c={{country.id}}&p={{predicate.id}}" title="{% trans "view" %} {% trans "item" %}">{{parent.preferred_label}}</a>
-        {% if parent.is_wikidata %}
-            <a href="{{ parent.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
-        {% endif %}
-    [{% endif %} {{ predicate.label }}{% if parent %} ]{% endif %}
-</div>
-<div class="h6 p-2 summary_label">{{ predicate1.label|capfirst}}</div>
-<h6 class="p-2">{% if can_edit %}<span class="mr-1"><a href="/item/{{item.id}}/edit/?c={{ country.id }}&p={{ predicate.id }}{% if predicate1 and parent %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}{{item.preferred_label}}
-    {% if item.is_wikidata %}
-        <a href="{{ item.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" preferred_label="true"></i></a>
-        {% endif %}
-</h6>
 {% endif %}
+</h5>
+
 <div style="max-height: calc(100vh - 20.2rem); overflow-y:auto">
 {% with wd=item.id props=item.properties %}
 {% for p, o, lang, languages, c, r, previous_p in props %}
@@ -39,28 +23,28 @@
     {% if p.is_literal %}
         {% if p.is_image %}
             <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
-            <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;"></div>
+            <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top; {% if predicate.id == 'P163' %} border: 1px solid rgba(0, 51, 153, .2);{% endif %}"></div>
         {% else %}
             <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
             <div class="p-2" style="flex-basis: 80%; font-size:90%;">{% if languages %}<div class="mb-1">{% if languages|length == 1 %}<span class="pt-0 pb-0 pl-1 pr-1" style="border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ languages.0 }}</span>{% else %}<select class="sel_lang">{% for l in languages %}<option value='{{wd}}_{{p.id}}_{{ l }}' {% if l == lang %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>{% endif %}</div>{% endif %}{% if p.is_url %}<a href="{{ o }}" target="_blank"><span class="break-long-words">{{ o }}</span></a>{% else %}{{ o|linebreaks }}{% endif %}</div>
         {% endif %}
         {% if r %}
            	{% with o=r %}
-            {% include "_props_subtree.html" with par1=country.id par2=predicate.id %}
+            {% include "_props_subtree.html" %}
         	{% endwith %}
         {% endif %}
     {% else %}
         <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%;">
-            <div class="h6 mb-3">{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/?c={{country.id}}&p={{predicate.id}}&e={{wd}}&p1={{p.id}}" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}?c={{ country.id }}&p={{ predicate.id }}&e={{wd}}&p1={{p.id}}" title="{% trans "view" %} {% trans "item"%}">{{ o.preferred_label }}</a>
+            <div class="h6 mb-3">{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" title="{% trans "view" %} {% trans "item"%}">{{ o.preferred_label }}</a>
                 {% if o.is_wikidata %}
                 <a href="{{ o.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%"></i></a>
                 {% endif %}
             </div>
-            {% include "_props_subtree.html" with par1=country.id par2=predicate.id %}
+            {% include "_props_subtree.html" %}
             {% if r %}
                	{% with o=r %}
-                {% include "_props_subtree.html" with par1=country.id par2=predicate.id  %}
+                {% include "_props_subtree.html"  %}
             	{% endwith %}
             {% endif %}
         </div>
@@ -71,9 +55,10 @@
 </div>
 {% if can_edit %}
  <div class="d-flex justify-content-center pt-3">
-    <div><a class="btn btn-light" href="/statement/{{ item.id }}/new/?f=view&c={{ country.id }}&p={{ predicate.id }}{% if predicate1 and parent %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}">{% trans "add"|capfirst %} {% trans "statement" %}</a></div>
+    <div><a class="btn btn-light" href="/statement/{{ item.id }}/new/">{% trans "add"|capfirst %} {% trans "statement" %}</a></div>
 </div>
 {% endif %}
+
 {% endwith %}
 
 {% endblock body %}

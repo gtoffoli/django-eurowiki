@@ -140,6 +140,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P948', {'en': 'page banner', 'it': 'banner di pagina',}), #
     ('comment', {'en': 'comment', 'it': 'commento',}), #
 ])
+PREDICATE_LABELS_KEYS = list(PREDICATE_LABELS.keys())
 
 CURRENTLY_HIDDEN_PREDICATE_LABELS =  OrderedDict([
     ('P242', {'en': 'stated in', 'it': "fonte dell'affermazione",}), # applies only to statements

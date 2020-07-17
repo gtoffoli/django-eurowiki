@@ -263,9 +263,17 @@ ew-like-button > a:hover {
 /* BREADCRUMB */
 .ew-breadcrumb {
   background-color: rgba(0, 51, 153, .04);
+  margin-bottom:0;
 }
 
 .ew-breadcrumb-item + .ew-breadcrumb-item::before {
     /*content:"→";*/
     content: "";
+}
+.ew-breadcrumb {
+    border-bottom: 1px solid rgba(0, 51, 153, .3);
+}
+
+.ew-breadcrumb:last-child {
+    border-bottom: none;
 }
