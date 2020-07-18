@@ -1,7 +1,7 @@
 {% extends "eurowiki_base.html" %}
 {% load static i18n %}
 
-{% block head_title %}{% trans "edit" %} {{ item.preferred_label }}{% endblock head_title %}
+{% block head_title %}{{ item.preferred_label }}: {% trans "edit" %}{% endblock head_title %}
 
 {% block body_class %}item_edit{% endblock body_class %}
 
@@ -15,16 +15,6 @@
 </h5>
 
 <form action="/item/edit/" method="POST" novalidate="">{% csrf_token %}
-{% comment %}    
-<input type="hidden" name="country" value="{{country.id}}">
-<input type="hidden" name="predicate" value="{{predicate.id}}">
-{% if parent %}
-	<input type="hidden" name="parent" value="{{parent.id}}">
-{% endif %}
-{% if predicate1 %}
-	<input type="hidden" name="predicate1" value="{{predicate1.id}}">
-{% endif %}
-{% endcomment %}
 <input type="hidden" name="item" value="{% if item.is_bnode %}{{ item.bnode }}{% else %}{{ item.id }}{% endif %}">
 
 <div style="max-height: calc(100vh - 20.2rem); overflow-y:auto">

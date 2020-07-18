@@ -322,7 +322,7 @@ class editStatement(View):
         fun = request.GET.get('f')
         data_dict['fun'] = fun
         
-        """ MMR 200717
+        """ MMR 200718
         c = request.GET.get('c')
         country = c and Country(id=c) or None
         data_dict['country'] = country
@@ -336,7 +336,13 @@ class editStatement(View):
         language = get_language()[:2]
         is_country = subject_id in settings.EU_COUNTRY_KEYS
         data_dict['is_country'] = is_country
-        """
+        if is_country:
+            country = Country(id=subject_id)
+            data_dict['country']=country
+            statement_class = 'uri'
+        else:
+            statement_class = 'literal'
+        """ 200718
         if is_country:
             data_dict['country'] = country = Country(id=subject_id)
             parent = None
@@ -350,27 +356,26 @@ class editStatement(View):
             else:
                 parent = None
         data_dict['parent'] = parent
+        if is_country:
+            statement_class = 'uri'
+        else:
+            statement_class = 'literal'
         """
-        if subject_id:
-            if is_country:
-                statement_class = 'uri'
-            else:
-                statement_class = 'literal'
-            context = settings.DEFAULT_CONTEXT
-            #MMR 200711 initial = { 'statement_class': 'literal', 'subject': subject_id, 'datatype': 'string', 'language': language }
-            initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': language, 'context': context }
-            form = self.form_class(initial=initial)
-            if is_bnode_id(subject_id):
-                subject = Item(bnode=BNode(subject_id))
-            else:
-                subject = Item(id=subject_id)
-            form.fields['subject'].widget = forms.HiddenInput()
-            data_dict['subject'] = subject
-            breadcrumb = make_breadcrumb(request,subject)
-            data_dict['country_list'] = breadcrumb[0]
-            data_dict['country_parent_list'] = breadcrumb[1]
-            data_dict['predicate'] = predicate0 = breadcrumb[2]
-            data_dict['predicate1'] = predicate1 = breadcrumb[3]
+        context = settings.DEFAULT_CONTEXT
+        #MMR 200711 initial = { 'statement_class': 'literal', 'subject': subject_id, 'datatype': 'string', 'language': language }
+        initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': language, 'context': context }
+        form = self.form_class(initial=initial)
+        if is_bnode_id(subject_id):
+            subject = Item(bnode=BNode(subject_id))
+        else:
+            subject = Item(id=subject_id)
+        form.fields['subject'].widget = forms.HiddenInput()
+        data_dict['subject'] = subject
+        breadcrumb = make_breadcrumb(request,subject)
+        data_dict['country_list'] = breadcrumb[0]
+        data_dict['country_parent_list'] = breadcrumb[1]
+        data_dict['predicate'] = predicate0 = breadcrumb[2]
+        data_dict['predicate1'] = predicate1 = breadcrumb[3]
 
         if statement_class == 'literal':
             if predicate1 or predicate0:
@@ -417,13 +422,14 @@ class editStatement(View):
         data_dict['form'] = form
         data_dict['statement'] = statement_id
         return render(request, self.template_name, data_dict, )
-
+        
     def post(self, request, statement_id=None, subject_id=None):
         language = get_language()[:2]
         form = self.form_class(request.POST)
         data_dict = {}
         fun = request.POST.get('fun', '')
         data_dict['fun'] = fun
+        """ 200718
         country_id = request.POST.get('country', '')
         country = country_id and Country(id=country_id) or None
         data_dict['country'] = country
@@ -444,6 +450,21 @@ class editStatement(View):
         else:
             query_string = '?f={}&c={}&p={}'.format(fun, country_id, predicate0_id)
         data_dict['predicate1'] = predicate1
+        """
+        is_country = subject_id in settings.EU_COUNTRY_KEYS
+        if is_country:
+            country = Country(id=subject_id)
+            data_dict['country']=country
+        if is_bnode_id(subject_id):
+            subject = Item(bnode=BNode(subject_id))
+        else:
+            subject = Item(id=subject_id)
+        data_dict['subject'] = subject
+        breadcrumb = make_breadcrumb(request,subject)
+        data_dict['country_list'] = breadcrumb[0]
+        data_dict['country_parent_list'] = breadcrumb[1]
+        data_dict['predicate'] = predicate0 = breadcrumb[2]
+        data_dict['predicate1'] = predicate1 = breadcrumb[3]
         form.fields['subject'].widget = forms.HiddenInput()
         is_save = False
         if form.is_valid():
@@ -525,7 +546,8 @@ class editStatement(View):
                 form.fields['literal'].widget = forms.HiddenInput()
                 form.fields['datatype'].widget = forms.HiddenInput()
                 form.fields['language'].widget = forms.HiddenInput()
-                if subject_id in settings.EU_COUNTRY_KEYS:
+                # 200718 if subject_id in settings.EU_COUNTRY_KEYS:
+                if is_country:
                     form.fields['statement_class'].widget = forms.HiddenInput()
                     props = country.properties()
                     # MMR 200715 predicate_list = COUNTRY_PREDICATE_CHOICES
@@ -542,10 +564,22 @@ class editStatement(View):
                 else:
                     # MMR 200715 form.fields['predicate'].choices = ITEM_PREDICATE_CHOICES
                     predicate_list = []
+                    if predicate0 and predicate0.id in settings.EW_TREE_KEYS:
+                        list_tmp = settings.EW_TREE[predicate0.id]
+                        print(list_tmp)
+                        for p in list_tmp:
+                            for v in ITEM_PREDICATE_CHOICES:
+                                if p == v[0]:
+                                    v = list(v)
+                                    v[1]=settings.PREDICATE_LABELS[v[0]][language]
+                                    predicate_list.append(tuple(v))
+                    """ MMR 200718
+                    predicate_list = []
                     for v in ITEM_PREDICATE_CHOICES:
                         v = list(v)
                         v[1] = settings.PREDICATE_LABELS[v[0]][language]
                         predicate_list.append(v)
+                    """
                     form.fields['predicate'].choices = predicate_list
                 if request.POST.get('save', ''):
                     object_id = data['object']
@@ -563,13 +597,8 @@ class editStatement(View):
                     return HttpResponseRedirect('/country/{}/'.format(subject_id))
                 else:
                     if fun == 'edit':
-                        return HttpResponseRedirect('/item/{}/edit{}'.format(subject_id, query_string))
-                    return HttpResponseRedirect('/item/{}/{}'.format(subject_id, query_string))
+                        return HttpResponseRedirect('/item/{}/edit'.format(subject_id))
+                    return HttpResponseRedirect('/item/{}/'.format(subject_id))
         data_dict['form']=form
-        if is_bnode_id(subject_id):
-            subject = Item(bnode=BNode(subject_id))
-        else:
-            subject = Item(id=subject_id)
-        data_dict['subject'] = subject
         data_dict['statement'] = statement_id
         return render(request, self.template_name, data_dict)

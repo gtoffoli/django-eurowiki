@@ -109,23 +109,27 @@
         <div class="container-fluid">
             <div class="row flex-xl-nowrap">
                 <div class="col-12 col-md-3 col-xl-2 ew-sidebar">
-					<form role="search" class="ew-search d-flex align-items-center">
-					    <span class="" style="position: relative; width:100%; display: inline-block; direction: ltr;">
-					        <input class="form-control" size="32" type="text" style="font-size:80%" name="q" id="navigation_autocomplete">
-					    </span>
-					    <button class="btn btn-link ew-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
-					</form>
+                    <form role="search" class="ew-search d-flex align-items-center">
+                        <span class="" style="position: relative; width:100%; display: inline-block; direction: ltr;">
+                        <input class="form-control" size="32" type="text" style="font-size:80%" name="q" id="navigation_autocomplete">
+                        </span>
+                        <button class="btn btn-link ew-search-docs-toggle d-md-none p-0 ml-3" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
+                    </form>
                     {% block sidebar %}
+{% comment %} MMR 200718
                     <div class="ew-bar-menu text-right">
                         <button class="btn btn-link ew-bar-menu-toggle d-md-none p-0 ml-0" type="button" data-toggle="collapse" data-target="#ew-menu-nav"><span class="fa fa-bars" style="font-size: 1.8rem"></span></button>
                     </div>
+{% endcomment %}
                     <nav class="nav-links collapse" id="ew-menu-nav">
                         <form action="/countries/view/" method="post" id="view_countries">
                             {% csrf_token %}
+{% comment %} MMR 200718
                             <div class="d-flex justify-content-end mt-2">
                                 <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "uncheck" %}</small></button>
                                 <button type="submit" class="btn"><i class="fa fa-eye"></i> <small>{% trans "view" %}</small></button>
                             </div>
+{% endcomment %}
                             <div class="d-flex justify-content-end mb-2">
                                 <select class="small" name="filter_prop">
                                     <option value ="">{% trans "filter for"|capfirst %}</option>
@@ -143,16 +147,6 @@
                                     </ul>
                                 </div>
                             </div>
-{% comment %}
-                            <div class="d-flex justify-content-end mt-2">
-                                <label class="small mr-2">{% trans "Filtro" %}</label>
-                                <select class="small">
-                                    {% for p in predicates %}
-                                    <option value ="{{p.0}}">{{p.1}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-{% endcomment %}
                             <div class="d-flex justify-content-end mt-2">
                                 <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "uncheck" %}</small> </button>
                                 <button type="submit" class="btn"><i class="fa fa-eye"></i> <small>{% trans "view" %}</small></button>

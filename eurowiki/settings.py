@@ -233,7 +233,8 @@ else:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-SITE_ID = 2
+SITE_ID = 1
+# SITE_ID = 2
 SITE_NAME = 'EuroIdentities'
 
 PROJECT_ROOT = os.path.dirname(__file__)

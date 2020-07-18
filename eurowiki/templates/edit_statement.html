@@ -2,49 +2,18 @@
 {% load static i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "add"|capfirst %} {% trans "statement" %}{% endblock head_title %}
+{% block head_title %}{% if is_country %}{{country.label}}: {% else %}{{subject.preferred_label}}: {% endif %}{% trans "add" %} {% trans "statement" %}{% endblock head_title %}
 
 {% block body_class %}edit_statement{% endblock body_class %}
 {% block body %}
 
-{% comment %}
-<nav aria-label="breadcrumb ew-breadcrumb">
-    <ol class="breadcrumb ew-breadcrumb">
-        <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/country/{{country.id}}/" title="{% trans "view" %} {{country.label}}">{{country.label}}</a></li>
-        {% if not is_country %}
-            {% if parent %}
-            <li class="h6 breadcrumb-item ew-breadcrumb-item"><div><div class="text-center"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div><div  style="margin-top:-0.6rem">{{predicate0.label}}</div></div></li>
-            <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/item/{{parent.id}}/?c={{country.id}}&p={{predicate0.id}}" title="{% trans "view" %} {% trans "item" %}">{{parent.preferred_label}}</a></li>
-            {% endif %}
-            <li class="h6 breadcrumb-item ew-breadcrumb-item"><div style="display:block;"><div class="text-center"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div><div style="margin-top:-0.6rem">{% if predicate1 and parent %}{{predicate1.label}}{% else %}{{predicate0.label}}{% endif %}</div></div></li>
-            <li class="h6 breadcrumb-item ew-breadcrumb-item"><a href="/item/{{subject.id}}/{%if fun == 'edit' %}edit{% endif %}?c={{country.id}}&p={{predicate0.id}}{% if parent and predicate1 %}&e={{parent.id}}&p1={{predicate1.id}}{% endif %}" title="{% if fun == 'edit' %}{% trans "edit" %}{% else %}{% trans "view" %}{% endif %} {% trans "item" %}">{{subject.preferred_label}}</a></li>
-        {% endif %}
-        <li class="h6 breadcrumb-item ew-breadcrumb-item"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></li>
-        <li class="h6 breadcrumb-item ew-breadcrumb-item active">{% trans "add"|capfirst %} {% trans "statement" %}</li>
-    </ol>
-</nav>
-{% endcomment %}
-
 {% include "_breadcrumb.html" %}
 
-<h3 class="text-center">{% trans "add"|capfirst %} {% trans "statement" %}</h3>
+<h5 class="text-center">{% trans "add"|capfirst %} {% trans "statement" %}</h5>
 
-{% comment %}
-{% if subject %}
-<form action="/statement/{{ subject.id }}/new/" method="post" novalidate>
-{% else %}
-<form action="/statement/{{ statement }}/edit/" method="post" novalidate>
-{% endif %}
-{% endcomment %}
 <form action="/statement/{{ subject.id }}/new/" method="post" novalidate>
     {% csrf_token %}
     {% if fun %}<input type="hidden" name="fun" value="{{fun}}">{% endif %}
-{% comment %}
-    {% if country %}<input type="hidden" name="country" value="{{country.id}}">{% endif %}
-    {% if predicate0 %}<input type="hidden" name="predicate0" value="{{predicate0.id}}">{% endif %}
-    {% if parent %}<input type="hidden" name="parent" value="{{parent.id}}">{% endif %}
-    {% if predicate1 %}<input type="hidden" name="predicate1" value="{{predicate1.id}}">{% endif %}
-{% endcomment %}
 	<input type="hidden" name="predicate" value="{{predicate.id}}">
     {{ form|crispy }}
     <div class="d-flex justify-content-center mb-3">
