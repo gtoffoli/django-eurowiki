@@ -62,7 +62,7 @@ EU_COUNTRY_LABELS = OrderedDict([
     ('Q32', {'en': 'Luxembourg', 'it': 'Lussemburgo',}), # Luxembourg
     ('Q233', {'en': 'Malta', 'it': 'Malta',}), # Malta
     ('Q55', {'en': 'Netherlands', 'it': 'Paesi Bassi',}), # Netherlands
-    ('Q29999', {'en': 'Kingdom of Netherlands', 'it': 'Paesi Bassi',}), # Kingdom of Netherlands
+#   ('Q29999', {'en': 'Kingdom of Netherlands', 'it': 'Paesi Bassi',}), # Kingdom of Netherlands
     ('Q36', {'en': 'Poland', 'it': 'Polonia',}), # Poland
     ('Q45', {'en': 'Portugal', 'it': 'Portogallo',}), # Portugal
     ('Q218', {'en': 'Romania', 'it': 'Romania',}), # Romania
@@ -71,14 +71,14 @@ EU_COUNTRY_LABELS = OrderedDict([
     ('Q29', {'en': 'Spain', 'it': 'Spagna',}), # Spain
     ('Q34', {'en': 'Sweden', 'it': 'Svezia',}), # Sweden
     ('Q28', {'en': 'Hungary', 'it': 'Ungheria',}), #  (member of Q458)
-    ('Q145', {'en': 'United Kingdom', 'it': 'Regno Unito',}), #
+#   ('Q145', {'en': 'United Kingdom', 'it': 'Regno Unito',}), #
 ])
 EU_COUNTRY_KEYS = list(EU_COUNTRY_LABELS.keys())
 
 OTHER_ITEM_LABELS = {
-    'Q458': {'en': 'European Union', 'it': 'Unione Europea'},
-    'Q4916': {'en': 'Euro', 'it': 'Euro'},
-    'Q8886': {'en': 'European Council', 'it': 'Consiglio Europeo'}, 
+    'Q458': {'en': 'European Union', 'it': 'Unione Europea',},
+    'Q4916': {'en': 'Euro', 'it': 'Euro',},
+    'Q8886': {'en': 'European Council', 'it': 'Consiglio Europeo',},
     'Q3624078': {'en': 'sovereign state', 'it': 'stato sovrano',},
     'Q2065736': {'en': 'cultural property', 'it': 'bene culturale',},
     'Q4989906': {'en': 'monument', 'it': 'monumento',},
@@ -94,7 +94,6 @@ OTHER_ITEM_LABELS = {
 
 PREDICATE_LABELS =  OrderedDict([
     ('label', {'en': 'name/title', 'it': 'nome/titolo',}), #
-    ('P1476', {'en': 'original title', 'it': 'titolo originale',}), # original title
     ('PUE1', {'en': 'text', 'it': 'testo',}), #
     ('P953', {'en': 'online full text', 'it': 'testo completo online',}), # 'full work available at', 'testo completo disponibile all'indirizzo'
     ('PUE2', {'en': 'description', 'it': 'descrizione',}), #
@@ -151,6 +150,7 @@ CURRENTLY_HIDDEN_PREDICATE_LABELS =  OrderedDict([
     ('P463', {'en': 'member of', 'it': 'membro di',}), # member of
     ('P17', {'en': 'country', 'it': 'paese',}), # country
     ('P495', {'en': 'country of origin', 'it': 'paese di origine',}), # country of origin
+    ('P1476', {'en': 'original title', 'it': 'titolo originale',}), # original title
     ('P642', {'en': 'refers to', 'it': 'relativo a',}), # of (refers to)
     ('P144', {'en': 'based on', 'it': 'basato su',}), # 'opere usate come base per il soggetto'
     ('P180', {'en': 'depicts', 'it': 'raffigura',}), #
@@ -223,6 +223,7 @@ EW_SUBTREE_KEYS = list(EW_SUBTREE.keys())
 LITERAL_LEAF_KEYS = ('label', 'PUE2', 'P854', 'P248', 'comment',)
 
 EURO_LANGUAGES = (
+    ('', '-'),
     ('en', 'English'),
     ('it', 'Italiano'),
     ('de', 'German'),

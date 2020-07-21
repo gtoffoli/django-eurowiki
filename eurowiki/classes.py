@@ -107,40 +107,13 @@ class Item(EurowikiBase):
         return settings.OTHER_ITEM_LABELS.get(self.id, {})
 
     def preferred_label(self, language=None):
-        properties = self.properties(keys=['P1476', 'title', 'label',], exclude_keys=[], language=language)
+        # properties = self.properties(keys=['P1476', 'title', 'label',], exclude_keys=[], language=language)
+        properties = self.properties(keys=['label',], exclude_keys=[], language=language)
         if properties:
             return properties[0][1]
         if self.is_bnode():
             return self.bnode
         return self.label()
-
-    # return a list of couples (item, predicate) leading from a country root to the target item
-    def lineage(self, graph_identifier=None):
-        if graph_identifier:
-            graph = get_named_graph(graph_identifier)
-        else:
-            graph = get_conjunctive_graph()
-        couples = []
-        object = self.node()
-        assert object
-        triples = list(graph.triples((None, None, object)))
-        n_triples = len(triples)
-        while n_triples and node_id(object) not in settings.EU_COUNTRY_KEYS:
-            if n_triples > 1:
-                triple =  triples[0] # choose more smartly?
-            else:
-                triple =  triples[0]
-            subject, predicate, object = triple
-            if isinstance(subject, URIRef):
-                item = Item(uriref=subject)
-            else:
-                item = Item(bnode=subject)
-            couples.append((item, Predicate(uriref=predicate)))
-            object = subject
-            triples = list(graph.triples((None, None, object)))
-            n_triples = len(triples)
-        couples.reverse()
-        return couples
 
     # return a list of paths, each being a list of couples (item, predicate) leading from a country root to the target item
     def lineages(self, request, graph_identifier=None):

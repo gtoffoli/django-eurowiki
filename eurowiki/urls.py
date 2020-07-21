@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^countries/view/$', views.view_countries, name='view_countries'),
     url(r'^item/edit/$', views.editItem.as_view(), name='edit_item_post'),
     url(r'^item/(?P<item_code>[\w\d]+)/edit/$', views.editItem.as_view(), name='edit_item_get'),
+    url(r'^item/(?P<item_code>[\w\d]+)/remove/$', views.remove_item, name='remove_item'),
     url(r'^item/(?P<item_code>[\w\d]+)/remprop/$', views.removeProperty, name='removeProperty'),
     url(r'^item/(?P<item_code>[\w\d]+)/$', views.view_item, name='view_item'),
 
