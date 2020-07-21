@@ -107,7 +107,6 @@ class Item(EurowikiBase):
         return settings.OTHER_ITEM_LABELS.get(self.id, {})
 
     def preferred_label(self, language=None):
-        # properties = self.properties(keys=['P1476', 'title', 'label',], exclude_keys=[], language=language)
         properties = self.properties(keys=['label',], exclude_keys=[], language=language)
         if properties:
             return properties[0][1]
@@ -158,8 +157,10 @@ class Item(EurowikiBase):
                 if not history:
                     for triple in triples:
                         edge = [make_item(triple[0]), Predicate(uriref=triple[1])]
-                        paths.append(deepcopy([edge]) + deepcopy(path))
-                path = deepcopy([best_edge]) + deepcopy(path)
+                        # paths.append(deepcopy([edge]) + deepcopy(path))
+                        paths.append([edge] + path)
+                # path = deepcopy([best_edge]) + deepcopy(path)
+                path = [best_edge] + path
 
                 object = s
                 triples = list(graph.triples((None, None, object)))
@@ -257,8 +258,7 @@ class Item(EurowikiBase):
                                 value_dict[prop_id] = o.value
                                 context_dict[prop_id] = c
                                 reified_dict[prop_id] = r
-                            if lang:
-                                languages_dict[prop_id].append(lang)
+                            languages_dict[prop_id].append(lang)
                         continue
             else:
                 if isinstance(o, BNode):

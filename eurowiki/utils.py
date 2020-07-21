@@ -24,15 +24,17 @@ wikidata_image_src_template = 'https://upload.wikimedia.org/wikipedia/commons/{}
 def is_bnode_id(item_code):
     if not item_code:
         return False
-    return item_code.count('_') or len(item_code)==35 or (len(item_code)==9 and item_code[0]!='Q')
+    # return item_code.count('_') or len(item_code)==35 or (len(item_code)==9 and item_code[0]!='Q')
+    return item_code.count('_') or (len(item_code)>=9 and item_code[0]!='Q')
+
 
 def make_uriref(value, prefix=None):
     if not prefix:
-        if value.startswith('QU'):
+        if value.startswith('QUE'):
             prefix = 'ew'
         elif value.startswith('Q'):
             prefix = 'wd'
-        elif value.startswith('PU'):
+        elif value.startswith('PUE'):
             prefix = 'ewt'
         elif value.startswith('P'):
             prefix = 'wdt'
@@ -54,7 +56,6 @@ def id_from_uriref(uriref):
     return label
 
 def make_node(value, prefix=None):
-    # if value.startswith('_:'):
     if is_bnode_id(value):
         return BNode(value.replace('_:', ''))
     else:

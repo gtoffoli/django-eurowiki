@@ -21,6 +21,11 @@ LITERAL_PREDICATE_CHOICES = [p for p in PREDICATE_CHOICES if p[0] in settings.LI
 URI_PREDICATE_CHOICES = [p for p in PREDICATE_CHOICES if not p[0] in settings.LITERAL_PROPERTIES]
 COUNTRY_PREDICATE_CHOICES = [p for p in URI_PREDICATE_CHOICES if p[0] in settings.EW_TREE_KEYS]
 ITEM_PREDICATE_CHOICES = [p for p in URI_PREDICATE_CHOICES if not p[0] in settings.EW_TREE_KEYS]
+OBJECT_TYPE_CHOICES = (
+    ('old', _('existing graph node')),
+    ('new',  _('new graph node')),
+    ('ext',  _('linked external node')),
+)
 CONTEXT_CHOICES = []
 for identifier in NamedGraph.objects.all().values_list('identifier', flat=True).distinct():
     context = identifier.n3().replace('<','').replace('>','')
@@ -30,6 +35,7 @@ class StatementForm(forms.Form):
     subject = forms.CharField(required=True, label=_('subject'))
     statement_class = forms.ChoiceField(required=True, choices=STATEMENT_CLASS_CHOICES, label=_('statement class'), widget=forms.Select(attrs={'class':'form-control', 'onchange':'javascript:this.form.submit()'}))
     predicate = forms.ChoiceField(required=True, choices=PREDICATE_CHOICES, label=_('predicate'), widget=forms.Select(attrs={'class':'form-control',}))
+    object_node_type = forms.ChoiceField(required=False, choices=OBJECT_TYPE_CHOICES, label=_('object node type'), widget=forms.Select(attrs={'class':'form-control', 'onchange':'javascript:this.form.submit()'}))
     object = forms.CharField(required=False, label=_('object node'))
     datatype = forms.ChoiceField(required=False, choices=DATATYPE_CHOICES, label=_('data type'), widget=forms.Select(attrs={'class':'form-control', 'onchange':'javascript:this.form.submit()'}))
     literal = forms.CharField(required=False, label=_('literal value'), widget=forms.Textarea(attrs={'rows': 4}))

@@ -290,7 +290,7 @@ class editStatement(View):
         else:
             statement_class = 'literal'
         context = settings.DEFAULT_CONTEXT
-        initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': language, 'context': context }
+        initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': '', 'context': context }
         form = self.form_class(initial=initial)
         form.fields['subject'].widget = forms.HiddenInput()
         breadcrumb = make_breadcrumb(request,subject)
@@ -319,6 +319,7 @@ class editStatement(View):
             else:
                 form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
             form.fields['object'].widget = forms.HiddenInput()
+            form.fields['object_node_type'].widget = forms.HiddenInput()
         else: # uri
             form.fields['statement_class'].widget = forms.HiddenInput()
             form.fields['datatype'].widget = forms.HiddenInput()
@@ -457,11 +458,21 @@ class editStatement(View):
                                     predicate_list.append(tuple(v))
                     form.fields['predicate'].choices = predicate_list
                 if request.POST.get('save', ''):
+                    object_node_type = data['object_node_type']
                     object_id = data['object']
-                    if object_id:
+                    o = None
+                    if object_node_type=='new':
+                        if object_id:
+                            o = BNode(object_id.replace('_:', ''))
+                        else:
+                            o = BNode()
+                    elif object_node_type=='old' and object_id:
+                        o = make_node(object_id) 
+                    elif object_node_type=='ext' and object_id.startswith('Q') and object_id[1:].isdecimal(): # ext
+                        o = make_node(object_id)
+                    if o:
                         s = make_node(subject_id)
                         p = make_uriref(predicate)
-                        o = make_node(object_id)
                         c = NamedGraph.objects.get(identifier=make_uriref(context))
                         statement = URIStatement(subject=s, predicate=p, object=o, context=c)
                         statement.save()
