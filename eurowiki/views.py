@@ -1,17 +1,21 @@
 # see https://stackoverflow.com/questions/2112715/how-do-i-fix-pydev-undefined-variable-from-import-errors (Eclipse)
 # Window -> Preferences -> PyDev -> Editor -> Code Analysis -> Undefined -> Undefined Variable From Import -> Ignore
+
+import json
+
 from rdflib.namespace import XSD
 from rdflib.term import Literal, BNode, URIRef
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django import forms
-from django.utils.translation import get_language
+from django.utils.translation import get_language, ugettext_lazy as _
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib.auth.models import User
+from dal import autocomplete
 
 from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
@@ -209,7 +213,7 @@ def removeProperty(request, item_code, graph_identifier=None):
                 graph.remove(triple)
         else:
             if isinstance(object, BNode):
-                if object_value_or_id == object:
+                if object_value_or_id == str(object):
                     remove_node(object, graph)
                     graph.remove(triple)
             elif isinstance(object, URIRef):
@@ -290,7 +294,7 @@ class editStatement(View):
         else:
             statement_class = 'literal'
         context = settings.DEFAULT_CONTEXT
-        initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': '', 'context': context }
+        initial = { 'statement_class': statement_class, 'subject': subject_id, 'datatype': 'string', 'language': '', 'object_node_type': 'old', 'context': context }
         form = self.form_class(initial=initial)
         form.fields['subject'].widget = forms.HiddenInput()
         breadcrumb = make_breadcrumb(request,subject)
@@ -457,8 +461,12 @@ class editStatement(View):
                                     v[1] = settings.PREDICATE_LABELS[v[0]][language]
                                     predicate_list.append(tuple(v))
                     form.fields['predicate'].choices = predicate_list
+                object_node_type = data['object_node_type']
+                if object_node_type=='old':
+                    form.fields['object'] = forms.ChoiceField(required=False, choices=[], label=_('object'), widget = autocomplete.ListSelect2(url='old-item-autocomplete', attrs={'class':'form-control', 'style': 'width: 100%;'}))
+                else:
+                    form.fields['object'] = forms.CharField(required=False, label=_('object'), widget=forms.TextInput(attrs={'class':'form-control',}))
                 if request.POST.get('save', ''):
-                    object_node_type = data['object_node_type']
                     object_id = data['object']
                     o = None
                     if object_node_type=='new':
@@ -467,7 +475,7 @@ class editStatement(View):
                         else:
                             o = BNode()
                     elif object_node_type=='old' and object_id:
-                        o = make_node(object_id) 
+                        o = make_node(object_id)
                     elif object_node_type=='ext' and object_id.startswith('Q') and object_id[1:].isdecimal(): # ext
                         o = make_node(object_id)
                     if o:
@@ -487,3 +495,30 @@ class editStatement(View):
         data_dict['form'] = form
         data_dict['statement'] = statement_id
         return render(request, self.template_name, data_dict)
+
+def old_item_autocomplete(request):
+    MIN_CHARS = 4
+    q = request.GET.get('q', None)
+    results = []
+    if request.user.is_authenticated:
+        if q and len(q) >= MIN_CHARS:
+            q = q.lower()
+            qs = LiteralStatement.objects.filter(predicate__icontains='label', object__icontains=q).order_by('subject')
+            last_s = None
+            for statement in qs:
+                s, p, o = statement.as_triple()
+                if s == last_s:
+                    continue
+                label = o.value
+                if label.lower().count(q):
+                    last_s = s
+                    if isinstance(s, BNode):
+                        node_id = str(s)
+                    else:
+                        node_id = id_from_uriref(s)
+                    results.append([node_id, label])
+                    last_s = s
+            results = sorted(results, key=lambda x: x[1])
+            results = [{'id': x[0], 'text': x[1][:80]} for x in results]
+    body = json.dumps({ 'results': results, 'more': False, })
+    return HttpResponse(body, content_type='application/json')

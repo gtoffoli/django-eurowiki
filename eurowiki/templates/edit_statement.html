@@ -4,6 +4,8 @@
 
 {% block head_title %}{% if is_country %}{{country.label}}: {% else %}{{subject.preferred_label}}: {% endif %}{% trans "add" %} {% trans "statement" %}{% endblock head_title %}
 
+{% block extra_head %}{% include "_select2_css.html" %}{% endblock extra_head %}
+
 {% block body_class %}edit_statement{% endblock body_class %}
 {% block body %}
 
@@ -22,3 +24,5 @@
 </form>
 
 {% endblock body %}
+
+{% block extra_script_style %}{% include "_select2_js.html" %}{% endblock extra_script_style %}

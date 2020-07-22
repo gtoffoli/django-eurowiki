@@ -44,4 +44,6 @@ urlpatterns = [
 
     url(r'^statement/(?P<subject_id>[\w\d]+)/new/$', views.editStatement.as_view(), name='statement_new'),
     url(r'^statement/(?P<statement_id>[\d-]+)/edit/$', views.editStatement.as_view(), name='statement_edit'),
+
+    url('old-item-autocomplete/$', views.old_item_autocomplete, name='old-item-autocomplete',),
 ]
