@@ -223,10 +223,14 @@ def removeProperty(request, item_code, graph_identifier=None):
             if datatype_id:
                 if datatype_id == object.datatype_id() and object_value_or_id == str(object.value):
                     graph.remove(triple)
+            elif object_value_or_id == object.value:
+                graph.remove(triple)
+            """ MMR 200723
             elif language and language == object.language:
                 graph.remove(triple)
             elif not language and not object.language:
                 graph.remove(triple)
+            """
         else:
             if isinstance(object, BNode):
                 if object_value_or_id == str(object):
