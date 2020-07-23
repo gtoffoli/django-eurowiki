@@ -27,11 +27,25 @@
                     <details open>
                         <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
                             <div class="level_one">
+                                {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
                                 <div class="h5 mb-3 p-2" style="font-size:1.1rem">
-                                {% if can_edit %}<span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" title="{% trans "view" %} {% trans "item" %}">{{ o.preferred_label }}</a>
-                                {% if o.is_wikidata %}
-                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
+                                {% if can_edit and countries_selected|length == 1 %}
+                                    <span class="mr-1"><a href="#" style="color: red;" id="{{country.id}}_{{p.id}}_{{ o.id }}" class="deleteItem"><i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
+                                    <span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>
                                 {% endif %}
+                                <a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" class="txt_content" title="{% trans "view" %} {% trans "item" %}">{{ preferred_label }}</a>
+                                {% if o.is_wikidata %}
+                                    <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
+                                {% endif %}
+                                {% if languages %}
+                                <div class="ml-2 d-inline-block">
+                                    {% if languages|length == 1 %}
+                                    <span class="pt-0 pb-0 pl-1 pr-1" style=" border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ lang_default }}</span>
+                                    {% else %}
+                                    <select class="sel_lang">{% for l in languages %}<option value='{{o.id}}_label_{{ l }}' {% if l == lang_default %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>{% endif %}
+                                </div>
+                                {% endif %}
+                                {% endwith %}
                                 </div>
                                 {% include "_props_subtree.html" with predicate=p.id %}
                                 {% if r %}
@@ -67,11 +81,16 @@
                             <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
                             {% endif %}
                             <div class="level_one">
-                                {% with preferred_label=o.preferred_label.0 lang_default=o.preferred_label.1 languages=o.preferred_label.2 %}
-                                <div class="h5 mb-3 p-2 d-inline-block" style="font-size:1.1rem">{% if can_edit %}<span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" class="txt_content" title="{% trans "view" %} {% trans "item" %}"><span>{{ preferred_label }}</span></a>
-                                {% if o.is_wikidata %}
-                                <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
-                                {% endif %}
+                                {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
+                                <div class="h5 mb-3 p-2 d-inline-block" style="font-size:1.1rem">
+                                    {% if can_edit and countries_selected|length == 1 %}
+                                    <span class="mr-1"><a href="#" style="color: red;" id="{{country.id}}_{{p.id}}_{{ o.id }}" class="deleteItem"><i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
+                                    <span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>
+                                    {% endif %}
+                                    <a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" class="txt_content" title="{% trans "view" %} {% trans "item" %}"><span>{{ preferred_label }}</span></a>
+                                    {% if o.is_wikidata %}
+                                    <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
+                                    {% endif %}
                                 </div>
                                 {% if languages %}
                                 <div class="ml-2 d-inline-block">
@@ -100,7 +119,7 @@
         </tr>
         <tr>
         {% for country in countries_selected %}
-            {% if  can_edit %}
+            {% if  can_edit and countries_selected|length == 1 %}
             <td>
                 <div class="d-flex justify-content-center pt-3">
                     <div><a class="btn btn-light" href="/statement/{{ country.id }}/new/">{% trans "add"|capfirst %} {% trans "statement" %}</a></div>
@@ -119,5 +138,49 @@
 {% endblock body %}
 
 {% block extra_script_style %}
+{%  with can_edit=request.user.is_euro_member can_view=request.user.is_authenticated %}
+
+{% if can_edit and countries_selected|length == 1 %}
+<style>
+    .modal_foreground {
+        z-index: 10000;
+    }
+</style>
+<script type="text/javascript" src="{% static "eurowiki/js/bootbox.min.js" %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('a.deleteItem').on('click', function(event){
+          event.preventDefault();
+          this_id = $(this).attr('id');
+          values = this_id.split('_');
+          if (!values[0] | !values[1] | !values[2] ) {
+            alert ('{% trans "Warning! ID attribute: a value is missing" %}');
+            return false
+          }
+          bootbox.confirm({
+            className: 'modal_foreground',
+            message: '{% trans "do you really want to remove this item"|capfirst %}?',
+            buttons: {
+              confirm: {
+                label: '{% trans "Yes" %}',
+                className: 'btn-success'
+              },
+              cancel: {
+                label: '{% trans "No" %}',
+                className: 'btn-danger'
+              },
+            },
+            callback: function(result) {
+                if (result) {
+                   $(window.location).attr('href', '/item/'+values[0]+'/remprop/?p='+values[1]+'&o='+values[2]);
+                }
+             }
+          });
+        });
+    });
+</script>
+{% endif %}
+{% endwith %}
 {% include "_sel_lang_js.html" %}
 {% endblock extra_script_style %}
