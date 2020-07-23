@@ -1,0 +1,37 @@
+<script>
+    $(document).ready(function() {
+        $("select.sel_lang").change(function() {
+            el = $(this);
+            val = el.val()
+            values = val.split('_');
+            parent = el.parent();
+            if (values[1] == 'label') {
+                label = parent.prev();
+                stringa=label.children('.txt_content');
+            }
+            else {
+                stringa = parent.next('.txt_content');
+            }
+            children=stringa.children()
+            subject_id = values[0];
+            if (children) {
+                $.ajax({
+                    type:'POST',
+                    data: {
+                        'p': values[1],
+                        'lang': values[2],
+                    },
+                    url: '/item/'+subject_id+'/viewprop/',
+                    success: function(json_data){
+                        for (key in json_data) {
+                            children.html(json_data[key]);
+                        };
+                    },
+                    error: function(){
+                        console.log("Error");
+                    }
+                });
+            }
+        });
+    });
+</script>

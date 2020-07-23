@@ -1,18 +1,20 @@
 {% extends "eurowiki_base.html" %}
 {% load static i18n %}
 
-{% block head_title %}{{ item.preferred_label }}: {% trans "edit" %}{% endblock head_title %}
+{% block head_title %}{{ item.preferred_label.0 }}: {% trans "edit" %}{% endblock head_title %}
 
 {% block body_class %}item_edit{% endblock body_class %}
 
 {% block body %}
 {% include "_breadcrumb.html" with fun='edit' %}
-<h5 class="p-2" style="font-size: 1.1rem">
-    {% trans "edit"|capfirst %}: <a href="/item/{{item.id}}/" title="{% trans "edit" %} {% trans "item" %}">{{item.preferred_label}}</a>
+{% with preferred_label=item.preferred_label.0 %}
+<h5 class="p-2 d-inline-block" style="font-size: 1.1rem">
+    {% trans "edit"|capfirst %}: <a href="/item/{{item.id}}/" title="{% trans "edit" %} {% trans "item" %}">{{preferred_label}}</a>
     {% if item.is_wikidata %}
         <a href="{{ item.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
-{% endif %}
+    {% endif %}
 </h5>
+{% endwith %}
 
 <form action="/item/edit/" method="POST" novalidate="">{% csrf_token %}
 <input type="hidden" name="item" value="{% if item.is_bnode %}{{ item.bnode }}{% else %}{{ item.id }}{% endif %}">
@@ -54,11 +56,21 @@
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
         <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%;">
-            <div class="h6 mb-3"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" title="{% trans "view" %} {% trans "item"%}">{{ o.preferred_label }}</a>
+            {% with preferred_label=o.preferred_label.0 lang_default=o.preferred_label.1 languages=o.preferred_label.2 %}
+            <div class="h6 mb-3 d-inline-block"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" title="{% trans "view" %} {% trans "item"%}">{{ preferred_label }}</a>
                 {% if o.is_wikidata %}
                 <a href="{{ o.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%"></i></a>
                 {% endif %}
             </div>
+            {% if languages %}
+            <div class="ml-2 d-inline-block">
+                {% if languages|length == 1 %}
+                <span class="pt-0 pb-0 pl-1 pr-1" style=" border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ lang_default }}</span>
+                {% else %}
+                <select class="sel_lang">{% for l in languages %}<option value='{{o.id}}_label_{{ l }}' {% if l == lang_default %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>{% endif %}
+                </div>
+            {% endif %}
+            {% endwith %}
             {% include "_props_subtree.html" %}
             {% if r %}
                	{% with o=r %}
@@ -80,3 +92,7 @@
 </div>
 </form>
 {% endblock body %}
+
+{% block extra_script_style %}
+{% include "_sel_lang_js.html" %}
+{% endblock extra_script_style %}

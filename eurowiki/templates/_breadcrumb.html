@@ -17,11 +17,11 @@
     </li>
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center">
         {% if parent_list|length == 1 %}
-        <div><a href="/item/{{parent_list.0.1.id}}/" title="{% trans "view" %} {% trans "item" %}">{{parent_list.0.1.preferred_label}}</a></div>
+        <div><a href="/item/{{parent_list.0.1.id}}/" title="{% trans "view" %} {% trans "item" %}">{{parent_list.0.1.preferred_label.0}}</a></div>
         {% else %}
         <div class="d-flex flex-column" style="margin-top: -0.5rem">
             {% for parent in parent_list %}
-            <div class="d-block mt-2"><a href="/item/{{parent.1.id}}/" title="{% trans "view" %} {% trans "item" %}">{{parent.1.preferred_label}}</a></div>
+            <div class="d-block mt-2"><a href="/item/{{parent.1.id}}/" title="{% trans "view" %} {% trans "item" %}">{{parent.1.preferred_label.0}}</a></div>
             {% endfor %}
         </div>
         {% endif %}
@@ -30,9 +30,9 @@
         <div class="d-block text-center"><div><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div><div style="margin-top:-0.6rem">{{predicate1.label}}</div></div>
     </li>
     {% if item %}
-    <li class="h6 breadcrumb-item ew-breadcrumb-item active align-self-center"><div>{% if fun == 'edit' %}{% trans "edit"|capfirst %}: {% endif %}{{item.preferred_label}}</div></li>
+    <li class="h6 breadcrumb-item ew-breadcrumb-item active align-self-center"><div>{% if fun == 'edit' %}{% trans "edit"|capfirst %}: {% endif %}{{item.preferred_label.0}}</div></li>
     {% elif subject %}
-    <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div><a href="/item/{{subject.id}}/" title="{% trans "view" %} {% trans "item" %}">{{subject.preferred_label}}</a></div></li>
+    <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div><a href="/item/{{subject.id}}/" title="{% trans "view" %} {% trans "item" %}">{{subject.preferred_label.0}}</a></div></li>
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div></li>
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center active"><div>{% trans "add"|capfirst %} {% trans "statement" %}</div></li>
     {% endif %}
@@ -45,9 +45,9 @@
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><a href="/country/{{ country.id }}/" title="{% trans "view" %} {% trans "country" %}">{{ country.label }}</a></li>
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div style="display:block;"><div class="text-center"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div><div style="margin-top:-0.6rem">{{predicate.label}}</div></div></li>
     {% if item %}
-     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center active"><div>{% if fun == 'edit' %}{% trans "edit"|capfirst %}: {% endif %}{{item.preferred_label}}</div></li>
+     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center active"><div>{% if fun == 'edit' %}{% trans "edit"|capfirst %}: {% endif %}{{item.preferred_label.0}}</div></li>
     {% elif subject %}
-    <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div><a href="/item/{{subject.id}}/" title="{% trans "view" %} {% trans "item" %}">{{subject.preferred_label}}</a></div></li>
+    <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div><a href="/item/{{subject.id}}/" title="{% trans "view" %} {% trans "item" %}">{{subject.preferred_label.0}}</a></div></li>
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div></li>
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center active"><div>{% trans "add"|capfirst %} {% trans "statement" %}</div></li>
     {% endif %}

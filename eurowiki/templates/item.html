@@ -1,20 +1,30 @@
 {% extends "eurowiki_base.html" %}
 {% load static i18n %}
 
-{% block head_title %}{{ item.preferred_label }}{% endblock head_title %}
+{% block head_title %}{{ item.preferred_label.0 }}{% endblock head_title %}
 
 {% block body_class %}item_view{% endblock body_class %}
 
 {% block body %}
 {%  with can_edit=request.user.is_euro_member can_view=request.user.is_authenticated %}
 {% include "_breadcrumb.html" %}
-
-<h5 class="p-2" style="font-size: 1.1rem">
-    {% if can_edit %}<span class="mr-1"><a href="/item/{{item.id}}/edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}{{item.preferred_label}}
+{% with preferred_label=item.preferred_label.0 lang_default=item.preferred_label.1 languages=item.preferred_label.2 %}
+<h5 class="p-2 d-inline-block" style="font-size: 1.1rem">
+    {% if can_edit %}<span class="mr-1"><a href="/item/{{item.id}}/edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}<div class="d-inline-block txt_content"><span>{{preferred_label}}</span></div>
     {% if item.is_wikidata %}
         <a href="{{ item.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
-{% endif %}
+    {% endif %}
 </h5>
+{% if languages %}
+<div class="ml-1 mb-1 d-inline-block">
+    {% if languages|length == 1 %}
+    <span class="pt-0 pb-0 pl-1 pr-1" style="border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ languages.0 }}</span>
+    {% else %}
+    <select class="sel_lang">{% for l in languages %}<option value='{{item.id}}_label_{{ l }}' {% if l == lang_default %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>
+    {% endif %}
+</div>
+{% endif %}
+{% endwith %}
 
 <div style="max-height: calc(100vh - 21.2rem); overflow-y:auto">
 {% with wd=item.id props=item.properties %}
@@ -26,7 +36,16 @@
             <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top; {% if predicate.id == 'P163' %} border: 1px solid rgba(0, 51, 153, .2);{% endif %}"></div>
         {% else %}
             <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
-            <div class="p-2" style="flex-basis: 80%; font-size:90%;">{% if languages %}<div class="mb-1">{% if languages|length == 1 %}<span class="pt-0 pb-0 pl-1 pr-1" style="border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ languages.0 }}</span>{% else %}<select class="sel_lang">{% for l in languages %}<option value='{{wd}}_{{p.id}}_{{ l }}' {% if l == lang %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>{% endif %}</div>{% endif %}{% if p.is_url %}<a href="{{ o }}" target="_blank"><span class="break-long-words">{{ o }}</span></a>{% else %}{{ o|linebreaks }}{% endif %}</div>
+            <div class="p-2" style="flex-basis: 80%; font-size:90%;">
+                {% if languages %}
+                    <div class="mb-1">
+                    {% if languages|length == 1 %}
+                    <span class="pt-0 pb-0 pl-1 pr-1" style="border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ languages.0 }}</span>
+                    {% else %}
+                    <select class="sel_lang">{% for l in languages %}<option value='{{wd}}_{{p.id}}_{{ l }}' {% if l == lang %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>{% endif %}
+                    </div>
+                {% endif %}
+                {% if p.is_url %}<a href="{{ o }}" target="_blank"><span class="break-long-words">{{ o }}</span></a>{% else %}<div class="txt_content">{{ o|linebreaks }}</div>{% endif %}</div>
         {% endif %}
         {% if r %}
            	{% with o=r %}
@@ -36,11 +55,21 @@
     {% else %}
         <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%;">
-            <div class="h6 mb-3">{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" title="{% trans "view" %} {% trans "item"%}">{{ o.preferred_label }}</a>
+            {% with preferred_label=o.preferred_label.0 lang_default=o.preferred_label.1 languages=o.preferred_label.2 %}
+            <div class="h6 mb-3 d-inline-block">{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" class="txt_content" title="{% trans "view" %} {% trans "item"%}"><span>{{ preferred_label }}</span></a>
                 {% if o.is_wikidata %}
                 <a href="{{ o.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%"></i></a>
                 {% endif %}
-            </div>
+            </div>    
+            {% if languages %}
+            <div class="ml-2 d-inline-block">
+                {% if languages|length == 1 %}
+                <span class="pt-0 pb-0 pl-1 pr-1" style=" border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ lang_default }}</span>
+                {% else %}
+                <select class="sel_lang">{% for l in languages %}<option value='{{o.id}}_label_{{ l }}' {% if l == lang_default %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>{% endif %}
+                </div>
+            {% endif %}
+            {% endwith %}
             {% include "_props_subtree.html" %}
             {% if r %}
                	{% with o=r %}
@@ -62,3 +91,7 @@
 {% endwith %}
 
 {% endblock body %}
+
+{% block extra_script_style %}
+{% include "_sel_lang_js.html" %}
+{% endblock extra_script_style %}

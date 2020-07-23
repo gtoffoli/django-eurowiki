@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^item/(?P<item_code>[\w\d]+)/edit/$', views.editItem.as_view(), name='edit_item_get'),
     url(r'^item/(?P<item_code>[\w\d]+)/remove/$', views.remove_item, name='remove_item'),
     url(r'^item/(?P<item_code>[\w\d]+)/remprop/$', views.removeProperty, name='removeProperty'),
+    url(r'^item/(?P<item_code>[\w\d]+)/viewprop/$', views.viewProperty, name='viewProperty'),
     url(r'^item/(?P<item_code>[\w\d]+)/$', views.view_item, name='view_item'),
 
     url(r'^statement/(?P<subject_id>[\w\d]+)/new/$', views.editStatement.as_view(), name='statement_new'),

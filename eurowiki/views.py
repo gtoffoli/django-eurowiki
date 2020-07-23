@@ -6,7 +6,7 @@ import json
 from rdflib.namespace import XSD
 from rdflib.term import Literal, BNode, URIRef
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django import forms
@@ -15,6 +15,7 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from dal import autocomplete
 
 from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
@@ -168,6 +169,21 @@ def view_item(request, item_code):
     item = item_from_id(item_code)
     breadcrumb = make_breadcrumb(request,item)
     return render(request, 'item.html', {'item' : item, 'country_list' : breadcrumb[0], 'country_parent_list': breadcrumb[1], 'predicate' : breadcrumb[2], 'predicate1' : breadcrumb[3]})
+
+@csrf_exempt
+def viewProperty(request, item_code):
+    item = item_from_id(item_code)
+    property = request.POST.get('p')
+    language = request.POST.get('lang', None)
+    if property == 'label':
+        properties = item.properties(keys=[property], exclude_keys=[], language=language)
+    else:
+        properties = item.properties(keys=[property], language=language)
+    if len(properties) == 1:
+        for p, o, lang, languages, c, r, previous_p in properties:
+            if property != 'label':
+                o = o.replace('\n', '<br>')
+            return JsonResponse({"json_data": o })
 
 @login_required
 def remove_item(request, item_code, graph_identifier=None):
@@ -403,6 +419,7 @@ class editStatement(View):
                 else:
                     form.fields['predicate'].choices = LITERAL_PREDICATE_CHOICES
                 form.fields['object'].widget = forms.HiddenInput()
+                form.fields['object_node_type'].widget = forms.HiddenInput()
                 value = data['literal']
                 dt = data['datatype']
                 language = data['language']
@@ -414,6 +431,7 @@ class editStatement(View):
                         o = Literal(value)
                 else:
                     form.fields['language'].widget = forms.HiddenInput()
+                    """ MMR 200723
                     if dt == 'integer':
                         datatype = XSD.integer
                     elif dt == 'date':
@@ -422,6 +440,11 @@ class editStatement(View):
                         datatype = XSD.integer
                     elif dt == 'gMonthDay':
                         datatype = XSD.string
+                    """
+                    if dt in ['integer', 'gYear']:
+                        datatype = XSD.integer
+                    elif dt == 'date':
+                        datatype = XSD.date 
                     o = Literal(value, datatype=datatype)
                 if request.POST.get('save', ''):
                     if value:
@@ -453,7 +476,6 @@ class editStatement(View):
                     predicate_list = []
                     if predicate0 and predicate0.id in settings.EW_TREE_KEYS:
                         list_tmp = settings.EW_TREE[predicate0.id]
-                        print(list_tmp)
                         for p in list_tmp:
                             for v in ITEM_PREDICATE_CHOICES:
                                 if p == v[0]:

@@ -2,9 +2,9 @@
 {% load static i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% if is_country %}{{country.label}}: {% else %}{{subject.preferred_label}}: {% endif %}{% trans "add" %} {% trans "statement" %}{% endblock head_title %}
+{% block head_title %}{% if is_country %}{{country.label}}: {% else %}{{subject.preferred_label.0}}: {% endif %}{% trans "add" %} {% trans "statement" %}{% endblock head_title %}
 
-{% block extra_head %}{% include "_select2_css.html" %}{% endblock extra_head %}
+{% block extra_style_head %}{% include "_select2_css.html" %}{% endblock extra_style_head %}
 
 {% block body_class %}edit_statement{% endblock body_class %}
 {% block body %}

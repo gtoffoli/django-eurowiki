@@ -105,7 +105,8 @@ class Item(EurowikiBase):
 
     def labels(self):
         return settings.OTHER_ITEM_LABELS.get(self.id, {})
-
+        
+    """ MMR 200722
     def preferred_label(self, language=None):
         properties = self.properties(keys=['label',], exclude_keys=[], language=language)
         if properties:
@@ -113,6 +114,20 @@ class Item(EurowikiBase):
         if self.is_bnode():
             return self.bnode
         return self.label()
+    """
+
+    def preferred_label(self, language=None):
+        # properties = self.properties(keys=['label',], exclude_keys=[], language=language)
+        properties = self.properties(keys=['label',], exclude_keys=[])
+        if properties:
+            if not properties[0][2]:
+                properties[0][3] = []
+            return [properties[0][1], properties[0][2], properties[0][3]]
+        if self.is_bnode():
+            return [self.bnode, '', '']
+        return [self.label(), '', '']
+
+
 
     # return a list of paths, each being a list of couples (item, predicate) leading from a country root to the target item
     def lineages(self, request, graph_identifier=None):
@@ -173,6 +188,7 @@ class Item(EurowikiBase):
 
     # def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
     def properties(self, keys=[], exclude_keys=['label',], language=None, edit=False):
+
         if not keys:
             in_prop_id = self.in_predicate and self.in_predicate.id or None
             if in_prop_id and in_prop_id in settings.EW_TREE_KEYS:
