@@ -37,7 +37,7 @@
                 <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&lang={{ lang }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
             {% endif %}
             <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
-            <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }} {% if lang %}[{{ lang }}]{% endif %}{% if o.datatype_id == 'integer' %}&lt;integer&gt;{% elif o.datatype_id == 'gYear' %}&lt;yyyy&gt;{% elif o.datatype_id == 'date' %}&lt;yyyy-mm-dd&gt;{% endif %}</div>
+            <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}{% if lang != '' %} [{{ lang }}]{% endif %}{% if o.datatype_id == 'integer' %} &lt;integer&gt;{% elif o.datatype_id == 'gYear' %} &lt;yyyy&gt;{% elif o.datatype_id == 'date' %} &lt;yyyy-mm-dd&gt;{% endif %}</div>
             <div class="p-2" style="flex-basis: 80%; font-size:90%;">
                 {% if o.datatype_id == 'integer' %}
                     <input type="number" name="{{ p.id }}_{{ o.datatype_id }}_{{ lang }}" value="{{ o }}" style="width:100%">

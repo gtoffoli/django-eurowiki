@@ -120,8 +120,12 @@ class Item(EurowikiBase):
         # properties = self.properties(keys=['label',], exclude_keys=[], language=language)
         properties = self.properties(keys=['label',], exclude_keys=[])
         if properties:
+            """ MMR 200725
+            if None in properties[0][3]:
+                properties[0][3].remove(None)
             if not properties[0][2]:
                 properties[0][3] = []
+            """
             return [properties[0][1], properties[0][2], properties[0][3]]
         if self.is_bnode():
             return [self.bnode, '', '']
@@ -274,7 +278,9 @@ class Item(EurowikiBase):
                                 value_dict[prop_id] = o.value
                                 context_dict[prop_id] = c
                                 reified_dict[prop_id] = r
-                            languages_dict[prop_id].append(lang)
+                            # MMR 200725 languages_dict[prop_id].append(lang)
+                            if lang:
+                                languages_dict[prop_id].append(lang)
                         continue
             else:
                 if isinstance(o, BNode):
