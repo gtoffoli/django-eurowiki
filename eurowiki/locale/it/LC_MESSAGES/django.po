@@ -82,7 +82,7 @@ msgstr "oggetto"
 
 #: .\forms.py:40
 msgid "data type"
-msgstr "tipoo di dato"
+msgstr "tipo di dato"
 
 #: .\forms.py:41
 msgid "literal value"
@@ -135,7 +135,7 @@ msgstr "item"
 #: .\templates\edit_item.html:12 .\templates\edit_item.html:60
 #: .\templates\item.html:13 .\templates\item.html:59
 msgid "edit"
-msgstr "modifica"
+msgstr "edita"
 
 #: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:52
 #: .\templates\_breadcrumb.html:61 .\templates\country.html:157
@@ -178,7 +178,7 @@ msgstr "vedi gli stati"
 
 #: .\templates\country.html:188
 msgid "Warning! ID attribute: a value is missing"
-msgstr ""
+msgstr "Attenzione! Attributo ID: manca un valore"
 
 #: .\templates\country.html:193
 msgid "do you really want to remove this item"
@@ -238,7 +238,7 @@ msgstr "Cerca ... (almeno 3 caratteri)"
 
 #: .\templates\eurowiki_base.html:199
 msgid "Select at least 1 country"
-msgstr "Scelgli almeno 1 stato"
+msgstr "Scegli almeno 1 stato"
 
 #: .\templates\list_literal_statements.html:4
 #: .\templates\list_literal_statements.html:8
