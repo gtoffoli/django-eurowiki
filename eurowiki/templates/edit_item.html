@@ -9,7 +9,7 @@
 {% include "_breadcrumb.html" with fun='edit' %}
 {% with preferred_label=item.preferred_label.0 %}
 <h5 class="p-2 d-inline-block" style="font-size: 1.1rem">
-    {% trans "edit"|capfirst %}: <a href="/item/{{item.id}}/" title="{% trans "edit" %} {% trans "item" %}">{{preferred_label}}</a>
+    {% trans "edit"|capfirst %}: <a href="/item/{{item.id}}/" title="{% trans "edit the properties of this item" %}">{{preferred_label}}</a>
     {% if item.is_wikidata %}
         <a href="{{ item.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
     {% endif %}
@@ -21,20 +21,20 @@
 
 <div style="max-height: calc(100vh - 20.2rem); overflow-y:auto">
 {% with wd=item.id props=item.edit_properties %}
-{% for p, o, lang, languages, c, r, previous_p in props %}
+{% for p, o, lang, languages, c, r, s, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 0px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
-        <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+        <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
         <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;{% if predicate.id == 'P163' %} border: 1px solid rgba(0, 51, 153, .2);{% endif %}"></div>
         </div>
         {% else %}
             {% if o.datatype_id %}
-                <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&dt={{ o.datatype_id }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+                <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&dt={{ o.datatype_id }}" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
             {% else %}
-                <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&lang={{ lang }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+                <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&lang={{ lang }}" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
             {% endif %}
             <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
             <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}{% if lang != '' %} [{{ lang }}]{% endif %}{% if o.datatype_id == 'integer' %} &lt;integer&gt;{% elif o.datatype_id == 'gYear' %} &lt;yyyy&gt;{% elif o.datatype_id == 'date' %} &lt;yyyy-mm-dd&gt;{% endif %}</div>
@@ -52,12 +52,12 @@
             </div>
         {% endif %}
     {% else %}
-        <div class="p-2"><a href="/item/{{ item.id }}/remprop/?p={{ p.id }}&o={{ o.id }}" style="color: red;"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+        <div class="p-2"><a href="/item/{{ item.id }}/remprop/?p={{ p.id }}&o={{ o.id }}" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
         <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%;">
             {% with preferred_label=o.preferred_label.0 lang_default=o.preferred_label.1 languages=o.preferred_label.2 %}
-            <div class="h6 mb-3 d-inline-block"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" title="{% trans "view" %} {% trans "item"%}">{{ preferred_label }}</a>
+            <div class="h6 mb-3 d-inline-block"><span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit the properties of this item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" title="{% trans "view" %} {% trans "item"%}">{{ preferred_label }}</a>
                 {% if o.is_wikidata %}
                 <a href="{{ o.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%"></i></a>
                 {% endif %}

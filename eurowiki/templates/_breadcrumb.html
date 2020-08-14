@@ -44,7 +44,10 @@
 <ol class="breadcrumb ew-breadcrumb">
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><a href="/country/{{ country.id }}/" title="{% trans "view" %} {% trans "country" %}">{{ country.label }}</a></li>
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div style="display:block;"><div class="text-center"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div><div style="margin-top:-0.6rem">{{predicate.label}}</div></div></li>
-    {% if item %}
+    {% if statement_predicate %}
+    <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div><a href="/item/{{item.id}}/" title="{% trans "view" %} {% trans "item" %}">{{item.preferred_label.0}}</a></div></li>
+    <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div style="display:block;"><div class="text-center"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div><div style="margin-top:-0.6rem">{{statement_predicate.label}}</div></div></li>
+    {% elif item %}
      <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center active"><div>{% if fun == 'edit' %}{% trans "edit"|capfirst %}: {% endif %}{{item.preferred_label.0}}</div></li>
     {% elif subject %}
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div><a href="/item/{{subject.id}}/" title="{% trans "view" %} {% trans "item" %}">{{subject.preferred_label.0}}</a></div></li>

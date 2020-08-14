@@ -14,27 +14,17 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from dal import autocomplete
 
 from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
-from .classes import Country, Item, Predicate
+from .models import StatementExtension
+from .classes import Country, Item, Predicate, StatementProxy
 from .forms import StatementForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
 from .utils import is_bnode_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
-
-try:
-    from commons.models import Project
-    euro_project = Project.objects.get(pk=settings.EURO_PROJECT_ID)
-except:
-    euro_project = None
-    
-def user_is_member(self, project=euro_project):
-    return self.is_authenticated and ((project and project.is_member(self)) or (not project and self.is_full_member()))
-User.is_euro_member = user_is_member
 
 def eu_countries(language=settings.LANGUAGE_CODE):
     return [Country(id=qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()]
@@ -95,6 +85,30 @@ def view_uri_statement(request, statement_id):
 def view_literal_statement(request, statement_id):
     statement = get_object_or_404(LiteralStatement, pk=statement_id)
     return render(request, 'literal_statement.html', {'statement': statement})
+
+statement_extension = None
+def statement_comments(request, statement_id):
+    statement_proxy = StatementProxy(statement_id=statement_id)
+    statement = statement_proxy.statement
+    statement_extension = statement_proxy.extension
+    if not statement_extension:
+        statement_extension = StatementExtension() # can be non-persistent object
+        if isinstance(statement, LiteralStatement):
+            statement_extension.literal_statement = statement
+        else:
+            statement_extension.uri_statement = statement
+        statement_extension.save()
+    data_dict = {'statement_extension': statement_extension, 'can_comment': True}
+    breadcrumb = make_breadcrumb(request, Item(statement.subject))
+    data_dict['country_list'] = breadcrumb[0]
+    data_dict['country_parent_list'] = breadcrumb[1]
+    data_dict['predicate'] = breadcrumb[2]
+    data_dict['predicate1'] = breadcrumb[3]
+    item = Item(statement_proxy.subject)
+    statement_predicate = Predicate(statement.predicate)
+    data_dict['item'] = item
+    data_dict['statement_predicate'] = statement_predicate
+    return render(request, 'statement_comments.html', data_dict)
 
 def view_country(request, item_code):
     assert item_code[0]=='Q'
@@ -180,7 +194,8 @@ def viewProperty(request, item_code):
     else:
         properties = item.properties(keys=[property], language=language)
     if len(properties) == 1:
-        for p, o, lang, languages, c, r, previous_p in properties:
+        # for p, o, lang, languages, c, r, previous_p in properties:
+        for p, o, lang, languages, c, r, s, previous_p in properties:
             if property != 'label':
                 o = o.replace('\n', '<br>')
             return JsonResponse({"json_data": o })
@@ -365,7 +380,8 @@ class editStatement(View):
                 v = list(v)
                 v[1] = settings.PREDICATE_LABELS[v[0]][language]
                 predicate_list.append(v)
-            for p, o, lang, languages, c, r, previous_p in props:
+            # for p, o, lang, languages, c, r, previous_p in props:
+            for p, o, lang, languages, c, r, s, previous_p in props:
                 if p.id in ['P832', 'PUE6',]: # multiple instances of national holidays and monuments are allowed
                     continue
                 predicate_list = [v for v in predicate_list if p.id != v[0]]
@@ -477,7 +493,8 @@ class editStatement(View):
                         v = list(v)
                         v[1] = settings.PREDICATE_LABELS[v[0]][language]
                         predicate_list.append(v)
-                    for p, o, lang, languages, c, r, previous_p in props:
+                    # for p, o, lang, languages, c, r, previous_p in props:
+                    for p, o, lang, languages, c, r, s, previous_p in props:
                         if p.id in ['P832', 'PUE6',]: # multiple instances of national holidays and monuments are allowed
                             continue
                         predicate_list = [v for v in predicate_list if p.id != v[0]]

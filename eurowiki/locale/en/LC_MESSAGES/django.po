@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-26 23:20+0200\n"
+"POT-Creation-Date: 2020-08-13 00:32+0200\n"
 "PO-Revision-Date: 2020-07-07 20:07+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -74,7 +74,7 @@ msgstr ""
 msgid "object type"
 msgstr ""
 
-#: .\forms.py:39 .\views.py:498 .\views.py:500
+#: .\forms.py:39 .\views.py:516 .\views.py:518
 msgid "object"
 msgstr ""
 
@@ -94,6 +94,18 @@ msgstr ""
 msgid "context"
 msgstr ""
 
+#: .\models.py:43
+msgid "deleted"
+msgstr ""
+
+#: .\models.py:45
+msgid "comments enabled"
+msgstr ""
+
+#: .\models.py:46
+msgid "Allows comments if checked."
+msgstr ""
+
 #: .\search_indexes.py:61
 msgid "In"
 msgstr ""
@@ -104,49 +116,55 @@ msgstr ""
 
 #: .\templates\_breadcrumb.html:10 .\templates\_breadcrumb.html:20
 #: .\templates\_breadcrumb.html:24 .\templates\_breadcrumb.html:35
-#: .\templates\_breadcrumb.html:45 .\templates\_breadcrumb.html:50
-#: .\templates\_breadcrumb.html:59 .\templates\_props_subtree.html:38
-#: .\templates\country.html:63 .\templates\country.html:120
-#: .\templates\edit_item.html:60 .\templates\eurowiki_base.html:152
-#: .\templates\item.html:59
+#: .\templates\_breadcrumb.html:45 .\templates\_breadcrumb.html:48
+#: .\templates\_breadcrumb.html:53 .\templates\_breadcrumb.html:62
+#: .\templates\_props_subtree.html:39 .\templates\country.html:64
+#: .\templates\country.html:122 .\templates\edit_item.html:60
+#: .\templates\eurowiki_base.html:152 .\templates\item.html:61
 msgid "view"
 msgstr ""
 
 #: .\templates\_breadcrumb.html:10 .\templates\_breadcrumb.html:45
-#: .\templates\_breadcrumb.html:59
+#: .\templates\_breadcrumb.html:62
 msgid "country"
 msgstr ""
 
 #: .\templates\_breadcrumb.html:20 .\templates\_breadcrumb.html:24
-#: .\templates\_breadcrumb.html:35 .\templates\_breadcrumb.html:50
-#: .\templates\_props_subtree.html:36 .\templates\_props_subtree.html:38
-#: .\templates\country.html:61 .\templates\country.html:63
-#: .\templates\country.html:118 .\templates\country.html:120
-#: .\templates\edit_item.html:12 .\templates\edit_item.html:60
-#: .\templates\item.html:13 .\templates\item.html:59
+#: .\templates\_breadcrumb.html:35 .\templates\_breadcrumb.html:48
+#: .\templates\_breadcrumb.html:53 .\templates\_props_subtree.html:39
+#: .\templates\country.html:64 .\templates\country.html:122
+#: .\templates\edit_item.html:60 .\templates\item.html:61
 msgid "item"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:33 .\templates\_breadcrumb.html:48
-#: .\templates\_props_subtree.html:36 .\templates\country.html:61
-#: .\templates\country.html:118 .\templates\edit_item.html:4
-#: .\templates\edit_item.html:12 .\templates\edit_item.html:60
-#: .\templates\item.html:13 .\templates\item.html:59
+#: .\templates\_breadcrumb.html:33 .\templates\_breadcrumb.html:51
+#: .\templates\edit_item.html:4 .\templates\edit_item.html:12
 msgid "edit"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:52
-#: .\templates\_breadcrumb.html:61 .\templates\country.html:157
+#: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:55
+#: .\templates\_breadcrumb.html:64 .\templates\country.html:159
 #: .\templates\edit_item.html:91 .\templates\edit_statement.html:5
-#: .\templates\edit_statement.html:14 .\templates\item.html:87
+#: .\templates\edit_statement.html:14 .\templates\item.html:89
 msgid "add"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:52
-#: .\templates\_breadcrumb.html:61 .\templates\country.html:157
+#: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:55
+#: .\templates\_breadcrumb.html:64 .\templates\country.html:159
 #: .\templates\edit_item.html:91 .\templates\edit_statement.html:5
-#: .\templates\edit_statement.html:14 .\templates\item.html:87
+#: .\templates\edit_statement.html:14 .\templates\item.html:89
 msgid "statement"
+msgstr ""
+
+#: .\templates\_comments.html:5
+msgid "see/add comments to this property"
+msgstr ""
+
+#: .\templates\_props_subtree.html:37 .\templates\country.html:62
+#: .\templates\country.html:120 .\templates\edit_item.html:12
+#: .\templates\edit_item.html:60 .\templates\item.html:13
+#: .\templates\item.html:61
+msgid "edit the properties of this item"
 msgstr ""
 
 #: .\templates\account\login.html:7 .\templates\account\login.html:32
@@ -174,19 +192,25 @@ msgstr ""
 msgid "view countries"
 msgstr ""
 
-#: .\templates\country.html:188
+#: .\templates\country.html:60 .\templates\country.html:118
+#: .\templates\edit_item.html:28 .\templates\edit_item.html:35
+#: .\templates\edit_item.html:37 .\templates\edit_item.html:55
+msgid "remove this property"
+msgstr ""
+
+#: .\templates\country.html:190
 msgid "Warning! ID attribute: a value is missing"
 msgstr ""
 
-#: .\templates\country.html:193
+#: .\templates\country.html:195
 msgid "do you really want to remove this item"
 msgstr ""
 
-#: .\templates\country.html:196
+#: .\templates\country.html:198
 msgid "Yes"
 msgstr ""
 
-#: .\templates\country.html:200
+#: .\templates\country.html:202
 msgid "No"
 msgstr ""
 
@@ -254,4 +278,35 @@ msgstr ""
 #: .\templates\list_uri_statements.html:4
 #: .\templates\list_uri_statements.html:8
 msgid "Uri statements"
+msgstr ""
+
+#: .\templates\statement_comments.html:17
+#: .\templates\statement_comments.html:19
+msgid "Comments"
+msgstr ""
+
+#: .\templates\statement_comments.html:17
+msgid "disable"
+msgstr ""
+
+#: .\templates\statement_comments.html:17
+msgid "enable"
+msgstr ""
+
+#: .\templates\statement_comments.html:40
+msgctxt "on date"
+msgid "on"
+msgstr ""
+
+#: .\templates\statement_comments.html:54
+#: .\templates\statement_comments.html:60
+msgid "Comments are closed."
+msgstr ""
+
+#: .\templates\statement_comments.html:58
+msgid "No comments yet."
+msgstr ""
+
+#: .\templates\statement_comments.html:75
+msgid "Add comment"
 msgstr ""

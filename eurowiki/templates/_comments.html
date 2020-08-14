@@ -1,0 +1,8 @@
+{% load i18n static %}
+
+{% if can_edit %}
+	{% with comments=s.comments %}
+		<span>(<a href="/statement/{{ s.statement.id }}/comments/" title="{% trans "see/add comments to this property" %}">{{ comments|length }}</a>)</span>
+	{% endwith %}
+{% endif %}
+

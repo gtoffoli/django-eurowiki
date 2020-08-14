@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^comments/', include('django_comments.urls')),
     url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
     url(r'^$', views.homepage, name='homepage'),
     url(r'^search/$', views.search, name='search'),
@@ -45,6 +46,7 @@ urlpatterns = [
 
     url(r'^statement/(?P<subject_id>[\w\d]+)/new/$', views.editStatement.as_view(), name='statement_new'),
     url(r'^statement/(?P<statement_id>[\d-]+)/edit/$', views.editStatement.as_view(), name='statement_edit'),
+    url(r'^statement/(?P<statement_id>[\w\d-]+)/comments/$', views.statement_comments, name='statement_comments'),
 
     url('old-item-autocomplete/$', views.old_item_autocomplete, name='old-item-autocomplete',),
 ]

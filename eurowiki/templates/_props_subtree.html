@@ -1,14 +1,14 @@
 {% load i18n static %}
 
 {% with wd=o.id props=o.properties %}
-{% for p, o, lang, languages, c, r, previous_p in props %}
+{% for p, o, lang, languages, c, r, s, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
-            <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
+            <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}{% include "_comments.html" %}</div>
             <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top; {% if predicate == 'P163' %}border: 1px solid rgba(0, 51, 153, .2);{% endif %}"></div>
         {% else %}
-            <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
+            <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}{% include "_comments.html" %}</div>
             <div class="p-2" style="flex-basis: 80%; font-size:90%;">
                 {% if languages %}
                 <div class="mb-1">
@@ -27,13 +27,14 @@
         	{% endwith %}
         {% endif %}
     {% else %}
-        <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
+        <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}{% include "_comments.html" %}</div>
         <div class="p-2" style="flex-basis: 80%;">
             {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
             <div class="level_two">
             <div class="h6 mb-3 d-inline-block">
+				{% include "_comments.html" %}
                 {% if can_edit %}
-                <span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/" title="{% trans "edit" %} {% trans "item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>
+                <span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/" title="{% trans "edit the properties of this item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>
                 {% endif %}
                 <a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" class="txt_content" title="{% trans "view" %} {% trans "item" %}"><span>{{ preferred_label }}</span></a>
                 {% if not r and o.is_wikidata %}

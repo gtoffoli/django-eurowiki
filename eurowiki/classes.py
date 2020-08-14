@@ -1,31 +1,15 @@
 from copy import deepcopy
 from django.conf import settings
 from django.core.cache import cache
+from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
-from rdflib.term import URIRef, BNode
-from rdflib_django.models import LiteralStatement
+from rdflib.term import URIRef, BNode, Literal
+from rdflib_django.models import URIStatement, LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 from .utils import is_bnode_id, node_id, make_uriref, id_from_uriref, wd_get_image_url
 from .session import get_history
-
-
-def literalstatement_item_code(self):
-    s, p, o = self.as_triple()
-    return node_id(s)
-LiteralStatement.item_code = literalstatement_item_code
-
-def literalstatement_is_country(self):
-    return self.item_code() in settings.EU_COUNTRY_KEYS
-LiteralStatement.item_code = literalstatement_item_code
-
-def literalstatement_indexable_literal(self):
-    s, p, o = self.as_triple()
-    if o.datatype:
-        return ''
-    else:
-        return o.value
-LiteralStatement.indexable_literal = literalstatement_indexable_literal
+from .models import StatementExtension
 
 
 RDF_STATEMENT = make_uriref('Statement', prefix='rdf')
@@ -144,7 +128,6 @@ class Item(EurowikiBase):
         MAX_DISTANCE = 5
         MAX_ITERATIONS = 5
         history = get_history(request)
-        print('history:', history)
         n_nodes = len(history)
         out_paths = []
         paths = [[[self, None]]] # start with only 1 path containing only a pseudo-edge
@@ -187,7 +170,7 @@ class Item(EurowikiBase):
                 n_triples = len(triples)
             out_paths.append(path[:-1])
             paths = paths[1:]
-            print_paths(out_paths)
+            # print_paths(out_paths)
         return out_paths
 
     # def properties(self, keys=[], exclude_keys=['P1476', 'title', 'label',], language=None):
@@ -229,6 +212,7 @@ class Item(EurowikiBase):
         context_dict = {}
         reified_dict = {}
         languages_dict = {}
+        statement_dict = {}
         for prop_id in settings.RDF_I18N_PROPERTIES:
             lang_code_dict[prop_id] = None
             value_dict[prop_id] = None
@@ -236,11 +220,13 @@ class Item(EurowikiBase):
             context_dict[prop_id] = None
             reified_dict[prop_id] = None
             languages_dict[prop_id] = []
+            statement_dict[prop_id] = None
         props = []
         # iterate on our pseudo-quads
         for p, o, c, r in p_o_c_r_iterable:
             if not keys.count(id_from_uriref(p)):
                 continue
+            statement_proxy = StatementProxy(subject=self.uriref or self.bnode, predicate=p, object=o)
             p = Predicate(uriref=p, graph=self.graph)
             # if p.is_literal() and not isinstance(o, BNode): # temporary patch
             if p.is_literal():
@@ -251,7 +237,8 @@ class Item(EurowikiBase):
                     if prop_id in settings.RDF_I18N_PROPERTIES:
                         lang = o.language
                         if edit:
-                            props.append([p, o.value, lang, [], c, r])
+                            # props.append([p, o.value, lang, [], c, r])
+                            props.append([p, o.value, lang, [], c, r, statement_proxy])
                         else:
                             if lang==language:
                                 lang_code_dict[prop_id] = lang
@@ -259,6 +246,7 @@ class Item(EurowikiBase):
                                 value_dict[prop_id] = o.value
                                 context_dict[prop_id] = c
                                 reified_dict[prop_id] = r
+                                statement_dict[prop_id] = statement_proxy
                             elif lang==settings.LANGUAGE_CODE:
                                 if not value_dict[prop_id]:
                                     lang_code_dict[prop_id] = lang
@@ -266,18 +254,21 @@ class Item(EurowikiBase):
                                     value_dict[prop_id] = o.value
                                     context_dict[prop_id] = c
                                     reified_dict[prop_id] = r
+                                    statement_dict[prop_id] = statement_proxy
                             elif lang and (not value_dict[prop_id] or (lang_code_dict[prop_id] in settings.LANGUAGE_CODES and lang in settings.LANGUAGE_CODES and settings.LANGUAGE_CODES.index(lang)<settings.LANGUAGE_CODES.index(lang_code_dict[prop_id]))):
                                 lang_code_dict[prop_id] = lang
                                 property_dict[prop_id] = p
                                 value_dict[prop_id] = o.value
                                 context_dict[prop_id] = c
                                 reified_dict[prop_id] = r
+                                statement_dict[prop_id] = statement_proxy
                             elif not property_dict[prop_id]:
                                 lang_code_dict[prop_id] = lang
                                 property_dict[prop_id] = p
                                 value_dict[prop_id] = o.value
                                 context_dict[prop_id] = c
                                 reified_dict[prop_id] = r
+                                statement_dict[prop_id] = statement_proxy
                             # MMR 200725 languages_dict[prop_id].append(lang)
                             if lang:
                                 languages_dict[prop_id].append(lang)
@@ -289,22 +280,28 @@ class Item(EurowikiBase):
                     o = Item(uriref=o, graph=self.graph, in_predicate=p)
                 if r:
                     r = Item(bnode=r, graph=self.graph, in_predicate=p)
-            props.append([p, o, '', [], c, r])
+            # props.append([p, o, '', [], c, r])
+            props.append([p, o, '', [], c, r, statement_proxy])
         # append proper version of language-aware string literals
         if not edit:
             for prop_id in settings.RDF_I18N_PROPERTIES:
                 if value_dict[prop_id]:
-                    props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id] or '', languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
+                    # props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id] or '', languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id]])
+                    props.append([property_dict[prop_id], value_dict[prop_id], lang_code_dict[prop_id] or '', languages_dict[prop_id], context_dict[prop_id], reified_dict[prop_id], statement_dict[prop_id]])
         # sort properties at the end of all processing
         props = sorted(props, key=lambda prop: keys.index(prop[0].id))
-        # record the previous property in the tuple itself, so that it can be accessed in template 
-        props_with_pp = []
+        # record the previous property and the original DB statement
+        # in the tuple itself, so that they can be accessed in template 
+        # props_with_pp = []
+        props_with_pp_st = []
         previous_p = None
         for prop in props:
             prop.append(previous_p)
             previous_p = prop[0]
-            props_with_pp.append(prop)
-        return props_with_pp
+            # props_with_pp.append(prop)
+            props_with_pp_st.append(prop)
+        # return props_with_pp
+        return props_with_pp_st
 
     def edit_properties(self):
         return self.properties(edit=True)
@@ -358,4 +355,60 @@ def make_item(node):
 
 def print_paths(paths):
     print('paths:', [[edge[0].id for edge in path] for path in paths])
-    
+
+class StatementProxy(Predicate):
+
+    # should see https://stackoverflow.com/questions/25354834/in-python-return-none-instead-of-creating-new-instance-if-wrong-parameters-ar
+    def __init__(self, statement_id=None, subject=None, predicate=None, object=None):
+        assert statement_id or (subject and predicate and object)
+        if statement_id:
+            try:
+                statements = LiteralStatement.objects.filter(pk=statement_id)
+                statement = statements[0]
+            except:
+                # statements = get_object_or_404(URIStatement, pk=statement_id)
+                statements = URIStatement.objects.filter(pk=statement_id)
+                assert statements.count()
+                statement = statements[0]
+            subject = statement.subject
+            object = statement.object
+            predicate = statement.predicate
+        else:
+            try:
+                statements = LiteralStatement.objects.filter(subject=subject, predicate=predicate, object=object)
+                statement = statements[0]
+            except:
+                statements = URIStatement.objects.filter(subject=subject, predicate=predicate, object=object)
+                assert statements.count()
+                statement = statements[0]
+        super(StatementProxy, self).__init__(uriref=predicate)
+        self.subject = subject
+        self.object = object
+        self.statement = statement
+
+    @property
+    def extension(self):
+        if isinstance(self.statement, LiteralStatement):
+            statement_extensions = StatementExtension.objects.filter(literal_statement=self.statement)
+        else:
+            statement_extensions = StatementExtension.objects.filter(uri_statement=self.statement)
+        return statement_extensions and statement_extensions[0] or None
+
+    def make_extension(self):
+        statement_extension = StatementExtension()
+        if isinstance(self.statement, LiteralStatement):
+            statement_extension.literal_statement = self.statement
+        else:
+            statement_extension.uri_statement = self.statement
+        statement_extension.save()
+        return statement_extension
+
+    @property
+    def comments(self):
+        extension = self.extension
+        return extension and extension.comments or []
+
+    @property
+    def can_comment(self, request):
+        user = request.user
+        return user.is_authenticated
