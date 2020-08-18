@@ -37,6 +37,10 @@ LiteralStatement.indexable_literal = literalstatement_indexable_literal
 
 
 class StatementExtension(models.Model):
+    """
+    this class, like the commons.Resource class, links the rdflib-django3 models to other ones;
+    currently the fields 'deleted' and 'comment_enabled' aren't used
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     uri_statement = models.OneToOneField(URIStatement, null=True, blank=True, on_delete=models.CASCADE, related_name='uri_statement')
     literal_statement = models.OneToOneField(LiteralStatement, null=True, blank=True, on_delete=models.CASCADE, related_name='literal_statement')

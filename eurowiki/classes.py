@@ -116,7 +116,6 @@ class Item(EurowikiBase):
         return [self.label(), '', '']
 
 
-
     # return a list of paths, each being a list of couples (item, predicate) leading from a country root to the target item
     def lineages(self, request, graph_identifier=None):
         if graph_identifier:
@@ -314,8 +313,12 @@ class Country(Item):
     def labels(self):
         return settings.EU_COUNTRY_LABELS.get(self.id, {})
 
-    def properties(self):
-        return super(Country, self).properties(keys=settings.EU_COUNTRY_PROPERTIES)
+    # def properties(self):
+    def properties(self, keys=[], exclude_keys=['label',], language=None, edit=False):
+        return super(Country, self).properties(keys=settings.EU_COUNTRY_PROPERTIES, exclude_keys=exclude_keys, language=language, edit=edit)
+
+    def lineages(self, request, graph_identifier=None):
+        return super(Country, self).lineages(request, graph_identifier=graph_identifier)
 
     def banner_url(self):
         predicate = make_uriref('P948', prefix='wdt')
@@ -357,6 +360,10 @@ def print_paths(paths):
     print('paths:', [[edge[0].id for edge in path] for path in paths])
 
 class StatementProxy(Predicate):
+    """
+    like the other classes in this module, StatementProxy encapsulates a rdflib-django3 statement
+    to make it available in Django templates
+    """
 
     # should see https://stackoverflow.com/questions/25354834/in-python-return-none-instead-of-creating-new-instance-if-wrong-parameters-ar
     def __init__(self, statement_id=None, subject=None, predicate=None, object=None):
@@ -383,13 +390,22 @@ class StatementProxy(Predicate):
                 statement = statements[0]
         super(StatementProxy, self).__init__(uriref=predicate)
         self.subject = subject
-        self.object = object
+        self.subject = subject
+        self.predicate = predicate
         self.statement = statement
 
     @property
     def extension(self):
+        """
+        literal statements with same subject and predicate, and different objects
+        (maybe objects with different languages or datatypes), share same extension and same comments!
+        """
         if isinstance(self.statement, LiteralStatement):
-            statement_extensions = StatementExtension.objects.filter(literal_statement=self.statement)
+            siblings = LiteralStatement.objects.filter(subject=self.subject, predicate=self.predicate)
+            for statement in siblings:
+                statement_extensions = StatementExtension.objects.filter(literal_statement=statement)
+                if statement_extensions:
+                    break
         else:
             statement_extensions = StatementExtension.objects.filter(uri_statement=self.statement)
         return statement_extensions and statement_extensions[0] or None

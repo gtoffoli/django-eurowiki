@@ -24,7 +24,7 @@ from .models import StatementExtension
 from .classes import Country, Item, Predicate, StatementProxy
 from .forms import StatementForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
-from .utils import is_bnode_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
+from .utils import is_bnode_id, node_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 def eu_countries(language=settings.LANGUAGE_CODE):
     return [Country(id=qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()]
@@ -86,7 +86,7 @@ def view_literal_statement(request, statement_id):
     statement = get_object_or_404(LiteralStatement, pk=statement_id)
     return render(request, 'literal_statement.html', {'statement': statement})
 
-statement_extension = None
+# statement_extension = None
 def statement_comments(request, statement_id):
     statement_proxy = StatementProxy(statement_id=statement_id)
     statement = statement_proxy.statement
@@ -99,14 +99,20 @@ def statement_comments(request, statement_id):
             statement_extension.uri_statement = statement
         statement_extension.save()
     data_dict = {'statement_extension': statement_extension, 'can_comment': True}
-    breadcrumb = make_breadcrumb(request, Item(statement.subject))
+    subject_id = node_id(statement.subject)
+    if subject_id in settings.EU_COUNTRY_KEYS:
+        item = Country(id=subject_id)
+        data_dict['country'] = item
+    else:
+        item = Item(id=subject_id)
+    data_dict['item'] = item
+    # breadcrumb = make_breadcrumb(request, Item(statement.subject))
+    breadcrumb = make_breadcrumb(request, item)
     data_dict['country_list'] = breadcrumb[0]
     data_dict['country_parent_list'] = breadcrumb[1]
     data_dict['predicate'] = breadcrumb[2]
     data_dict['predicate1'] = breadcrumb[3]
-    item = Item(statement_proxy.subject)
     statement_predicate = Predicate(statement.predicate)
-    data_dict['item'] = item
     data_dict['statement_predicate'] = statement_predicate
     return render(request, 'statement_comments.html', data_dict)
 

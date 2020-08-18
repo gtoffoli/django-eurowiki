@@ -32,7 +32,6 @@
             {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
             <div class="level_two">
             <div class="h6 mb-3 d-inline-block">
-				{% include "_comments.html" %}
                 {% if can_edit %}
                 <span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/" title="{% trans "edit the properties of this item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>
                 {% endif %}

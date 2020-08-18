@@ -71,7 +71,7 @@
          {{ form.object_pk }}
          {{ form.timestamp }}
          {{ form.security_hash }}
-         <input type="hidden" name="next" value="{{ statement_extension.get_absolute_url }}">
+         <input type="hidden" name="next" value="{{ item.url }}">
          <div class="marginT5"><button type="submit" value="id_submit" id="id_submit" class="btn btn-default">{% trans "Add comment" %}</button></div>
        </form></dd>
      {% endif %}

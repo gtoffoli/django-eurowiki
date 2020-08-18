@@ -54,7 +54,6 @@
                             <div class="level_one">
                                 {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
                                 <div class="h5 mb-3 p-2 d-inline-block" style="font-size:1.1rem">
-								{% include "_comments.html" %}
                                 {% if can_edit %}
                                     {% if countries_selected|length == 1 %}
                                     <span class="mr-1"><a href="#" style="color: red;" id="{{country.id}}_{{p.id}}_{% if r %}{{ r.id }}{% else %}{{o.id}}{% endif %}" class="deleteItem" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
@@ -65,6 +64,7 @@
                                 {% if not r and o.is_wikidata %}
                                     <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
                                 {% endif %}
+								{% include "_comments.html" %}
                                 </div>
                                 {% if languages %}
                                 <div class="ml-2 d-inline-block">
@@ -112,7 +112,6 @@
                             <div class="level_one">
                                 {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
                                 <div class="h5 mb-3 p-2 d-inline-block" style="font-size:1.1rem">
-									{% include "_comments.html" %}
                                     {% if can_edit %}
                                     {% if countries_selected|length == 1 %}
                                     <span class="mr-1"><a href="#" style="color: red;" id="{{country.id}}_{{p.id}}_{% if r %}{{ r.id }}{% else %}{{ o.id }}{% endif %}" class="deleteItem" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
@@ -123,6 +122,7 @@
                                     {% if not r and o.is_wikidata %}
                                     <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
                                     {% endif %}
+									{% include "_comments.html" %}
                                 </div>
                                 {% if languages %}
                                 <div class="ml-2 d-inline-block">

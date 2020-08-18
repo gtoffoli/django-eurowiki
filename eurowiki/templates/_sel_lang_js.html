@@ -3,7 +3,8 @@
         $("select.sel_lang").change(function() {
             el = $(this);
             val = el.val()
-            values = val.split('_');
+            // values = val.split('_');
+            values = val.split('_').slice().reverse();
             parent = el.parent();
             if (values[1] == 'label') {
                 label = parent.prev();
@@ -13,13 +14,15 @@
                 stringa = parent.next('.txt_content');
             }
             children=stringa.children()
-            subject_id = values[0];
+            // subject_id = values[0];
+            subject_id = values.slice(2).reverse().join('_');
             if (children) {
                 $.ajax({
                     type:'POST',
                     data: {
                         'p': values[1],
-                        'lang': values[2],
+                        // 'lang': values[2],
+                        'lang': values[0],
                     },
                     url: '/item/'+subject_id+'/viewprop/',
                     success: function(json_data){
