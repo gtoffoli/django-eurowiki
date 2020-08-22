@@ -113,8 +113,8 @@ class Item(EurowikiBase):
             return [properties[0][1], properties[0][2], properties[0][3]]
         if self.is_bnode():
             return [self.bnode, '', '']
-        return [self.label(), '', '']
-
+        # return [self.label(), '', '']
+        return [super(Item, self).label(), '', '']
 
     # return a list of paths, each being a list of couples (item, predicate) leading from a country root to the target item
     def lineages(self, request, graph_identifier=None):
@@ -352,9 +352,14 @@ class Image(str):
 
 def make_item(node):
     if isinstance(node, URIRef):
-        return Item(uriref=node)
-    else:
+        if id_from_uriref(node) in settings.EU_COUNTRY_KEYS:
+            return Country(uriref=node)
+        else:
+            return Item(uriref=node)
+    elif isinstance(node, BNode):
         return Item(bnode=node)
+    else:
+        return None
 
 def print_paths(paths):
     print('paths:', [[edge[0].id for edge in path] for path in paths])

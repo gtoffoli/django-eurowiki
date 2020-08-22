@@ -26,8 +26,13 @@ urlpatterns = [
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^comments/', include('django_comments.urls')),
     url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
+
     url(r'^$', views.homepage, name='homepage'),
-    url(r'^search/$', views.search, name='search'),
+    url(r'^query/(?P<query_id>[\d-]+)/$', views.Query.as_view(), name='view_query'),
+    url(r'^query/(?P<edit_query_id>[\d-]+)/edit/$', views.Query.as_view(), name='edit_query'),
+    url(r'^query/(?P<run_query_id>[\d-]+)/run/$', views.Query.as_view(), name='run_query'),
+    url(r'^query/(?P<delete_query_id>[\d-]+)/delete/$', views.Query.as_view(), name='delete_query'),
+    url(r'^query/$', views.Query.as_view(), name='queries'),
     
     url(r'^statements/$', views.list_statements, name='list_statements'),
     url(r'^uri_statements/$', views.list_uri_statements, name='list_uri_statements'),

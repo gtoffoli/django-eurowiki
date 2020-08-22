@@ -20,10 +20,11 @@ from dal import autocomplete
 from rdflib_django.models import Store, NamedGraph, NamespaceModel, URIStatement, LiteralStatement
 from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
-from .models import StatementExtension
+from .models import StatementExtension, SparqlQuery
 from .classes import Country, Item, Predicate, StatementProxy
-from .forms import StatementForm
+from .forms import StatementForm, QueryForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
+from .sparql import run_query, query_result_to_dataframe, dataframe_to_html # , queries
 from .utils import is_bnode_id, node_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 def eu_countries(language=settings.LANGUAGE_CODE):
@@ -549,6 +550,64 @@ class editStatement(View):
                     return HttpResponseRedirect('/item/{}/'.format(subject_id))
         data_dict['form'] = form
         data_dict['statement'] = statement_id
+        return render(request, self.template_name, data_dict)
+
+class Query(View):
+    form_class = QueryForm
+    template_name = 'query.html'
+
+    def get(self, request, query_id='', edit_query_id='', run_query_id='', delete_query_id=''):
+        data_dict = {}
+        if run_query_id:
+            query = get_object_or_404(SparqlQuery, pk=run_query_id)
+            data_dict['query'] = query
+            query_result = run_query(query.text)
+            dataframe = query_result_to_dataframe(query_result)
+            query_result = dataframe_to_html(dataframe)
+            data_dict['query_result'] = query_result
+        elif query_id:
+            query = get_object_or_404(SparqlQuery, pk=query_id)
+            data_dict['query'] = query
+        elif edit_query_id:
+            query = get_object_or_404(SparqlQuery, pk=edit_query_id)
+            data_dict['query'] = query
+            form = self.form_class(instance=query)
+            data_dict['form'] = form
+        elif delete_query_id:
+            query = get_object_or_404(SparqlQuery, pk=delete_query_id)
+            query.delete()
+            return HttpResponseRedirect('/query/')
+        else:
+            queries = SparqlQuery.objects.all().order_by('title')
+            data_dict['queries'] = queries
+            query = queries and queries[0] or None
+        data_dict['can_edit'] = query and query.can_edit(request)
+        data_dict['can_delete'] = query and query.can_delete(request)
+        return render(request, self.template_name, data_dict)
+
+    def post(self, request):
+        data_dict = {}
+        post = request.POST
+        if post.get('new_query', ''):
+            form = self.form_class()
+        elif post.get('save', '') or post.get('save_continue', ''):
+            query_id = request.POST.get('id')
+            if query_id:
+                query = get_object_or_404(SparqlQuery, pk=query_id)
+                form = self.form_class(request.POST, instance=query)
+            else:
+                form = self.form_class(request.POST)
+            if form.is_valid():               
+                query = form.save(commit=False)
+                query.editor = request.user
+                query.save()
+                if post.get('save', ''):
+                    return HttpResponseRedirect('/query/')
+            else:
+                print (form.errors)
+        elif post.get('delete_query', ''):
+            form = None
+        data_dict['form'] = form
         return render(request, self.template_name, data_dict)
 
 def old_item_autocomplete(request):

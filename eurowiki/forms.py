@@ -2,8 +2,8 @@
 from django.conf import settings
 from django import forms
 from django.utils.translation import get_language, ugettext_lazy as _
-from rdflib_django.models import NamedGraph, URIStatement, LiteralStatement
-
+from rdflib_django.models import NamedGraph
+from .models import SparqlQuery
 
 STATEMENT_CLASS_CHOICES = (('literal', _('Literal Statement')), ('uri', _('URI Statement')))
 PREDICATE_CHOICES = settings.ORDERED_PREDICATE_KEYS
@@ -41,3 +41,13 @@ class StatementForm(forms.Form):
     literal = forms.CharField(required=False, label=_('literal value'), widget=forms.Textarea(attrs={'rows': 4}))
     language = forms.ChoiceField(required=False, choices=LANGUAGE_CHOICES, label=_('string language'), widget=forms.Select(attrs={'class':'form-control',}))
     context = forms.ChoiceField(required=False, choices=CONTEXT_CHOICES, label=_('context'), widget=forms.Select(attrs={'class':'form-control',}))
+
+class QueryForm(forms.ModelForm):
+    class Meta:
+        model = SparqlQuery
+        fields = ['id', 'title', 'description', 'text',]
+
+    id = forms.CharField(required=False, widget=forms.HiddenInput())
+    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',})) # help_text=_('please use a short title'))
+    description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 3, 'cols': 80,}))
+    text = forms.CharField(required=True, label=_('SPARQL query text'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 6, 'cols': 80,}))
