@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-13 00:32+0200\n"
+"POT-Creation-Date: 2020-08-23 23:54+0200\n"
 "PO-Revision-Date: 2020-07-07 20:07+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -74,7 +74,7 @@ msgstr ""
 msgid "object type"
 msgstr ""
 
-#: .\forms.py:39 .\views.py:516 .\views.py:518
+#: .\forms.py:39 .\views.py:522 .\views.py:524
 msgid "object"
 msgstr ""
 
@@ -94,16 +94,76 @@ msgstr ""
 msgid "context"
 msgstr ""
 
-#: .\models.py:43
+#: .\forms.py:51 .\models.py:76
+msgid "title"
+msgstr ""
+
+#: .\forms.py:52
+msgid "short description"
+msgstr ""
+
+#: .\forms.py:53
+msgid "SPARQL query text"
+msgstr ""
+
+#: .\models.py:49
 msgid "deleted"
 msgstr ""
 
-#: .\models.py:45
+#: .\models.py:51
 msgid "comments enabled"
 msgstr ""
 
-#: .\models.py:46
+#: .\models.py:52
 msgid "Allows comments if checked."
+msgstr ""
+
+#: .\models.py:77 .\templates\query.html:40
+msgid "description"
+msgstr ""
+
+#: .\models.py:78
+msgid "query text"
+msgstr ""
+
+#: .\models.py:81
+msgid "last modified"
+msgstr ""
+
+#: .\models.py:82
+msgid "last editor"
+msgstr ""
+
+#: .\models.py:85
+msgid "SPARQL query definition"
+msgstr ""
+
+#: .\models.py:86
+msgid "SPARQL query definitions"
+msgstr ""
+
+#: .\models.py:100 .\templates\eurowiki_base.html:74
+msgid "query"
+msgstr ""
+
+#: .\models.py:101
+msgid "query result"
+msgstr ""
+
+#: .\models.py:103
+msgid "execution time"
+msgstr ""
+
+#: .\models.py:104
+msgid "executor"
+msgstr ""
+
+#: .\models.py:107
+msgid "SPARQL query execution"
+msgstr ""
+
+#: .\models.py:108
+msgid "SPARQL query executions"
 msgstr ""
 
 #: .\search_indexes.py:61
@@ -114,43 +174,44 @@ msgstr ""
 msgid "paths"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:10 .\templates\_breadcrumb.html:20
-#: .\templates\_breadcrumb.html:24 .\templates\_breadcrumb.html:35
-#: .\templates\_breadcrumb.html:45 .\templates\_breadcrumb.html:48
-#: .\templates\_breadcrumb.html:53 .\templates\_breadcrumb.html:62
-#: .\templates\_props_subtree.html:39 .\templates\country.html:64
-#: .\templates\country.html:122 .\templates\edit_item.html:60
-#: .\templates\eurowiki_base.html:152 .\templates\item.html:61
+#: .\templates\_breadcrumb.html:7 .\templates\_breadcrumb.html:16
+#: .\templates\_breadcrumb.html:26 .\templates\_breadcrumb.html:30
+#: .\templates\_breadcrumb.html:41 .\templates\_breadcrumb.html:51
+#: .\templates\_breadcrumb.html:54 .\templates\_breadcrumb.html:59
+#: .\templates\_breadcrumb.html:68 .\templates\_props_subtree.html:38
+#: .\templates\country.html:63 .\templates\country.html:121
+#: .\templates\edit_item.html:60 .\templates\eurowiki_base.html:152
+#: .\templates\item.html:61
 msgid "view"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:10 .\templates\_breadcrumb.html:45
-#: .\templates\_breadcrumb.html:62
+#: .\templates\_breadcrumb.html:7 .\templates\_breadcrumb.html:16
+#: .\templates\_breadcrumb.html:51 .\templates\_breadcrumb.html:68
 msgid "country"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:20 .\templates\_breadcrumb.html:24
-#: .\templates\_breadcrumb.html:35 .\templates\_breadcrumb.html:48
-#: .\templates\_breadcrumb.html:53 .\templates\_props_subtree.html:39
-#: .\templates\country.html:64 .\templates\country.html:122
+#: .\templates\_breadcrumb.html:26 .\templates\_breadcrumb.html:30
+#: .\templates\_breadcrumb.html:41 .\templates\_breadcrumb.html:54
+#: .\templates\_breadcrumb.html:59 .\templates\_props_subtree.html:38
+#: .\templates\country.html:63 .\templates\country.html:121
 #: .\templates\edit_item.html:60 .\templates\item.html:61
 msgid "item"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:33 .\templates\_breadcrumb.html:51
+#: .\templates\_breadcrumb.html:39 .\templates\_breadcrumb.html:57
 #: .\templates\edit_item.html:4 .\templates\edit_item.html:12
 msgid "edit"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:55
-#: .\templates\_breadcrumb.html:64 .\templates\country.html:159
+#: .\templates\_breadcrumb.html:43 .\templates\_breadcrumb.html:61
+#: .\templates\_breadcrumb.html:70 .\templates\country.html:159
 #: .\templates\edit_item.html:91 .\templates\edit_statement.html:5
 #: .\templates\edit_statement.html:14 .\templates\item.html:89
 msgid "add"
 msgstr ""
 
-#: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:55
-#: .\templates\_breadcrumb.html:64 .\templates\country.html:159
+#: .\templates\_breadcrumb.html:43 .\templates\_breadcrumb.html:61
+#: .\templates\_breadcrumb.html:70 .\templates\country.html:159
 #: .\templates\edit_item.html:91 .\templates\edit_statement.html:5
 #: .\templates\edit_statement.html:14 .\templates\item.html:89
 msgid "statement"
@@ -160,8 +221,8 @@ msgstr ""
 msgid "see/add comments to this property"
 msgstr ""
 
-#: .\templates\_props_subtree.html:37 .\templates\country.html:62
-#: .\templates\country.html:120 .\templates\edit_item.html:12
+#: .\templates\_props_subtree.html:36 .\templates\country.html:61
+#: .\templates\country.html:119 .\templates\edit_item.html:12
 #: .\templates\edit_item.html:60 .\templates\item.html:13
 #: .\templates\item.html:61
 msgid "edit the properties of this item"
@@ -192,7 +253,7 @@ msgstr ""
 msgid "view countries"
 msgstr ""
 
-#: .\templates\country.html:60 .\templates\country.html:118
+#: .\templates\country.html:59 .\templates\country.html:117
 #: .\templates\edit_item.html:28 .\templates\edit_item.html:35
 #: .\templates\edit_item.html:37 .\templates\edit_item.html:55
 msgid "remove this property"
@@ -215,15 +276,13 @@ msgid "No"
 msgstr ""
 
 #: .\templates\edit_item.html:89 .\templates\edit_statement.html:22
+#: .\templates\query.html:18 .\templates\query.html:29
 msgid "save"
 msgstr ""
 
-#: .\templates\edit_item.html:90
+#: .\templates\edit_item.html:90 .\templates\query.html:19
+#: .\templates\query.html:30
 msgid "save & continue"
-msgstr ""
-
-#: .\templates\eurowiki_base.html:74
-msgid "search"
 msgstr ""
 
 #: .\templates\eurowiki_base.html:98
@@ -278,6 +337,62 @@ msgstr ""
 #: .\templates\list_uri_statements.html:4
 #: .\templates\list_uri_statements.html:8
 msgid "Uri statements"
+msgstr ""
+
+#: .\templates\query.html:7
+msgid "running query"
+msgstr ""
+
+#: .\templates\query.html:14
+msgid "edit query"
+msgstr ""
+
+#: .\templates\query.html:20 .\templates\query.html:31
+msgid "cancel"
+msgstr ""
+
+#: .\templates\query.html:25
+msgid "define new query"
+msgstr ""
+
+#: .\templates\query.html:38
+msgid "definition of query"
+msgstr ""
+
+#: .\templates\query.html:41
+msgid "SPARQL text"
+msgstr ""
+
+#: .\templates\query.html:45
+msgid "saved query definitions"
+msgstr ""
+
+#: .\templates\query.html:51
+msgid "execute query"
+msgstr ""
+
+#: .\templates\query.html:52
+msgid "view definition"
+msgstr ""
+
+#: .\templates\query.html:53
+msgid "show edit view"
+msgstr ""
+
+#: .\templates\query.html:54
+msgid "delete query definition"
+msgstr ""
+
+#: .\templates\query.html:60
+msgid "No query defined yet"
+msgstr ""
+
+#: .\templates\query.html:65
+msgid "add query"
+msgstr ""
+
+#: .\templates\query.html:71
+msgid "list all saved queries"
 msgstr ""
 
 #: .\templates\statement_comments.html:17

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-13 00:55+0200\n"
+"POT-Creation-Date: 2020-08-23 23:54+0200\n"
 "PO-Revision-Date: 2020-07-07 20:07+0200\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: \n"
@@ -76,7 +76,7 @@ msgstr "predicato"
 msgid "object type"
 msgstr "tipo di oggetto"
 
-#: .\forms.py:39 .\views.py:515 .\views.py:517
+#: .\forms.py:39 .\views.py:522 .\views.py:524
 msgid "object"
 msgstr "oggetto"
 
@@ -96,17 +96,77 @@ msgstr "lingua della stringa"
 msgid "context"
 msgstr "contesto"
 
-#: .\models.py:43
+#: .\forms.py:51 .\models.py:76
+msgid "title"
+msgstr "titolo"
+
+#: .\forms.py:52
+msgid "short description"
+msgstr "breve descrizione"
+
+#: .\forms.py:53
+msgid "SPARQL query text"
+msgstr "testo della query SPARQL"
+
+#: .\models.py:49
 msgid "deleted"
 msgstr "cancellato"
 
-#: .\models.py:45
+#: .\models.py:51
 msgid "comments enabled"
 msgstr "commenti abilitati"
 
-#: .\models.py:46
+#: .\models.py:52
 msgid "Allows comments if checked."
 msgstr "Abilita i commenti se spuntato."
+
+#: .\models.py:77 .\templates\query.html:40
+msgid "description"
+msgstr "descrizione"
+
+#: .\models.py:78
+msgid "query text"
+msgstr "testo della query"
+
+#: .\models.py:81
+msgid "last modified"
+msgstr "ultima modifica"
+
+#: .\models.py:82
+msgid "last editor"
+msgstr "ultima modifica di"
+
+#: .\models.py:85
+msgid "SPARQL query definition"
+msgstr "definizione di query SPARQL"
+
+#: .\models.py:86
+msgid "SPARQL query definitions"
+msgstr "definizioni di query SPARQL"
+
+#: .\models.py:100 .\templates\eurowiki_base.html:74
+msgid "query"
+msgstr "query"
+
+#: .\models.py:101
+msgid "query result"
+msgstr "risultato della query"
+
+#: .\models.py:103
+msgid "execution time"
+msgstr "eseguita il"
+
+#: .\models.py:104
+msgid "executor"
+msgstr "eseguita da"
+
+#: .\models.py:107
+msgid "SPARQL query execution"
+msgstr "esecuzioni della query SPARQL"
+
+#: .\models.py:108
+msgid "SPARQL query executions"
+msgstr "esecuzioni di query SPARQL"
 
 #: .\search_indexes.py:61
 msgid "In"
@@ -116,43 +176,44 @@ msgstr "In"
 msgid "paths"
 msgstr "percorsi"
 
-#: .\templates\_breadcrumb.html:10 .\templates\_breadcrumb.html:20
-#: .\templates\_breadcrumb.html:24 .\templates\_breadcrumb.html:35
-#: .\templates\_breadcrumb.html:45 .\templates\_breadcrumb.html:48
-#: .\templates\_breadcrumb.html:53 .\templates\_breadcrumb.html:62
-#: .\templates\_props_subtree.html:39 .\templates\country.html:64
-#: .\templates\country.html:122 .\templates\edit_item.html:60
-#: .\templates\eurowiki_base.html:152 .\templates\item.html:61
+#: .\templates\_breadcrumb.html:7 .\templates\_breadcrumb.html:16
+#: .\templates\_breadcrumb.html:26 .\templates\_breadcrumb.html:30
+#: .\templates\_breadcrumb.html:41 .\templates\_breadcrumb.html:51
+#: .\templates\_breadcrumb.html:54 .\templates\_breadcrumb.html:59
+#: .\templates\_breadcrumb.html:68 .\templates\_props_subtree.html:38
+#: .\templates\country.html:63 .\templates\country.html:121
+#: .\templates\edit_item.html:60 .\templates\eurowiki_base.html:152
+#: .\templates\item.html:61
 msgid "view"
 msgstr "vedi"
 
-#: .\templates\_breadcrumb.html:10 .\templates\_breadcrumb.html:45
-#: .\templates\_breadcrumb.html:62
+#: .\templates\_breadcrumb.html:7 .\templates\_breadcrumb.html:16
+#: .\templates\_breadcrumb.html:51 .\templates\_breadcrumb.html:68
 msgid "country"
 msgstr "stato"
 
-#: .\templates\_breadcrumb.html:20 .\templates\_breadcrumb.html:24
-#: .\templates\_breadcrumb.html:35 .\templates\_breadcrumb.html:48
-#: .\templates\_breadcrumb.html:53 .\templates\_props_subtree.html:39
-#: .\templates\country.html:64 .\templates\country.html:122
+#: .\templates\_breadcrumb.html:26 .\templates\_breadcrumb.html:30
+#: .\templates\_breadcrumb.html:41 .\templates\_breadcrumb.html:54
+#: .\templates\_breadcrumb.html:59 .\templates\_props_subtree.html:38
+#: .\templates\country.html:63 .\templates\country.html:121
 #: .\templates\edit_item.html:60 .\templates\item.html:61
 msgid "item"
 msgstr "item"
 
-#: .\templates\_breadcrumb.html:33 .\templates\_breadcrumb.html:51
+#: .\templates\_breadcrumb.html:39 .\templates\_breadcrumb.html:57
 #: .\templates\edit_item.html:4 .\templates\edit_item.html:12
 msgid "edit"
 msgstr "edita"
 
-#: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:55
-#: .\templates\_breadcrumb.html:64 .\templates\country.html:159
+#: .\templates\_breadcrumb.html:43 .\templates\_breadcrumb.html:61
+#: .\templates\_breadcrumb.html:70 .\templates\country.html:159
 #: .\templates\edit_item.html:91 .\templates\edit_statement.html:5
 #: .\templates\edit_statement.html:14 .\templates\item.html:89
 msgid "add"
 msgstr "aggiungi"
 
-#: .\templates\_breadcrumb.html:37 .\templates\_breadcrumb.html:55
-#: .\templates\_breadcrumb.html:64 .\templates\country.html:159
+#: .\templates\_breadcrumb.html:43 .\templates\_breadcrumb.html:61
+#: .\templates\_breadcrumb.html:70 .\templates\country.html:159
 #: .\templates\edit_item.html:91 .\templates\edit_statement.html:5
 #: .\templates\edit_statement.html:14 .\templates\item.html:89
 msgid "statement"
@@ -162,8 +223,8 @@ msgstr "statement"
 msgid "see/add comments to this property"
 msgstr "vedi/aggiungi commenti a questa proprietà"
 
-#: .\templates\_props_subtree.html:37 .\templates\country.html:62
-#: .\templates\country.html:120 .\templates\edit_item.html:12
+#: .\templates\_props_subtree.html:36 .\templates\country.html:61
+#: .\templates\country.html:119 .\templates\edit_item.html:12
 #: .\templates\edit_item.html:60 .\templates\item.html:13
 #: .\templates\item.html:61
 msgid "edit the properties of this item"
@@ -194,7 +255,7 @@ msgstr "nessun item"
 msgid "view countries"
 msgstr "vedi gli stati"
 
-#: .\templates\country.html:60 .\templates\country.html:118
+#: .\templates\country.html:59 .\templates\country.html:117
 #: .\templates\edit_item.html:28 .\templates\edit_item.html:35
 #: .\templates\edit_item.html:37 .\templates\edit_item.html:55
 msgid "remove this property"
@@ -217,16 +278,14 @@ msgid "No"
 msgstr "No"
 
 #: .\templates\edit_item.html:89 .\templates\edit_statement.html:22
+#: .\templates\query.html:18 .\templates\query.html:29
 msgid "save"
 msgstr "salva"
 
-#: .\templates\edit_item.html:90
+#: .\templates\edit_item.html:90 .\templates\query.html:19
+#: .\templates\query.html:30
 msgid "save & continue"
 msgstr "salva e continua"
-
-#: .\templates\eurowiki_base.html:74
-msgid "search"
-msgstr "cerca"
 
 #: .\templates\eurowiki_base.html:98
 msgid "Log out"
@@ -282,6 +341,62 @@ msgstr "Statement"
 msgid "Uri statements"
 msgstr "Statement URI"
 
+#: .\templates\query.html:7
+msgid "running query"
+msgstr "esecuzione di query"
+
+#: .\templates\query.html:14
+msgid "edit query"
+msgstr "edita query"
+
+#: .\templates\query.html:20 .\templates\query.html:31
+msgid "cancel"
+msgstr "annulla"
+
+#: .\templates\query.html:25
+msgid "define new query"
+msgstr "definisci una nuova query"
+
+#: .\templates\query.html:38
+msgid "definition of query"
+msgstr "definizione di query"
+
+#: .\templates\query.html:41
+msgid "SPARQL text"
+msgstr "testo SPARQL"
+
+#: .\templates\query.html:45
+msgid "saved query definitions"
+msgstr "definizioni di query memorizzate"
+
+#: .\templates\query.html:51
+msgid "execute query"
+msgstr "esegui la query"
+
+#: .\templates\query.html:52
+msgid "view definition"
+msgstr "vedi la definizione"
+
+#: .\templates\query.html:53
+msgid "show edit view"
+msgstr "mostra la vista di editing"
+
+#: .\templates\query.html:54
+msgid "delete query definition"
+msgstr "cancella definizione di query"
+
+#: .\templates\query.html:60
+msgid "No query defined yet"
+msgstr "Non è definita alcuna query"
+
+#: .\templates\query.html:65
+msgid "add query"
+msgstr "aggiungi query"
+
+#: .\templates\query.html:71
+msgid "list all saved queries"
+msgstr "elenca tutte le query memorizzate"
+
 #: .\templates\statement_comments.html:17
 #: .\templates\statement_comments.html:19
 msgid "Comments"
@@ -312,3 +427,6 @@ msgstr "Ancora nessun commento"
 #: .\templates\statement_comments.html:75
 msgid "Add comment"
 msgstr "Aggiungi un commento"
+
+#~ msgid "search"
+#~ msgstr "cerca"

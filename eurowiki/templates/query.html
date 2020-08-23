@@ -15,9 +15,9 @@
 	<form action="/query/" method="post" class="form-horizontal">{% csrf_token %}
 		{{ form.as_table}}
 		<div style="text-align: center; margin-top: 1em; margin-bottom: 1em;">
-			<input type="submit" name="save" value="{% trans "save"|capfirst %}"/>
-		&nbsp; <input type="submit" name="save_continue" value="{% trans "save & continue"|capfirst %}"/>
-		&nbsp; <input type="submit" name="cancel" value="{% trans "cancel"|capfirst %}"/>
+			<input type="submit" class="btn btn-light" name="save" value="{% trans "save"|capfirst %}"/>
+		&nbsp; <input type="submit" class="btn btn-light" name="save_continue" value="{% trans "save & continue"|capfirst %}"/>
+		&nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/">{% trans "cancel"|capfirst %}</a>
 		</div>
 	</form>
 
@@ -26,11 +26,11 @@
 	<form action="/query/" method="post" class="form-horizontal">{% csrf_token %}
 		{{ form.as_table}}
 		<div style="text-align: center; margin-top: 1em; margin-bottom: 1em;">
-			<input type="submit" name="save" value="{% trans "save"|capfirst %}"/>
-		&nbsp; <input type="submit" name="save_continue" value="{% trans "save & continue"|capfirst %}"/>
-		&nbsp; <input type="submit" name="cancel" value="{% trans "cancel"|capfirst %}"/>
+			<input type="submit" class="btn btn-light" name="save" value="{% trans "save"|capfirst %}"/>
+		&nbsp; <input type="submit" class="btn btn-light" name="save_continue" value="{% trans "save & continue"|capfirst %}"/>
+		&nbsp; <a class="btn btn-light" href="/query/">{% trans "cancel"|capfirst %}</a>
 		</div>
-	</form>
+
 		</div>
 	{% endif %}
 
@@ -48,23 +48,23 @@
 		<ul>
 		{% for query in queries %}
 			<li><strong>{{ query.title }}</strong>
-		         &nbsp; <a href="/query/{{ query.id }}/run/" title="{% trans "execute query" %}"><i class="fa fa-play font07em c-white"></i></a>
-		         &nbsp; <a href="/query/{{ query.id }}/" title="{% trans "view definition" %}"><i class="fa fa-eye font07em c-white"></i></a>
-		        {% if can_edit %} &nbsp; <a href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
-		        {% if can_delete %} &nbsp; <a href="/query/{{ query.id }}/delete/" title="{% trans "delete query definition" %}"><i class="fa fa-times-circle font07em" aria-hidden="true" style="color: red;"></i></a>{% endif %}
+		         &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/run/" title="{% trans "execute query" %}"><i class="fa fa-play font07em c-white"></i></a>
+		         &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/" title="{% trans "view definition" %}"><i class="fa fa-eye font07em c-white"></i></a>
+		        {% if can_edit %} &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+		        {% if can_delete %} &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/delete/" title="{% trans "delete query definition" %}"><i class="fa fa-times-circle font07em" aria-hidden="true" style="color: red;"></i></a>{% endif %}
 				<br>{{ query.description }}</li>
 		{% endfor %}
 		</ul>
 
 	{% else %}
 		<div>{% trans "No query defined yet" %}</div>
-
-	<h5 class="text-center">{% trans "add query definition"|capfirst %}</h5>
-	<form action="" method="post" class="form-horizontal">{% csrf_token %}
-		<input type="submit" name="new_query" value="{% trans "add"|capfirst %}"/>
-	</form>
-
 	{% endif %}
+
+	<form action="" method="post" class="form-horizontal">{% csrf_token %}
+		<div style="text-align: center; margin-top: 1em; margin-bottom: 1em;">
+			<input type="submit" class="btn btn-light" name="new_query" value="{% trans "add query"|capfirst %}"/>
+		</div>
+	</form>
 
 {% endif %}
 {% if not queries.count %}

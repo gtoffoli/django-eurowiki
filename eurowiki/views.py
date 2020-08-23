@@ -605,8 +605,6 @@ class Query(View):
                     return HttpResponseRedirect('/query/')
             else:
                 print (form.errors)
-        elif post.get('delete_query', ''):
-            form = None
         data_dict['form'] = form
         return render(request, self.template_name, data_dict)
 
