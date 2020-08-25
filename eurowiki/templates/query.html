@@ -5,8 +5,12 @@
 
 {% if query and query_result %}
 	<h5 class="text-center">{% trans "running query"|capfirst %} <i>{{ query.title|capfirst }}</i></h5>
+	<div class="text-center"><i>{{ query.description|capfirst }}</i></div>
 	<div style="margin-top: 1em; margin-bottom: 1em;">
 	{{ query_result|safe}}
+	</div>
+	<div style="text-align: center; margin-top: 1em; margin-bottom: 1em;">
+		<a class="btn btn-light" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}">{% trans "export result"|capfirst %}</a>
 	</div>
 
 {% elif form %}
@@ -49,6 +53,7 @@
 		{% for query in queries %}
 			<li><strong>{{ query.title }}</strong>
 		         &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/run/" title="{% trans "execute query" %}"><i class="fa fa-play font07em c-white"></i></a>
+		         &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}"><i class="fa fa-download font07em c-white"></i></a>
 		         &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/" title="{% trans "view definition" %}"><i class="fa fa-eye font07em c-white"></i></a>
 		        {% if can_edit %} &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
 		        {% if can_delete %} &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/delete/" title="{% trans "delete query definition" %}"><i class="fa fa-times-circle font07em" aria-hidden="true" style="color: red;"></i></a>{% endif %}

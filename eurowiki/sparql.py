@@ -37,7 +37,8 @@ def print_qres(qres):
 
 def query_result_to_dataframe(query_result):
     bindings = query_result.bindings
-    columns = [var.toPython().replace('?','') for var in bindings[0].keys()]
+    # columns = [var.toPython().replace('?','') for var in bindings[0].keys()]
+    columns = [var.toPython().replace('?','') for var in bindings[0]]
     data = []
     for row in query_result:
         els = []
@@ -58,3 +59,7 @@ def query_result_to_dataframe(query_result):
 def dataframe_to_html(df):
     html = df.to_html(index=False, justify='center', classes='ew-table')
     return html
+
+def dataframe_to_csv(df, sep='\t', index=False):
+    txt = df.to_csv(sep=sep, index=index)
+    return txt

@@ -2,6 +2,7 @@
 # Window -> Preferences -> PyDev -> Editor -> Code Analysis -> Undefined -> Undefined Variable From Import -> Ignore
 
 import json
+from datetime import datetime
 
 from rdflib.namespace import XSD
 from rdflib.term import Literal, BNode, URIRef
@@ -12,6 +13,7 @@ from django.utils.decorators import method_decorator
 from django import forms
 from django.utils.translation import get_language, ugettext_lazy as _
 from django.views import View
+from django.template.defaultfilters import slugify
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -24,7 +26,7 @@ from .models import StatementExtension, SparqlQuery
 from .classes import Country, Item, Predicate, StatementProxy
 from .forms import StatementForm, QueryForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
-from .sparql import run_query, query_result_to_dataframe, dataframe_to_html # , queries
+from .sparql import run_query, query_result_to_dataframe, dataframe_to_html, dataframe_to_csv
 from .utils import is_bnode_id, node_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 def eu_countries(language=settings.LANGUAGE_CODE):
@@ -556,13 +558,23 @@ class Query(View):
     form_class = QueryForm
     template_name = 'query.html'
 
-    def get(self, request, query_id='', edit_query_id='', run_query_id='', delete_query_id=''):
+    def get(self, request, query_id='', edit_query_id='', run_query_id='', export_query_id='', delete_query_id=''):
         data_dict = {}
+        run_query_id = run_query_id or export_query_id
         if run_query_id:
             query = get_object_or_404(SparqlQuery, pk=run_query_id)
             data_dict['query'] = query
             query_result = run_query(query.text)
             dataframe = query_result_to_dataframe(query_result)
+            if export_query_id:
+                query_result = dataframe_to_csv(dataframe)
+                response = HttpResponse(query_result)
+                mimetype = 'application/vnd.ms-excel'
+                response['Content-Type'] = '{}; charset=utf-8'.format(mimetype)
+                filename = slugify(query.title)
+                timestamp = str(datetime.now())
+                response['Content-Disposition'] = 'attachment; filename="{}-{}.csv"'.format(filename, timestamp)
+                return response
             query_result = dataframe_to_html(dataframe)
             data_dict['query_result'] = query_result
         elif query_id:

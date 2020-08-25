@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-23 23:54+0200\n"
+"POT-Creation-Date: 2020-08-25 17:25+0200\n"
 "PO-Revision-Date: 2020-07-07 20:07+0200\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: \n"
@@ -76,7 +76,7 @@ msgstr "predicato"
 msgid "object type"
 msgstr "tipo di oggetto"
 
-#: .\forms.py:39 .\views.py:522 .\views.py:524
+#: .\forms.py:39 .\views.py:524 .\views.py:526
 msgid "object"
 msgstr "oggetto"
 
@@ -120,7 +120,7 @@ msgstr "commenti abilitati"
 msgid "Allows comments if checked."
 msgstr "Abilita i commenti se spuntato."
 
-#: .\models.py:77 .\templates\query.html:40
+#: .\models.py:77 .\templates\query.html:44
 msgid "description"
 msgstr "descrizione"
 
@@ -278,12 +278,12 @@ msgid "No"
 msgstr "No"
 
 #: .\templates\edit_item.html:89 .\templates\edit_statement.html:22
-#: .\templates\query.html:18 .\templates\query.html:29
+#: .\templates\query.html:22 .\templates\query.html:33
 msgid "save"
 msgstr "salva"
 
-#: .\templates\edit_item.html:90 .\templates\query.html:19
-#: .\templates\query.html:30
+#: .\templates\edit_item.html:90 .\templates\query.html:23
+#: .\templates\query.html:34
 msgid "save & continue"
 msgstr "salva e continua"
 
@@ -345,55 +345,64 @@ msgstr "Statement URI"
 msgid "running query"
 msgstr "esecuzione di query"
 
-#: .\templates\query.html:14
+#: .\templates\query.html:13
+msgid "execute query and export result"
+msgstr "esegui la query ed esporta i risultati"
+
+#: .\templates\query.html:13
+#| msgid "query result"
+msgid "export result"
+msgstr "esporta i risultati"
+
+#: .\templates\query.html:18
 msgid "edit query"
 msgstr "edita query"
 
-#: .\templates\query.html:20 .\templates\query.html:31
+#: .\templates\query.html:24 .\templates\query.html:35
 msgid "cancel"
 msgstr "annulla"
 
-#: .\templates\query.html:25
+#: .\templates\query.html:29
 msgid "define new query"
 msgstr "definisci una nuova query"
 
-#: .\templates\query.html:38
+#: .\templates\query.html:42
 msgid "definition of query"
 msgstr "definizione di query"
 
-#: .\templates\query.html:41
+#: .\templates\query.html:45
 msgid "SPARQL text"
 msgstr "testo SPARQL"
 
-#: .\templates\query.html:45
+#: .\templates\query.html:49
 msgid "saved query definitions"
 msgstr "definizioni di query memorizzate"
 
-#: .\templates\query.html:51
+#: .\templates\query.html:55
 msgid "execute query"
 msgstr "esegui la query"
 
-#: .\templates\query.html:52
+#: .\templates\query.html:56
 msgid "view definition"
 msgstr "vedi la definizione"
 
-#: .\templates\query.html:53
+#: .\templates\query.html:57
 msgid "show edit view"
 msgstr "mostra la vista di editing"
 
-#: .\templates\query.html:54
+#: .\templates\query.html:58
 msgid "delete query definition"
 msgstr "cancella definizione di query"
 
-#: .\templates\query.html:60
+#: .\templates\query.html:64
 msgid "No query defined yet"
 msgstr "Non è definita alcuna query"
 
-#: .\templates\query.html:65
+#: .\templates\query.html:69
 msgid "add query"
 msgstr "aggiungi query"
 
-#: .\templates\query.html:71
+#: .\templates\query.html:75
 msgid "list all saved queries"
 msgstr "elenca tutte le query memorizzate"
 
