@@ -1,0 +1,18 @@
+{% extends "eurowiki_base.html" %}
+
+{% load i18n staticfiles %}
+
+{% block head_title %}{{ flatpage.title }}{% endblock %}
+
+{% block languages %}{% with object=flatpage %}{% include "_hreflang.html" %}{% endwith %}{% endblock %}
+
+{% block body_class %}flatpage{% endblock %}
+
+{% block body_base %}
+<article class="marginTB30">
+  <div class="panel-heading-base">
+    <h5 class="text-center padding105 margin0">{{ flatpage.title }}</h5>
+  </div>
+  <section class="base">{{ flatpage.content|safe }}</section>
+</article>
+{% endblock %}

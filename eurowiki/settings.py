@@ -314,4 +314,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'relative_urls' : False,
 }
 
+DATATRANS_TRANSLATE_MAP = {
+    'flatpage': ('/admin/flatpages/flatpage/%s/', 'pk', 'title', 'commons.forms.FlatPageForm',),
+}
+
 from eurowiki.resources import * # EXTERNAL_SOURCES an EXTERNAL_RESOURCES, complementing rdflib store

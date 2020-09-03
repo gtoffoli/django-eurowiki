@@ -128,6 +128,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('PUE15', {'en': 'commemorative coins', 'it': 'monete commemorative',}), # brand-NEW for currency and coinage
     ('PUE16', {'en': 'celebration mode', 'it': 'modalità di celebrazione',}), # brand-NEW for holidays
     ('PUE17', {'en': 'possible variations', 'it': 'possibili varianti',}), # brand-NEW for many symbols
+    ('PUE18', {'en': 'method of communication', 'it': 'modalità di esternazione',}), # brand-NEW for some symbols
 
     ('PUE11', {'en': 'general principles', 'it': 'principi generali',}), # brand-NEW for constitutions
     ('PUE12', {'en': 'soverainity cession', 'it': 'cessione di sovranità',}), # brand-NEW for constitutions
@@ -173,8 +174,8 @@ PREDICATE_LABELS.update(EW_PREDICATE_LABELS)
 ORDERED_PREDICATE_KEYS = list(PREDICATE_LABELS.keys())
 
 EU_COUNTRY_PROPERTIES = ['P85', 'P163', 'P237', 'P1546', 'PUE6', 'P832', 'P38', 'P92',] # mandatory 1st level properties for countries
-LITERAL_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'PUE15', 'PUE16', 'PUE17', 'comment', 'P248',] # properties occurring in Literal Statements
-RDF_I18N_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'PUE15', 'PUE16', 'PUE17', 'comment',] # RDF properties having a literal value language-awware
+LITERAL_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P41', 'P94', 'P1541', 'P1476', 'P18', 'P828', 'P571', 'P577', 'P580', 'P582', 'P837', 'P948', 'P953', 'P854', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'PUE15', 'PUE16', 'PUE17', 'PUE18', 'comment', 'P248',] # properties occurring in Literal Statements
+RDF_I18N_PROPERTIES = ['label', 'PUE1', 'PUE2', 'P1541', 'P1476', 'P828', 'P837', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'PUE9', 'PUE11', 'PUE12', 'PUE13', 'PUE14', 'PUE15', 'PUE16', 'PUE17', 'PUE18', 'comment',] # RDF properties having a literal value language-awware
 IMAGE_PROPERTIES = ['P18', 'P41', 'P94', 'P948',] # properties from whose value an online address can be computed 
 URL_PROPERTIES = ['P854', 'P953',]
 REPEATABLE_PROPERTIES = ['PUE6', 'P832',] # predicates allowing multiple properties for same subject 
@@ -197,13 +198,13 @@ OTHER_EXTERNAL_RESOURCES = {
 }
 
 EW_TREE = OrderedDict([
-    ('P85', ('P1476', 'PUE1', 'PUE2', 'PUE17', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national anthem: title, text auth., composer, ...
+    ('P85', ('P1476', 'PUE1', 'PUE2', 'PUE17', 'PUE3', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national anthem: title, text auth., composer, ...
     ('P163', ('P18', 'PUE2', 'PUE17', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828', 'PUE9', 'P854', 'P248', 'comment',),), # national flag: descr., img, prop., delib., date, ...
     ('P237', ('P18', 'PUE2', 'PUE17', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national emblem: descr., img, prop., delib., date, ...
-    ('P1546', ('P1541', 'PUE2', 'PUE17', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), #national motto: text
+    ('P1546', ('P1541', 'PUE1', 'PUE2', 'PUE17', 'PUE18', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), #national motto: text
     ('PUE6', ('PUE2', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national monuments
-    ('P832', ('PUE1', 'PUE2', 'PUE17', 'P837', 'PUE16', 'PUE4', 'PUE5', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national (holi)days: title, day,  prop., delib., date, ...
-    ('P38', ('PUE2', 'PUE3', 'P790', 'P571', 'PUE4', 'P828', 'PUE7', 'PUE8','PUE9', 'P854', 'P248', 'PUE15', 'comment',),), # currency and coinage
+    ('P832', ('PUE2', 'PUE17', 'P837', 'PUE16', 'PUE4', 'PUE5', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national (holi)days: title, day,  prop., delib., date, ...
+    ('P38', ('PUE2', 'P170', 'PUE3', 'P790', 'P571', 'PUE4', 'P828', 'PUE7', 'PUE8','PUE9', 'P854', 'P248', 'PUE15', 'comment',),), # currency and coinage
     ('P92', ('P953', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'PUE9', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248', 'comment',),), # national constitution
     # ('Bag', ('', 'P832',),), # container of members (monuments and days)
 ])

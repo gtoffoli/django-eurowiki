@@ -4,40 +4,14 @@ from rdflib_django.utils import get_conjunctive_graph
 from .classes import Country, make_item
 
 
-from django.conf import settings
-wdt = settings.RDF_PREFIXES['wdt']
-national_anthem = '{}{}'.format(wdt, 'P85')
-music_composer = '{}{}'.format(wdt, 'P86')
-text_author = '{}{}'.format(wdt, 'P676')
-
-queries = {
-    'anthems': {
-        'title': 'National anthems by country, with music composer and text author',
-        'sparql': """
-SELECT ?country ?anthem ?composer ?author
-       WHERE {
-          ?country wdt:P85 ?anthem .
-          OPTIONAL { ?anthem wdt:P86 ?composer } .
-          OPTIONAL { ?anthem wdt:P676 ?author } .
-       }
-""",},
-}
-
 def run_query(query, g=None):
     if not g:
         g = get_conjunctive_graph()
-    # query = queries[key]['sparql']
-    print(query)
     query_result = g.query(query)
     return query_result
 
-def print_qres(qres):
-    for row in qres:
-        print(row)
-
 def query_result_to_dataframe(query_result):
     bindings = query_result.bindings
-    # columns = [var.toPython().replace('?','') for var in bindings[0].keys()]
     columns = [var.toPython().replace('?','') for var in bindings[0]]
     data = []
     for row in query_result:

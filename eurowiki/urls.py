@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
+from django.contrib.flatpages import views as flatpages_views
 from . import views
 from . import search_indexes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^datatrans/', include('datatrans.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^tinymce/', include('tinymce.urls')),
@@ -55,4 +57,5 @@ urlpatterns = [
     url(r'^statement/(?P<statement_id>[\w\d-]+)/comments/$', views.statement_comments, name='statement_comments'),
 
     url('old-item-autocomplete/$', views.old_item_autocomplete, name='old-item-autocomplete',),
+    url(r'^(?P<url>.*)$', flatpages_views.flatpage, name='django.contrib.flatpages.views.flatpage'),
 ]
