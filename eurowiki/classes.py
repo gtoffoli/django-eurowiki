@@ -225,6 +225,9 @@ class Item(EurowikiBase):
         for p, o, c, r in p_o_c_r_iterable:
             if not keys.count(id_from_uriref(p)):
                 continue
+            if r:
+                o = r # copy URI of reified statement to object
+                r = None
             statement_proxy = StatementProxy(subject=self.uriref or self.bnode, predicate=p, object=o)
             p = Predicate(uriref=p, graph=self.graph)
             # if p.is_literal() and not isinstance(o, BNode): # temporary patch

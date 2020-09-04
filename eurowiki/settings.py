@@ -241,6 +241,8 @@ PROJECT_ROOT = os.path.dirname(__file__)
 PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
 
 USE_HAYSTACK = True
+INDEXABLE_PREDICATES = ('label', 'PUE2',)
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 SEARCH_BACKEND = "whoosh"
 if SEARCH_BACKEND == 'whoosh':
     HAYSTACK_CONNECTIONS = {

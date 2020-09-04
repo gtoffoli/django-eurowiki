@@ -31,10 +31,15 @@ LiteralStatement.item_code = literalstatement_item_code
 
 def literalstatement_indexable_literal(self):
     s, p, o = self.as_triple()
+    """
     if o.datatype:
         return ''
     else:
-        return o.value
+    """
+    for p_key in settings.INDEXABLE_PREDICATES:
+        if p.count(p_key):
+            return o.value
+    return ''
 LiteralStatement.indexable_literal = literalstatement_indexable_literal
 
 
