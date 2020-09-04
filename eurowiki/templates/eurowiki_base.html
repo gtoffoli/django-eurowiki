@@ -163,6 +163,7 @@
                 </main>
             </div>
         </div>
+        <a id="back-to-top" href="#" class="/*btn btn-light btn-lg*/ back-to-top" role="button"><i class="fa fa-chevron-up"></i></a>
         {% endblock body_base %}
         <footer class="navbar navbar-expand navbar-dark flex-column flex-md-row pt-2 pb-2 pl-3 pr-3" style="background:#f7f7f7;  border-top: 1px solid rgba(0, 0, 0, .1);">
             <div class="small">&copy; Università degli Studi di Roma "La Sapienza" - Dipartimento di Storia Antropologia Religioni Arte Spettacolo - Piazzale Aldo Moro 5, 00185 Roma</div>
@@ -216,6 +217,20 @@
                 });
              }
           });
+
+          $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+          });
+            $('#back-to-top').click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 400);
+                return false;
+            });
         });
         </script>
         {% block extra_script_style %}{% endblock extra_script_style %}

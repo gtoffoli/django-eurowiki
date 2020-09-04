@@ -310,10 +310,13 @@ TINYMCE_DEFAULT_CONFIG = {
         {'title': 'table responsive', 'value': 'table-responsive'},
         {'title': 'table responsive width 100%', 'value': 'table-responsive width-full'},],
     'file_browser_callback_types': 'image',
-    'paste_as_text': True,
+    'paste_as_text': False,
+    'paste_enable_default_filters': False,
+    'paste_remove_styles_if_webkit': False,
     # URL settings
     # 'convert_urls' : False,
     'relative_urls' : False,
+
 }
 
 DATATRANS_TRANSLATE_MAP = {
