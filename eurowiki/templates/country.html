@@ -32,6 +32,40 @@
 
 {% block body %} 
 {%  with can_edit=request.user.is_euro_member can_view=request.user.is_authenticated %}
+
+{% if countries_selected|length == 1 %}
+{% for country in countries_selected %}
+{% with source=country.banner_url %}
+{% if source %}<div class="ew-banner"><img src="{{ source }}" class="img-fluid"></div>{% endif %}
+{% endwith %}
+{% include "_country_content.html" %}
+{% if can_edit %}
+<div class="d-flex justify-content-center pt-3">
+    <div><a class="btn btn-light" href="/statement/{{ country.id }}/new/">{% trans "add"|capfirst %} {% trans "statement" %}</a></div>
+</div>
+{% endif %}
+{% endfor %}
+{% elif countries_selected|length > 1 %}
+<div class="table-responsive">
+    <table class="table ew-table mb-0">
+        <tbody>
+        <tr>
+        {% for country in countries_selected %}
+        <td>{% include "_country_content.html" %}</td>
+        {% endfor %}
+        </tr>
+{% comment %} MMR non rimuovere div seguente - escamotage per fissare larghezza minima uguale per le colonne [td] {% endcomment %}                
+         <tr>
+        {% for country in countries_selected %}
+            <td class="{% if countries_selected|length == 2 %}cell_width{% else %}cell_width_plus{% endif %}"></td>
+        {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% comment %} 20200907 MMR OLD VERSION
 <div class="table-responsive">
     <table class="table ew-table mb-0">
         <tbody>
@@ -96,15 +130,7 @@
                     <details>
                    {% endif %}
                         {% if p.is_literal %}
-{% comment %} MMR
-                            {% if p.is_image %}
-                                <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label }}</summary>
-                                <div class="mb-3"><img src="{{ o.url }}" style="width:120px; height: auto;"></div>
-                            {% else %}
-                                <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{% trans "title" %}/{% trans "name" %}</summary>
-                                <div class="mb-3 break-long-words">{{ o.label }}</div>
-                            {% endif %}
-{% endcomment %}
+
                         {% else %}
                             {% if previous_p.id != p.id %}
                             <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
@@ -151,7 +177,6 @@
         </tr>
         <tr>
         {% for country in countries_selected %}
-{% comment %} MMR non rimuovere div seguente - escamotage per fissare larghezza minima uguale per le colonne [td] {% endcomment %}                
             <td class="{% if countries_selected|length <= 2 %}cell_width{% else %}cell_width_plus{% endif %}">
             {% if can_edit and countries_selected|length == 1 %}
                 <div class="d-flex justify-content-center pt-3">
@@ -164,6 +189,7 @@
         </tbody>
     </table>
 </div>
+{% endcomment %} 
 {% endwith %}
 
 {% endblock body %}

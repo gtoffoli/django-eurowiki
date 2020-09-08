@@ -1,0 +1,58 @@
+{% load static i18n %}
+
+<h1 class="ew-title" style="white-space: nowrap;">{{ country.label }} <a href="{{ country.wd_url }}" target="_blank"><i class="fa fa-external-link" style="font-size:55%"></i></a></h1>
+<div class="p-2" {% if countries_selected|length > 1 %}style="max-height: calc(100vh - 16.2rem); overflow-y: auto;"{% endif %}>
+{% with props=country.properties %}
+{% if filter_predicate %}
+    {% for p, o, lang, languages, c, r, s, previous_p in props %}
+        {% if p.id == filter_predicate %}
+            <details open>
+                <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
+                <div class="level_one">
+                    {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
+                    {% include "_single_statement.html" %}
+                    {% include "_languages_statement.html" with data_class="ml-2 d-inline-block" %}
+                    {% include "_comments.html" with data_class="pl-2 ew-comments" %}
+                    {% endwith %}
+                    {% include "_props_subtree.html" with predicate=p.id %}
+{% if r %}
+{% with o=r %}
+% include "_props_subtree.html" with predicate=p.id %}
+{% endwith %}
+{% endif %}
+                </div>
+            </details>
+            {{ break}}
+        {% endif %}
+    {% endfor %}
+{% else %}
+    {% for p, o, lang, languages, c, r, s, previous_p in props %}
+        {% if not forloop.first and not previous.is_repeatable and previous_p.id != p.id  %}
+            </details>
+        {% endif %}
+        {% if previous_p.id != p.id %}
+            <details>
+        {% endif %}
+        {% if previous_p.id != p.id %}
+                <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
+        {% endif %}
+                <div class="level_one">
+                    {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
+                    {% include "_single_statement.html" %}
+                    {% include "_languages_statement.html"  with data_class="ml-2 d-inline-block" %}
+                    {% include "_comments.html" with data_class="pl-2 ew-comments" %}
+                    {% endwith %}
+                    {% include "_props_subtree.html" with predicate=p.id %}
+{% if r %}
+{% with o=r %}
+% include "_props_subtree.html" with predicate=p.id %}
+{% endwith %}
+{% endif %}
+                </div>
+        {% if forloop.last %}
+            </details>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endwith %}
+</div>
