@@ -1,0 +1,14 @@
+{% load static i18n %}
+
+<div class="h5 p-2 {% if can_edit %} mb-0 {% else %} mb-3 {% endif %}d-inline-block" style="font-size:1.1rem">
+    {% if can_edit %}
+        {% if countries_selected|length == 1 %}
+            <span class="mr-1"><a href="#" style="color: red;" id="{{country.id}}_{{p.id}}_{% if r %}{{ r.id }}{% else %}{{o.id}}{% endif %}" class="deleteItem" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
+        {% endif %}
+        <span class="mr-1"><a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}edit/" title="{% trans "edit the properties of this item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>
+    {% endif %}
+    <a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" class="txt_content" title="{% trans "view" %} {% trans "item" %}"><span>{{ preferred_label }}</span></a>
+    {% if not r and o.is_wikidata %}
+        <a href="{{ o.wd_url }}" target="_blank" class="ml-1"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
+    {% endif %}
+</div>

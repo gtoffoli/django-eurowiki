@@ -19,22 +19,22 @@
 <form action="/item/edit/" method="POST" novalidate="">{% csrf_token %}
 <input type="hidden" name="item" value="{% if item.is_bnode %}{{ item.bnode }}{% else %}{{ item.id }}{% endif %}">
 
-<div style="max-height: calc(100vh - 20.2rem); overflow-y:auto">
+<div {% comment %}style="max-height: calc(100vh - 20.2rem); overflow-y:auto"{% endcomment %}>
 {% with wd=item.id props=item.edit_properties %}
 {% for p, o, lang, languages, c, r, s, previous_p in props %}
 <div class="d-flex justify-content-start mb-3" style="font-size:1rem; border: 0px solid rgba(0, 51, 153, .1); border-radius: 3px">
     {% if p.is_literal %}
         {% if p.is_image %}
-        <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+        <div class="p-2"><a href="#" id="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}" class="deleteItem" style="color: red;" title="{% trans "remove this property" %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
         <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%; font-size:90%;"><img src="{{ o.url }}" style="width:120px; height: auto; vertical-align: text-top;{% if predicate.id == 'P163' %} border: 1px solid rgba(0, 51, 153, .2);{% endif %}"></div>
         </div>
         {% else %}
             {% if o.datatype_id %}
-                <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&dt={{ o.datatype_id }}" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+                <div class="p-2"><a href="#" id="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&dt={{ o.datatype_id }}" class="deleteItem" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
             {% else %}
-                <div class="p-2"><a href="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&lang={{ lang }}" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+                <div class="p-2"><a href="#" id="/item/{{ item.id }}/remprop/?c={{ country.id }}&p={{ p.id }}&o={{ o|urlencode }}&lang={{ lang }}" class="deleteItem" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
             {% endif %}
             <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
             <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}{% if lang != '' %} [{{ lang }}]{% endif %}{% if o.datatype_id == 'integer' %} &lt;integer&gt;{% elif o.datatype_id == 'gYear' %} &lt;yyyy&gt;{% elif o.datatype_id == 'date' %} &lt;yyyy-mm-dd&gt;{% endif %}</div>
@@ -52,7 +52,7 @@
             </div>
         {% endif %}
     {% else %}
-        <div class="p-2"><a href="/item/{{ item.id }}/remprop/?p={{ p.id }}&o={{ o.id }}" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+        <div class="p-2"><a href="#" id="/item/{{ item.id }}/remprop/?p={{ p.id }}&o={{ o.id }}" class="deleteItem" style="color: red;" title="{% trans "remove this property"  %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
         <div class="d-flex justify-content" style="width: 100%; border: 1px solid rgba(0, 51, 153, .1); border-radius: 3px">
         <div class="summary_label p-2 pr-3" style="flex-basis: 20%; font-size:90%; word-wrap:break-word;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%;">
@@ -62,14 +62,7 @@
                 <a href="{{ o.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%"></i></a>
                 {% endif %}
             </div>
-            {% if languages %}
-            <div class="ml-2 d-inline-block">
-                {% if languages|length == 1 %}
-                <span class="pt-0 pb-0 pl-1 pr-1" style=" border-width: 1px; border-style: solid; border-color: -internal-light-dark-color(rgb(118, 118, 118), rgb(195, 195, 195))">{{ lang_default }}</span>
-                {% else %}
-                <select class="sel_lang">{% for l in languages %}<option value='{{o.id}}_label_{{ l }}' {% if l == lang_default %}selected="selected"{% endif %}>{{l }}</option>{% endfor %}</select>{% endif %}
-                </div>
-            {% endif %}
+            {% include "_languages_statement.html"  with data_class="ml-2 d-inline-block" %}            
             {% endwith %}
             {% include "_props_subtree.html" %}
             {% if r %}
@@ -94,5 +87,49 @@
 {% endblock body %}
 
 {% block extra_script_style %}
+<style>
+    .modal_foreground {
+        z-index: 10000;
+    }
+</style>
+<script type="text/javascript" src="{% static "eurowiki/js/bootbox.min.js" %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('a.deleteItem').on('click', function(event){
+          event.preventDefault();
+          this_id = $(this).attr('id');
+          console.log (this_id);
+          
+          //values = this_id.split('_');
+          //if (!values[0] | !values[1] | !values[2] ) {
+          if (!this_id) {
+            alert ('{% trans "Warning! ID attribute: a value is missing" %}');
+            return false
+          }
+          bootbox.confirm({
+            className: 'modal_foreground',
+            message: '{% trans "do you really want to remove this item"|capfirst %}?',
+            buttons: {
+              confirm: {
+                label: '{% trans "Yes" %}',
+                className: 'btn-success'
+              },
+              cancel: {
+                label: '{% trans "No" %}',
+                className: 'btn-danger'
+              },
+            },
+            callback: function(result) {
+                if (result) {
+                   //$(window.location).attr('href', '/item/'+values[0]+'/remprop/?p='+values[1]+'&o='+values[2]);
+                   $(window.location).attr('href', this_id);
+                }
+             }
+             
+          });
+        });
+    });
+</script>
 {% include "_sel_lang_js.html" %}
 {% endblock extra_script_style %}

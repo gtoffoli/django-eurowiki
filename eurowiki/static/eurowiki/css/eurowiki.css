@@ -297,3 +297,13 @@ ew-like-button > a:hover {
     padding: 0 .3rem .3rem .3rem;
     color: #fff;
 }
+
+.ew-comments {
+    font-size:90%;
+}
+
+.ew-comments-litteral {
+    font-size:90%;
+    border: 1px solid rgba(0, 51, 153, .1);
+    border-top:0;
+}
