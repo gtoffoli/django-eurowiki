@@ -1,0 +1,15 @@
+{% load i18n static %}
+
+<div class="navbar-nav-scroll">
+    <ul class="navbar-nav flex-row">
+        <li class="nav-item">
+            <a class="nav-link {% if request.path == '/' %} active {% endif %}" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.path == '/query/' %} active {% endif %}" href="/query/">{% trans "query"|capfirst %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.path == '/help/' %} active {% endif %}" href="/help/">{% trans "help"|capfirst %}</a>
+        </li>
+    </ul>
+</div>
