@@ -15,6 +15,7 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from django.views import View
 from django.template.defaultfilters import slugify
 from django.contrib.auth.decorators import login_required
+from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from dal import autocomplete
@@ -39,10 +40,21 @@ def item_from_id(item_code):
         return Item(id=item_code)
 
 def homepage(request):
-    return render(request, 'homepage.html')
+    try:
+        page_content = FlatPage.objects.get(url='/eurowiki_home/').content
+    except:
+        page_content = _('No homepage is present yet.')
+    return render(request, 'homepage.html', {'page_content': page_content})
 
 def search(request):
     return render(request, 'search.html')
+
+def help(request):
+    try:
+        page_content = FlatPage.objects.get(url='/eurowiki_help/').content
+    except:
+        page_content = _('No help pages are present yet.')
+    return render(request, 'help.html', {'page_content': page_content})
 
 def list_stores(request):
     stores = Store.objects.all()
@@ -380,7 +392,8 @@ class editStatement(View):
             form.fields['literal'].widget = forms.HiddenInput()
             form.fields['language'].widget = forms.HiddenInput()
             if is_country:
-                predicate_choices = COUNTRY_PREDICATE_CHOICES
+                key = 'P948' # page banner
+                predicate_choices = COUNTRY_PREDICATE_CHOICES + [(key, settings.PREDICATE_LABELS[key].get(language, key))]
             else:
                 predicate_choices = ITEM_PREDICATE_CHOICES
             props = subject.properties()
@@ -423,6 +436,8 @@ class editStatement(View):
             predicate = data['predicate']
             context = data['context']
             statement_class = data['statement_class']
+            if predicate == 'P948': # page banner
+                statement_class = 'literal'
             if statement_class == 'literal':
                 datatype = data['datatype']
                 if datatype == 'integer':
@@ -548,7 +563,7 @@ class editStatement(View):
                     return HttpResponseRedirect('/country/{}/'.format(subject_id))
                 else:
                     if fun == 'edit':
-                        return HttpResponseRedirect('/item/{}/edit'.format(subject_id))
+                        return HttpResponseRedirect('/item/{}/edit/'.format(subject_id))
                     return HttpResponseRedirect('/item/{}/'.format(subject_id))
         data_dict['form'] = form
         data_dict['statement'] = statement_id

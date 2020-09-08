@@ -34,7 +34,7 @@ for identifier in NamedGraph.objects.all().values_list('identifier', flat=True).
 class StatementForm(forms.Form):
     subject = forms.CharField(required=True, label=_('subject'))
     statement_class = forms.ChoiceField(required=True, choices=STATEMENT_CLASS_CHOICES, label=_('statement class'), widget=forms.Select(attrs={'class':'form-control', 'onchange':'javascript:this.form.submit()'}))
-    predicate = forms.ChoiceField(required=True, choices=PREDICATE_CHOICES, label=_('predicate'), widget=forms.Select(attrs={'class':'form-control',}))
+    predicate = forms.ChoiceField(required=True, choices=PREDICATE_CHOICES, label=_('predicate'), widget=forms.Select(attrs={'class':'form-control', 'onchange':'javascript:this.form.submit()'}))
     object_node_type = forms.ChoiceField(required=False, choices=OBJECT_TYPE_CHOICES, label=_('object type'), widget=forms.Select(attrs={'class':'form-control', 'onchange':'javascript:this.form.submit()'}))
     object = forms.CharField(required=False, label=_('object'))
     datatype = forms.ChoiceField(required=False, choices=DATATYPE_CHOICES, label=_('data type'), widget=forms.Select(attrs={'class':'form-control', 'onchange':'javascript:this.form.submit()'}))

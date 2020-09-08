@@ -204,8 +204,8 @@ EW_TREE = OrderedDict([
     ('P1546', ('P1541', 'PUE1', 'PUE2', 'PUE17', 'PUE18', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), #national motto: text
     ('PUE6', ('PUE2', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national monuments
     ('P832', ('PUE2', 'PUE17', 'P837', 'PUE16', 'PUE4', 'PUE5', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national (holi)days: title, day,  prop., delib., date, ...
-    ('P38', ('PUE2', 'P170', 'PUE3', 'P790', 'P571', 'PUE4', 'P828', 'PUE7', 'PUE8','PUE9', 'P854', 'P248', 'PUE15', 'comment',),), # currency and coinage
-    ('P92', ('P953', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'PUE9', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248', 'comment',),), # national constitution
+    ('P38', ('PUE2', 'P170', 'PUE3', 'P790', 'P571', 'P580', 'PUE4', 'P828', 'PUE7', 'PUE8', 'PUE9', 'P854', 'P248', 'PUE15', 'comment',),), # currency and coinage
+    ('P92', ('P953', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P580', 'PUE9', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248', 'comment',),), # national constitution
     # ('Bag', ('', 'P832',),), # container of members (monuments and days)
 ])
 EW_TREE_KEYS = list(EW_TREE.keys())
