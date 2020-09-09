@@ -10,14 +10,13 @@
 {% include "_breadcrumb.html" %}
 
 {% with preferred_label=item.preferred_label.0 lang_default=item.preferred_label.1 languages=item.preferred_label.2 %}
-<h5 class="p-2 {% if can_edit %}mb-0{% else %}mb-3{% endif %} d-inline-block" style="font-size: 1.1rem">
+<h5 class="p-2 mb-3 d-inline-block" style="font-size: 1.1rem">
     {% if can_edit %}<span class="mr-1"><a href="/item/{{item.id}}/edit/" title="{% trans "edit the properties of this item" %}"><i class="fa fa-pencil" style="font-size:90%" aria-hidden="true"></i></a></span>{% endif %}<div class="d-inline-block txt_content"><span>{{preferred_label}}</span></div>
     {% if item.is_wikidata %}
         <a href="{{ item.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%" aria-hidden="true"></i></a>
     {% endif %}
 </h5>
-{% include "_languages_statement.html"  with data_class="ml-2 d-inline-block" %} 
-{% include "_comments.html" with data_class="pl-2 ew-comments" %}
+{% include "_languages_statement.html" with data_test="label_item" data_lang=lang_default data_class="ml-2 d-inline-block" %} 
 {% endwith %}
 
 <div>
@@ -31,37 +30,27 @@
         {% else %}
             <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
             <div class="p-2" style="flex-basis: 80%; font-size:90%;">
-                {% include "_languages_statement.html" with data_class="mb-1" %}   
+                {% include "_languages_statement.html" with data_test="" data_lang=lang data_class="mb-1" %}   
                 {% if p.is_url %}<a href="{{ o }}" target="_blank"><span class="break-long-words">{{ o }}</span></a>{% else %}<div class="txt_content">{{ o|linebreaks }}</div>{% endif %}</div>
-        {% endif %}
-        {% if r %}
-           	{% with o=r %}
-            {% include "_props_subtree.html" %}
-        	{% endwith %}
         {% endif %}
     {% else %}
         <div class="summary_label p-2 pr-3 label-break-long-words" style="flex-basis: 20%; font-size:90%;">{{ p.label }}</div>
         <div class="p-2" style="flex-basis: 80%;">
             {% with preferred_label=o.preferred_label.0 lang_default=o.preferred_label.1 languages=o.preferred_label.2 %}
-            <div class="h6 {% if can_edit %}mb-0{% else %}mb-3{% endif %} d-inline-block">
-            	{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit the properties of this item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span>{% endif %}<a href="{% if r %}{{ r.url }}{% else %}{{ o.url }}{% endif %}" class="txt_content" title="{% trans "view" %} {% trans "item"%}"><span>{{ preferred_label }}</span></a>
+            <div class="h6 mb-3 d-inline-block">
+            	{% if can_edit %}<span class="mr-1"><a href="{{ o.url }}edit/" title="{% trans "edit the properties of this item" %}"><i class="fa fa-pencil" aria-hidden="true" style="font-size:90%"></i></a></span>{% endif %}<a href="{{ o.url }}" class="txt_content" title="{% trans "view" %} {% trans "item"%}"><span>{{ preferred_label }}</span></a>
                 {% if o.is_wikidata %}
                 <a href="{{ o.wd_url }}" target="_blank" class="ml-2"><i class="fa fa-external-link" style="font-size:90%"></i></a>
                 {% endif %}
             </div>
-            {% include "_languages_statement.html" with data_class="ml-2  d-inline-block" %}   
-            {% include "_comments.html" with data_class="ew-comments" %}
+            {% include "_languages_statement.html" with data_test="label" data_lang=lang_default data_class="ml-2 d-inline-block" %}   
+            {# include "_comments.html" with data_class="ew-comments" #}
             {% endwith %}
             {% include "_props_subtree.html" %}
-            {% if r %}
-               	{% with o=r %}
-                {% include "_props_subtree.html"  %}
-            	{% endwith %}
-            {% endif %}
         </div>
     {% endif %}
 </div>
-{% if p.is_literal %}{% include "_comments.html" with data_class="pl-2 ew-comments-litteral" %}{% endif %}
+{% include "_comments.html" with data_class="mb-3 ew-comments-litteral" %}
 
 {% endfor %}
 {% endwith %}

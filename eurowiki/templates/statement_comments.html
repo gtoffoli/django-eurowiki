@@ -2,22 +2,29 @@
 {% load static i18n %}
 {% load comments %}
 
-{% block head_title %}{{ item.preferred_label.0 }}{% endblock head_title %}
+{% block head_title %}{{item.label}}{% endblock head_title %}
+{% block extra_style_head %}
+<style>
+blockquote {
+    border-bottom: 1px solid rgba(0, 51, 153, .3);
+    margin-bottom: 0.2rem;
+}
+blockquote p {
+    margin-bottom: 0.3rem;
+}
+</style>
+{% endblock extra_style_head %}
 
-{% block body_class %}item_view{% endblock body_class %}
+{% block body_class %}comments_view{% endblock body_class %}
 
 {% block body %}
 {% with can_edit=request.user.is_euro_member can_view=request.user.is_authenticated %}
 {% include "_breadcrumb.html" %}
 
-<div class="box_comments">
 <dl>
   {% get_comment_count for statement_extension as comment_count %}
-  {% if can_toggle_comments %}
-     <dt class="bb-{{ data_class }}"><span class="panel-heading-{{ data_class }} borderColor-{{ data_class }}" style="border-top-right-radius:0">{% if comment_count %}{{ comment_count }} {% endif %}{% trans "Comments" %}</span><a href="/{{type_obj}}/{{ data_obj.id }}/toggle_comments/" class="like-button-neutral" title="">{% if data_obj.comment_enabled %}{% trans "disable" %}{% else %}{% trans "enable" %}{% endif %}</a></dt>
-  {% else %} 
-  <dt class="bb-{{ data_class }}"><span class="panel-heading-{{ data_class }}">{% if comment_count %}{{ comment_count }} {% endif %}{% trans "Comments" %}</span></dt>
-  {% endif %}
+ 
+  <dt class="h5">{% if comment_count %}{{ comment_count }} {% endif %}{% trans "Comments" %}</dt>
 
   {% if comment_count %}
     {% with comment_list=statement_extension.comments %}
@@ -26,21 +33,11 @@
         <dd id="comment-{{ comment.pk }}-by-{{ comment.user_name|slugify }}"
             class="comment vcard {% cycle box1 box2 %}{% if comment.user %} authenticated-comment{% if comment.user.is_staff %} staff-comment{% endif %}{% if comment.user.is_superuser %} superuser-comment{% endif %}{% endif %}">
           {% block comment-info %}
-            <p class="comment-info">
-              {% block comment-image %}
-                <img {% if comment.user.get_profile.avatar %} src="/media/{{ comment.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> 
-              {% endblock comment-image %}
-              {% if comment.url %}
-                <a href="{{ comment.url }}" rel="external nofollow" class="fn url">{{ comment.name }}</a>
-              {% elif comment.user %}
-                <a href="/profile/{{ comment.user.username }}/">{{ comment.user.get_display_name }}</a>
-              {% else %}
-                {{ comment.name }}
-              {% endif %}
-              <small>{% trans "on" context "on date" %}
+            <p style="font-size:90%" class="mb-0"><strong>{{ comment.user.get_display_name }}</strong>
+              {% trans "on" context "on date" %}
               <time class="comment-published" datetime="{{ comment.submit_date|date:"c" }}">
               {{ comment.submit_date|date:"SHORT_DATETIME_FORMAT" }}
-              </time></small>
+              </time>
             </p>
           {% endblock comment-info %}
           {% block comment-content %}
@@ -72,11 +69,10 @@
          {{ form.timestamp }}
          {{ form.security_hash }}
          <input type="hidden" name="next" value="{{ item.url }}">
-         <div class="marginT5"><button type="submit" value="id_submit" id="id_submit" class="btn btn-default">{% trans "Add comment" %}</button></div>
+         <div class="mt-2"><button type="submit" value="id_submit" id="id_submit" class="btn btn-default btn-light">{% trans "Add comment" %}</button></div>
        </form></dd>
      {% endif %}
   {% endblock entry-comments-form %}
 </dl>
-</div>
 {% endwith %}
 {% endblock body %}

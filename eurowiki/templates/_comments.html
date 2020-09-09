@@ -2,7 +2,7 @@
 
 {% if can_edit %}
 	{% with comments=s.comments %}
-	<div class="mb-3 {{data_class}}"><i class="fa fa-comments-o" aria-hidden="true"></i> {% trans "comments"|capfirst %}: <a href="/statement/{{ s.statement.id }}/comments/" title="{% trans "see/add comments to this property" %}">{{ comments|length }}</a></div>
+	<div class="pl-2 {{data_class}}"><i class="fa fa-comments-o" aria-hidden="true"></i> {% trans "comments"|capfirst %}: <a href="/statement/{{ s.statement.id }}/comments/" title="{% trans "see/add comments to this property" %}">{{ comments|length }}</a></div>
 	{% endwith %}
 {% endif %}
 

@@ -9,17 +9,12 @@
             <details open>
                 <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
                 <div class="level_one">
-                    {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
+                    {% with preferred_label=o.preferred_label.0 lang_default=o.preferred_label.1 languages=o.preferred_label.2 %}
+                    {% include "_comments.html" with data_class="mb-0 ew-comments" %}
                     {% include "_single_statement.html" %}
-                    {% include "_languages_statement.html" with data_class="ml-2 d-inline-block" %}
-                    {% include "_comments.html" with data_class="pl-2 ew-comments" %}
+                    {% include "_languages_statement.html" with data_test="label" data_lang=lang_default data_class="ml-2 d-inline-block" %}
                     {% endwith %}
                     {% include "_props_subtree.html" with predicate=p.id %}
-{% if r %}
-{% with o=r %}
-% include "_props_subtree.html" with predicate=p.id %}
-{% endwith %}
-{% endif %}
                 </div>
             </details>
             {{ break}}
@@ -37,17 +32,12 @@
                 <summary class="h5 p-2 summary_label" style="font-size:1.1rem">{{ p.label|capfirst }}</summary>
         {% endif %}
                 <div class="level_one">
-                    {% with preferred_label=r.preferred_label.0|default:o.preferred_label.0 lang_default=r.preferred_label.1|default:o.preferred_label.1 languages=r.preferred_label.2|default:o.preferred_label.2 %}
+                    {% with preferred_label=o.preferred_label.0 lang_default=o.preferred_label.1 languages=o.preferred_label.2 %}
+                    {% include "_comments.html" with data_class="mb-0 ew-comments" %}
                     {% include "_single_statement.html" %}
-                    {% include "_languages_statement.html"  with data_class="ml-2 d-inline-block" %}
-                    {% include "_comments.html" with data_class="pl-2 ew-comments" %}
+                    {% include "_languages_statement.html" with data_test="label" data_lang=lang_default data_class="ml-2 d-inline-block" %}
                     {% endwith %}
                     {% include "_props_subtree.html" with predicate=p.id %}
-{% if r %}
-{% with o=r %}
-% include "_props_subtree.html" with predicate=p.id %}
-{% endwith %}
-{% endif %}
                 </div>
         {% if forloop.last %}
             </details>
