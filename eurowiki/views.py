@@ -114,14 +114,25 @@ def statement_comments(request, statement_id):
             statement_extension.uri_statement = statement
         statement_extension.save()
     data_dict = {'statement_extension': statement_extension, 'can_comment': True}
+    """
     subject_id = node_id(statement.subject)
     if subject_id in settings.EU_COUNTRY_KEYS:
         item = Country(id=subject_id)
         data_dict['country'] = item
     else:
         item = Item(id=subject_id)
+    """
+    subject = statement.subject
+    subject_id = node_id(subject)
+    if subject_id in settings.EU_COUNTRY_KEYS:
+        item = Country(id=subject_id)
+        data_dict['country'] = item
+    else:
+        if isinstance(subject, BNode):
+            item = Item(bnode=subject)
+        else:
+            item = Item(uriref=subject)
     data_dict['item'] = item
-    # breadcrumb = make_breadcrumb(request, Item(statement.subject))
     breadcrumb = make_breadcrumb(request, item)
     data_dict['country_list'] = breadcrumb[0]
     data_dict['country_parent_list'] = breadcrumb[1]
