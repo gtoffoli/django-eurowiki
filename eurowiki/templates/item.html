@@ -7,7 +7,7 @@
 
 {% block body %}
 {%  with can_edit=request.user.is_euro_member can_view=request.user.is_authenticated %}
-{% include "_breadcrumb.html" %}
+{% include "_breadcrumb.html" with comments=0 %}
 
 {% with preferred_label=item.preferred_label.0 lang_default=item.preferred_label.1 languages=item.preferred_label.2 %}
 <h5 class="p-2 mb-3 d-inline-block" style="font-size: 1.1rem">

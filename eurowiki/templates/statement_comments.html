@@ -19,7 +19,7 @@ blockquote p {
 
 {% block body %}
 {% with can_edit=request.user.is_euro_member can_view=request.user.is_authenticated %}
-{% include "_breadcrumb.html" %}
+{% include "_breadcrumb.html" with comments=1 %}
 
 <dl>
   {% get_comment_count for statement_extension as comment_count %}

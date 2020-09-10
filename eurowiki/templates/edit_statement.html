@@ -9,7 +9,7 @@
 {% block body_class %}edit_statement{% endblock body_class %}
 {% block body %}
 
-{% include "_breadcrumb.html" %}
+{% include "_breadcrumb.html" with comments=0 %}
 
 <h5 class="text-center">{% trans "add"|capfirst %} {% trans "statement" %}</h5>
 

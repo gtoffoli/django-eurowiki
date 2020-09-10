@@ -6,7 +6,7 @@
 {% block body_class %}item_edit{% endblock body_class %}
 
 {% block body %}
-{% include "_breadcrumb.html" with fun='edit' %}
+{% include "_breadcrumb.html" with comments=0 fun='edit' %}
 {% with preferred_label=item.preferred_label.0 %}
 <h5 class="p-2 d-inline-block" style="font-size: 1.1rem">
     {% trans "edit"|capfirst %}: <a href="/item/{{item.id}}/" title="{% trans "edit the properties of this item" %}">{{preferred_label}}</a>

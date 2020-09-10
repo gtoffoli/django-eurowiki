@@ -2,7 +2,7 @@
 <details class="mb-3"{% if country_list|length <= 1 %} open{% endif %}>
 <summary class="h6 summary_label p-2 mb-0">{% trans "paths"|capfirst %}</summary>
 <nav aria-label="breadcrumb ew-breadcrumb mb-0" style="border-width: 1px 0 1px 0; border-style: solid; border-color: rgba(0, 51, 153, .3)">
-{% if country %}
+{% if country and comments %}
 <ol class="breadcrumb ew-breadcrumb">
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><a href="/country/{{ country.id }}/" title="{% trans "view" %} {% trans "country" %}">{{ country.label }}</a></li>
     <li class="h6 breadcrumb-item ew-breadcrumb-item align-self-center"><div style="display:block;"><div class="text-center"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></div><div style="margin-top:-0.6rem">{{statement_predicate.label}}</div></div></li>
