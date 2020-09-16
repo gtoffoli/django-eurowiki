@@ -2,7 +2,8 @@
 {% load static i18n %}
 {% load comments %}
 
-{% block head_title %}{{item.label}}{% endblock head_title %}
+{% block head_title %}{% if country %}{{item.label}}{% else %}{{ item.preferred_label.0 }}{% endif %} [{% trans "Comments" %}]{% endblock head_title %}
+
 {% block extra_style_head %}
 <style>
 blockquote {

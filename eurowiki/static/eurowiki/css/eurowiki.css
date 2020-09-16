@@ -219,7 +219,7 @@ ew-like-button > a:hover {
   border-bottom: 1px solid rgba(0, 51, 153, .3);
 }
 
-.ew-table td, ew-table th {
+.ew-table td, .ew-table th {
     padding: 0; 
     vertical-align: top;
     border-top-width: 0;
@@ -229,6 +229,30 @@ ew-like-button > a:hover {
     vertical-align: top;
     border-top-width: 0;
     border-right-width: 0;
+}
+
+.ew-table-results td, .ew-table-results th {
+    padding: 0.25rem 0.5rem; 
+    vertical-align: top;
+    border-top-width: 0;
+    border-right: 1px solid rgba(0, 51, 153, .1);
+}
+.ew-table-results td:last-child, .ew-table th:last-child {
+    vertical-align: top;
+    border-top-width: 0;
+    border-right-width: 0;
+}
+.ew-table-results th {
+    text-transform: capitalize;
+}
+
+.ew-table-results tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 51, 153, .04);
+}
+
+.ew-table-results tbody tr:hover {
+  color: #ffffff;
+  background-color: #003399;
 }
 
 .summary_label {

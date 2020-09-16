@@ -31,7 +31,7 @@ def query_result_to_dataframe(query_result):
     return dataframe
 
 def dataframe_to_html(df):
-    html = df.to_html(index=False, justify='center', classes='ew-table')
+    html = df.to_html(index=False, border="0", justify='left', classes='table ew-table-results')
     return html
 
 def dataframe_to_csv(df, sep='\t', index=False):

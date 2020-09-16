@@ -1,79 +1,132 @@
 {% extends "eurowiki_base.html" %}
-{% load static i18n %}
+{% load static i18n crispy_forms_tags  %}
+
+{% block head_title %}{% trans "query"|capfirst %}{% endblock head_title %}
 
 {% block body %}
 
 {% if query and query_result %}
-	<h5 class="text-center">{% trans "running query"|capfirst %} <i>{{ query.title|capfirst }}</i></h5>
-	<div class="text-center"><i>{{ query.description|capfirst }}</i></div>
-	<div style="margin-top: 1em; margin-bottom: 1em;">
+  <div class="text-center p-1 mb-2">
+	<div><span class="h5">{% trans "running query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst }}</span></div>
+	<div>{{ query.description|capfirst }}</div>
+  </div>
+	<div class="table-responsive">
 	{{ query_result|safe}}
 	</div>
-	<div style="text-align: center; margin-top: 1em; margin-bottom: 1em;">
+	<div class="d-flex justify-content-center mt-2 mb-2">
 		<a class="btn btn-light" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}">{% trans "export result"|capfirst %}</a>
 	</div>
 
 {% elif form %}
 	{% if query %}
-	<h5 class="text-center">{% trans "edit query"|capfirst %} <i>{{ query.title|capfirst }}</i></h5>
-	<form action="/query/" method="post" class="form-horizontal">{% csrf_token %}
-		{{ form.as_table}}
-		<div style="text-align: center; margin-top: 1em; margin-bottom: 1em;">
-			<input type="submit" class="btn btn-light" name="save" value="{% trans "save"|capfirst %}"/>
-		&nbsp; <input type="submit" class="btn btn-light" name="save_continue" value="{% trans "save & continue"|capfirst %}"/>
-		&nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/">{% trans "cancel"|capfirst %}</a>
+	<div class="text-center p-1 mb-2">
+	    <span class="h5">{% trans "edit query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst }}</span>
+  </div>
+	<form action="/query/" method="post">{% csrf_token %}
+		{{ form|crispy}}
+		<div class="d-flex justify-content-center pt-4 mb-2">
+		    <button type="submit" class="btn btn-light " name="save" value="{% trans "save"|capfirst %}">{% trans "save"|capfirst %}</button>
+		    <button type="submit" class="btn btn-light ml-2" name="save_continue" value="{% trans "save & continue"|capfirst %}">{% trans "save & continue"|capfirst %}</button>
+		    <a class="btn btn-light ml-2" href="/query/{{ query.id }}/">{% trans "cancel"|capfirst %}</a>
 		</div>
 	</form>
-
 	{% else %}
-	<h5 class="text-center">{% trans "define new query"|capfirst %}</h5>
-	<form action="/query/" method="post" class="form-horizontal">{% csrf_token %}
-		{{ form.as_table}}
-		<div style="text-align: center; margin-top: 1em; margin-bottom: 1em;">
-			<input type="submit" class="btn btn-light" name="save" value="{% trans "save"|capfirst %}"/>
-		&nbsp; <input type="submit" class="btn btn-light" name="save_continue" value="{% trans "save & continue"|capfirst %}"/>
-		&nbsp; <a class="btn btn-light" href="/query/">{% trans "cancel"|capfirst %}</a>
+	<div class="text-center p-1 mb-2"><span class="h4">{% trans "define new query"|capfirst %}</span></div>
+	<form action="/query/" method="post">{% csrf_token %}
+		{{ form|crispy}}
+		<div class="d-flex justify-content-center pt-4 mb-2">
+		    <button type="submit" class="btn btn-light" name="save" value="{% trans "save"|capfirst %}">{% trans "save"|capfirst %}</button>
+		    <button type="submit" class="btn btn-light ml-2" name="save_continue" value="{% trans "save & continue"|capfirst %}">{% trans "save & continue"|capfirst %}</button>
+		    <a class="btn btn-light ml-2" href="/query/">{% trans "cancel"|capfirst %}</a>
 		</div>
-
-		</div>
+		</form>
 	{% endif %}
-
 {% elif query %}
-	<h5 class="text-center">{% trans "definition of query"|capfirst %} <i>{{ query.title|capfirst}}</i></h5>
+  <div class="text-center p-1 mb-2"><span class="h5">{% trans "definition of query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst}}</span></div>
 	<dl>
 	<dt>{% trans "description"|capfirst %}</dt> <dd>{{ query.description }}</dd>
 	<dt>{% trans "SPARQL text"|capfirst %}</dt> <dd><pre>{{ query.text }}</pre></dd>
 	</dl>
-
 {% else %}
-	<h5 class="text-center">{% trans "saved query definitions"|capfirst %}</h5>
-
+	<div class="text-center p-1 mb-2"><span class="h4">{% trans "saved query definitions"|capfirst %}</span></div>
 	{% if queries.count %}
-		<ul>
+		<ul class="list-unstyled">
 		{% for query in queries %}
-			<li><strong>{{ query.title }}</strong>
-		         &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/run/" title="{% trans "execute query" %}"><i class="fa fa-play font07em c-white"></i></a>
-		         &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}"><i class="fa fa-download font07em c-white"></i></a>
-		         &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/" title="{% trans "view definition" %}"><i class="fa fa-eye font07em c-white"></i></a>
-		        {% if can_edit %} &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
-		        {% if can_delete %} &nbsp; <a class="btn btn-light" href="/query/{{ query.id }}/delete/" title="{% trans "delete query definition" %}"><i class="fa fa-times-circle font07em" aria-hidden="true" style="color: red;"></i></a>{% endif %}
-				<br>{{ query.description }}</li>
+			<li class="mb-3">
+			    <div class="row flex-xl-nowrap align-items-center">
+			        <div class="col-12 col-md-8 col-xl-8"><h5 class="mb-0">{{ query.title }}</h5><p>{{ query.description }}</p></div>
+              <div class="col-12 col-md-4 col-xl-4 text-center">
+                <a class="btn" href="/query/{{ query.id }}/run/" title="{% trans "execute query" %}"><i class="fa fa-play"></i></a>
+		            <a class="btn ml-2" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}"><i class="fa fa-download"></i></a>
+		            <a class="btn ml-2" href="/query/{{ query.id }}/" title="{% trans "view definition" %}"><i class="fa fa-eye"></i></a>
+		            {% if can_edit %}<a class="btn ml-2" href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit"></i></a>{% endif %}
+		            {% if can_delete %}<a class="btn ml-2 deleteQuery" id="/query/{{ query.id }}/delete/" style="color:red" href="#" title="{% trans "delete query definition" %}"><i class="fa fa-times-circle"></i></a>{% endif %}
+              </div>
+          </div>
+			</li>
 		{% endfor %}
 		</ul>
 
 	{% else %}
 		<div>{% trans "No query defined yet" %}</div>
 	{% endif %}
-
-	<form action="" method="post" class="form-horizontal">{% csrf_token %}
-		<div style="text-align: center; margin-top: 1em; margin-bottom: 1em;">
-			<input type="submit" class="btn btn-light" name="new_query" value="{% trans "add query"|capfirst %}"/>
-		</div>
-	</form>
+  {% if can_edit %}
+  <div class="d-flex justify-content-center pt-3 mb-2">
+	<form action="" method="post">{% csrf_token %}
+			<button type="submit" class="btn btn-light" name="new_query" value="{% trans "add query"|capfirst %}">{% trans "add query"|capfirst %}</button>
+	</form>	
+  </div>
+	{% endif %}
 
 {% endif %}
-{% if not queries.count %}
-	<div><a href="/query/">{% trans "list all saved queries"|capfirst %}</a></div>
+{% if query %}
+	<div class="text-center mt-4 mb-2"><a class="btn btn-light" href="/query/">{% trans "list all saved queries"|capfirst %}</a></div>
 {% endif %}
 
 {% endblock body %}
+
+
+{% block extra_script_style %}
+{% if can_delete %}
+<style>
+    .modal_foreground {
+        z-index: 10000;
+    }
+</style>
+<script type="text/javascript" src="{% static "eurowiki/js/bootbox.min.js" %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('a.deleteQuery').on('click', function(event){
+          event.preventDefault();
+          this_id = $(this).attr('id');
+          console.log (this_id);
+          if (!this_id) {
+            alert ('{% trans "Warning! ID attribute: a value is missing" %}');
+            return false
+          }
+          bootbox.confirm({
+            className: 'modal_foreground',
+            message: '{% trans "do you really want to remove this query"|capfirst %}?',
+            buttons: {
+              confirm: {
+                label: '{% trans "Yes" %}',
+                className: 'btn-success'
+              },
+              cancel: {
+                label: '{% trans "No" %}',
+                className: 'btn-danger'
+              },
+            },
+            callback: function(result) {
+                if (result) {                   //$(window.location).attr('href', '/item/'+values[0]+'/remprop/?p='+values[1]+'&o='+values[2]);
+                   $(window.location).attr('href', this_id);
+                }
+             }
+             
+          });
+        });
+    });
+</script>
+{% endif %}
+{% endblock extra_script_style %}
