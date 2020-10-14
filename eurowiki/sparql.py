@@ -11,8 +11,18 @@ def run_query(query, g=None):
     return query_result
 
 def query_result_to_dataframe(query_result):
+
     bindings = query_result.bindings
+    """
+    20201012 MMR
     columns = [var.toPython().replace('?','') for var in bindings[0]]
+    """
+    columns = []
+    for var in bindings:
+        for v in var:
+            el=v.toPython().replace('?','')
+            if not (el in columns):
+                columns.append(el)
     data = []
     for row in query_result:
         els = []
