@@ -27,7 +27,7 @@ from .models import StatementExtension, SparqlQuery
 from .classes import Country, Item, Predicate, StatementProxy
 from .forms import StatementForm, QueryForm
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
-from .sparql import run_query, query_result_to_dataframe, dataframe_to_html, dataframe_to_csv
+from .sparql import run_query, query_result_to_dataframe, dataframe_to_html, dataframe_to_csv, get_query_variables
 from .utils import is_bnode_id, node_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 def eu_countries(language=settings.LANGUAGE_CODE):
@@ -591,7 +591,8 @@ class Query(View):
             query = get_object_or_404(SparqlQuery, pk=run_query_id)
             data_dict['query'] = query
             query_result = run_query(query.text)
-            dataframe = query_result_to_dataframe(query_result)
+            # dataframe = query_result_to_dataframe(query_result)
+            dataframe = query_result_to_dataframe(query_result, columns=get_query_variables(query.text))
             if export_query_id:
                 query_result = dataframe_to_csv(dataframe)
                 response = HttpResponse(query_result)

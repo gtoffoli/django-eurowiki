@@ -10,19 +10,21 @@ def run_query(query, g=None):
     query_result = g.query(query)
     return query_result
 
-def query_result_to_dataframe(query_result):
+# def query_result_to_dataframe(query_result):
+def query_result_to_dataframe(query_result, columns=None):
 
-    bindings = query_result.bindings
-    """
-    20201012 MMR
-    columns = [var.toPython().replace('?','') for var in bindings[0]]
-    """
-    columns = []
-    for var in bindings:
-        for v in var:
-            el=v.toPython().replace('?','')
-            if not (el in columns):
-                columns.append(el)
+    if not columns:
+        bindings = query_result.bindings
+        """
+        20201012 MMR
+        columns = [var.toPython().replace('?','') for var in bindings[0]]
+        """
+        columns = []
+        for var in bindings:
+            for v in var:
+                el=v.toPython().replace('?','')
+                if not (el in columns):
+                    columns.append(el)
     data = []
     for row in query_result:
         els = []
@@ -47,3 +49,17 @@ def dataframe_to_html(df):
 def dataframe_to_csv(df, sep='\t', index=False):
     txt = df.to_csv(sep=sep, index=index)
     return txt
+
+def get_query_variables(query):
+    tokens = query.split()
+    variables = []
+    select = False
+    for token in tokens:
+        if token.lower() == 'select':
+            select = True
+            continue
+        elif token.lower() == 'where':
+            break
+        elif select and token.startswith('?'):
+            variables.append(token.replace('?',''))
+    return variables
