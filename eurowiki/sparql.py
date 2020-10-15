@@ -39,7 +39,8 @@ def query_result_to_dataframe(query_result, columns=None):
                 els.append(term or '')
         data.append(els)
     dataframe = pd.DataFrame(data, columns=columns)
-    dataframe.sort_values(columns[0], inplace=True)
+    if data:
+        dataframe.sort_values(columns[0], inplace=True)
     return dataframe
 
 def dataframe_to_html(df):

@@ -604,6 +604,7 @@ class Query(View):
                 return response
             query_result = dataframe_to_html(dataframe)
             data_dict['query_result'] = query_result
+            data_dict['dataframe'] = dataframe
         elif query_id:
             query = get_object_or_404(SparqlQuery, pk=query_id)
             data_dict['query'] = query
