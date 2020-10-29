@@ -12,7 +12,7 @@
   </div>
   {% if not dataframe.empty %}
 	<div class="table-responsive">
-	{{ query_result|safe}}
+	{{ query_result|safe }}
 	</div>
 	<div class="d-flex justify-content-center mt-2 mb-2">
 		<a class="btn btn-light" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}">{% trans "export result"|capfirst %}</a>
@@ -45,7 +45,7 @@
 		</form>
 	{% endif %}
 {% elif query %}
-  <div class="text-center p-1 mb-2"><span class="h5">{% trans "definition of query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst}}</span></div>
+   class="text-center p-1 mb-2"><span class="h5">{% trans "definition of query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst}}</span></div>
 	<dl>
 	<dt>{% trans "description"|capfirst %}</dt> <dd>{{ query.description }}</dd>
 	<dt>{% trans "SPARQL text"|capfirst %}</dt> <dd><pre>{{ query.text }}</pre></dd>

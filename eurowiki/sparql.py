@@ -44,7 +44,8 @@ def query_result_to_dataframe(query_result, columns=None):
     return dataframe
 
 def dataframe_to_html(df):
-    html = df.to_html(index=False, border="0", justify='left', classes='table ew-table-results')
+    df = df.replace(r'\r\n','<br />', regex=True)
+    html = df.to_html(index=False, border="0", justify='left', classes='table ew-table-results', escape=False, render_links=True)
     return html
 
 def dataframe_to_csv(df, sep='\t', index=False):
