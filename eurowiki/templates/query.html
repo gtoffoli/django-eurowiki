@@ -45,7 +45,7 @@
 		</form>
 	{% endif %}
 {% elif query %}
-   class="text-center p-1 mb-2"><span class="h5">{% trans "definition of query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst}}</span></div>
+   <div class="text-center p-1 mb-2"><span class="h5">{% trans "definition of query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst}}</span></div>
 	<dl>
 	<dt>{% trans "description"|capfirst %}</dt> <dd>{{ query.description }}</dd>
 	<dt>{% trans "SPARQL text"|capfirst %}</dt> <dd><pre>{{ query.text }}</pre></dd>
