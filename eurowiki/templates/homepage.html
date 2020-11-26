@@ -1,10 +1,9 @@
 {% extends "eurowiki_base.html" %}
 {% load static i18n %}
-
+{% block head_title %}Homepage{% endblock head_title %}
 {% block body %}
-
-    <div class="container">
-            <div>{{ page_content|safe }}</div>
-    </div>     
-
+<div class="container mt-4">
+<h2 class="text-center" style="color: #FFCC00;">Euroidentities</h2>
+{{ page_content|safe }}
+</div>
 {% endblock body %}
