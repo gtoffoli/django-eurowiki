@@ -49,11 +49,19 @@ def homepage(request):
 def search(request):
     return render(request, 'search.html')
 
+# forum: https://www.commonspaces.eu/forum/c/project-forums/university-4-europe-european-national-identities-profiles-towards-euroforge/
+def contributions(request):
+    try:
+        page_content = FlatPage.objects.get(url='/eurowiki_contributions/').content
+    except:
+        page_content = _("The page you are looking for is not yet present.")
+    return render(request, 'help.html', {'page_content': page_content})
+
 def help(request):
     try:
         page_content = FlatPage.objects.get(url='/eurowiki_help/').content
     except:
-        page_content = _('No help pages are present yet.')
+        page_content = _("The page you are looking for is not yet present.")
     return render(request, 'help.html', {'page_content': page_content})
 
 def list_stores(request):

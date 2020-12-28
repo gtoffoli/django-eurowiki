@@ -44,6 +44,7 @@ def query_result_to_dataframe(query_result, columns=None):
     return dataframe
 
 def dataframe_to_html(df):
+    pd.set_option('display.max_colwidth', -1)
     df = df.replace(r'\r\n','<br />', regex=True)
     html = df.to_html(index=False, border="0", justify='left', classes='table ew-table-results', escape=False, render_links=True)
     return html
@@ -56,12 +57,19 @@ def get_query_variables(query):
     tokens = query.split()
     variables = []
     select = False
+    coalesce = 0
     for token in tokens:
         if token.lower() == 'select':
             select = True
             continue
         elif token.lower() == 'where':
             break
-        elif select and token.startswith('?'):
+        elif token.lower() == 'coalesce':
+            coalesce = 1
+        elif coalesce and token == '(':
+            coalesce += 1
+        elif coalesce == 2 and token == ')':
+            coalesce = 0
+        elif select and not coalesce and token.startswith('?'):
             variables.append(token.replace('?',''))
     return variables

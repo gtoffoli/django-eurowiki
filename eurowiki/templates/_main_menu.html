@@ -9,6 +9,9 @@
             <a class="nav-link {% if request.path == '/query/' %} active {% endif %}" href="/query/">{% trans "query"|capfirst %}</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link {% if request.path == '/contributions/' %} active {% endif %}" href="/contributions/">{% trans "contributions"|capfirst %}</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link {% if request.path == '/help/' %} active {% endif %}" href="/help/">{% trans "help"|capfirst %}</a>
         </li>
     </ul>
