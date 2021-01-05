@@ -10,33 +10,22 @@ def run_query(query, g=None):
     query_result = g.query(query)
     return query_result
 
-# def query_result_to_dataframe(query_result):
-def query_result_to_dataframe(query_result, columns=None):
-
-    if not columns:
-        bindings = query_result.bindings
-        """
-        20201012 MMR
-        columns = [var.toPython().replace('?','') for var in bindings[0]]
-        """
-        columns = []
-        for var in bindings:
-            for v in var:
-                el=v.toPython().replace('?','')
-                if not (el in columns):
-                    columns.append(el)
+def query_result_to_dataframe(query_result, columns, variables):
     data = []
     for row in query_result:
         els = []
+        i = 0
         for term in row:
-            item = make_item(term)
-            if item:
-                if isinstance(item, Country):
-                    els.append(item.label())
+            if variables[i] in columns:
+                item = make_item(term)
+                if item:
+                    if isinstance(item, Country):
+                        els.append(item.label())
+                    else:
+                        els.append(item.preferred_label()[0])
                 else:
-                    els.append(item.preferred_label()[0])
-            else:
-                els.append(term or '')
+                    els.append(term or '')
+            i += 1
         data.append(els)
     dataframe = pd.DataFrame(data, columns=columns)
     if data:

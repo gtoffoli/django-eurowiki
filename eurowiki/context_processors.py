@@ -22,6 +22,6 @@ def processor(request):
         'DOMAIN': host,
         'HAS_SAML2': settings.HAS_SAML2,
         'DJANGO_VERSION': settings.DJANGO_VERSION,
-        'COUNTRIES':  [Country(qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()],
+        'COUNTRIES':  [Country(id=qcode) for qcode in settings.EU_COUNTRY_LABELS.keys()],
         'COUNTRY_PREDICATES' : country_predicates(language=get_language()[:2]),
     }

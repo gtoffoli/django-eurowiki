@@ -14,7 +14,8 @@ DATATYPE_CHOICES = (
     ('gYear', _('year')),
     ('gMonthDay',  _('day of year')),
 )
-LANGUAGE_CHOICES = settings.EURO_LANGUAGES
+# LANGUAGE_CHOICES = [[l, l] for l in settings.EURO_LANGUAGES_CODES[1:]]
+LANGUAGE_CHOICES = settings.EURO_LANGUAGES[1:]
 language = get_language()[:2]
 PREDICATE_CHOICES = [(key, settings.PREDICATE_LABELS[key].get(language, key)) for key in settings.ORDERED_PREDICATE_KEYS]
 LITERAL_PREDICATE_CHOICES = [p for p in PREDICATE_CHOICES if p[0] in settings.LITERAL_PROPERTIES]
@@ -51,3 +52,34 @@ class QueryForm(forms.ModelForm):
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',})) # help_text=_('please use a short title'))
     description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 3, 'cols': 80,}))
     text = forms.CharField(required=True, label=_('SPARQL query text'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 6, 'cols': 80,}))
+
+
+RUN_QUERY_CHOICES = (
+    ('show', _('show results')),
+    ('export', _('export results to CSV file')+' (**) '),
+)
+
+def apply_language_priorities(language_choices, languages):
+    choices = []
+    for code in languages:
+        for choice in language_choices:
+            if choice[0] == code:
+                choices.append(choice)
+    for choice in language_choices:
+        if choice[0] not in languages:
+            choices.append(choice)         
+    return choices
+
+class QueryExecForm(forms.Form):
+    query = forms.IntegerField(widget=forms.HiddenInput())
+    languages = forms.MultipleChoiceField(choices=LANGUAGE_CHOICES,
+        label = _('languages'), required=False,
+        help_text = _("set languages priority") + ' (*) ',
+        widget = forms.SelectMultiple(attrs={'id':'select_languages', 'class':'form-control', 'size': 3, 'style': 'width: auto;',}))
+    columns = forms.MultipleChoiceField(choices=[],
+        label = _('columns'), required=False,
+        help_text = _("select colums to display"),
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 3, 'style': 'width: auto;',}))
+    output_mode = forms.ChoiceField(required=False, choices=RUN_QUERY_CHOICES,
+        label=_('show/export results'),
+        widget=forms.RadioSelect())

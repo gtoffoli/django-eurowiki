@@ -235,7 +235,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SITE_ID = 1
 # SITE_ID = 2
-SITE_NAME = 'EuroIdentities'
+SITE_NAME = 'Euroidentities'
 
 PROJECT_ROOT = os.path.dirname(__file__)
 PARENT_ROOT = os.path.dirname(PROJECT_ROOT)

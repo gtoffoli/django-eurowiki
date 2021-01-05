@@ -133,13 +133,16 @@
                                 <div class="form-group">
                                     <ul class="nav pl-3">
                                         {% for country in COUNTRIES %}
+{% comment %} GT 210101
                                         <li class="d-flex justify-content-between"><div {% if request.path ==  country.url %}class="active"{% else %}{% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}class="active"{% endif %}{% endfor %}{% endif %}{% endif %}><a href="{{ country.url }}">{{ country.label }}</a></div><div><input type="checkbox" name="group" value="{{country.id}}" {% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}checked{% endif %}{% endfor %}{% endif %}></div></li>
+{% endcomment %}
+                                        <li class="d-flex justify-content-between"><div {% if request.path ==  country.url %}class="active"{% else %}{% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}class="active"{% endif %}{% endfor %}{% endif %}{% endif %}><a href="{{ country.url }}">{{ country.label }}</a></div><div><input type="checkbox" name="group" data-non_empty="{{country.non_empty}}" value="{{country.id}}" {% if countries_selected|length > 1 %} {% for country_selected in countries_selected %}{% if country_selected.id == country.id %}checked{% endif %}{% endfor %}{% endif %}></div></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end mt-2">
-                                <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "uncheck" %}</small> </button>
+                                <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "check" %}/{% trans "clear" %}</small></button>
                                 <button type="submit" class="btn"><i class="fa fa-eye"></i> <small>{% trans "view" %}</small></button>
                             </div>
                         </form>
@@ -169,7 +172,7 @@
               url: '{% url 'navigation_autocomplete' %}',
               choiceSelector: 'a',
               minimumCharacters: 3,
-              placeholder: '{% trans "Search ... (at least 3 characters)" %}',
+              placeholder: '{% trans "Search ... (at least 3 chars)" %}',
             }).input.bind('selectChoice', function(e, choice, autocomplete) {
              document.location.href = choice.attr('href');
             });
@@ -200,8 +203,12 @@
           });
           $('button.uncheck').on('click', function(event) {
              if ($("input[name='group']:checked").length > 0) {
-                $.each($("input[name='group']:checked"), function(){
-                    $(this).removeAttr("checked");
+                $.each($("input[name='group']:checked"), function() {
+                    $(this).prop("checked",false)
+                })
+             } else {
+                $.each($("input[name='group'][data-non_empty='True']"), function() {
+                    $(this).prop("checked",true);
                 });
              }
           });

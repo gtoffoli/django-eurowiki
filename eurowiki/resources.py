@@ -4,6 +4,7 @@ It includes definitions complementing the database of rdflib_django.
 Should include only terminology and the core of top-level items.
 """
 
+from django.utils.translation import get_language, ugettext_lazy as _
 
 DEFAULT_STORE = "http://www.eurowiki.eu"
 
@@ -223,31 +224,65 @@ EW_SUBTREE_KEYS = list(EW_SUBTREE.keys())
 
 LITERAL_LEAF_KEYS = ('label', 'PUE2', 'P854', 'P248', 'comment',)
 
+EURO_COUNTRIES = (
+    ('Q40', _('Austria'), 'de',),
+    ('Q31', _('Belgium'), 'fr', 'nl',),
+    ('Q219', _('Bulgaria'), 'bg',),
+    ('Q224', _('Croatia'), 'hr',),
+    ('Q229', _('Republic of Cyprus'), 'el',),
+    ('Q213', _('Czech Republic'), 'cs',),
+    ('Q35', _('Denmark'), 'da',),
+    ('Q191', _('Estonia'), 'et',),
+    ('Q33', _('Finland'), 'fi',),
+    ('Q142', _('France'), 'fr',),
+    ('Q183', _('Germany'), 'de',),
+    ('Q41', _('Greece'), 'el',),
+    ('Q27', _('Ireland'), 'en', 'ga',),
+    ('Q38', _('Italy'), 'it',),
+    ('Q211', _('Latvia'), 'lv',),
+    ('Q37', _('Lithuania'), 'lt',),
+    ('Q32', _('Luxembourg'), 'fr', 'de',),
+    ('Q233', _('Malta'), 'mt',),
+    ('Q55', _('Netherlands'), 'nl',),
+    ('Q36', _('Poland'), 'pl',),
+    ('Q45', _('Portugal'), 'pt',),
+    ('Q218', _('Romania'), 'ro',),
+    ('Q214', _('Slovakia'), 'sk',),
+    ('Q215', _('Slovenia'), 'sl',),
+    ('Q29', _('Spain'), 'es',),
+    ('Q34', _('Sweden'), 'sw',),
+    ('Q28', _('Hungary'), 'hu',),
+)
+EURO_COUNTRIES_KEYS = [c[0] for c in EURO_COUNTRIES]
+EURO_COUNTRIES_DICT = OrderedDict([(c[0], c[1]) for c in EURO_COUNTRIES])
+EURO_COUNTRIES_LANGUAGES_DICT = OrderedDict([(c[0], c[2:]) for c in EURO_COUNTRIES])
+
 EURO_LANGUAGES = (
     ('', '-'),
-    ('en', 'English'),
-    ('it', 'Italiano'),
-    ('de', 'German'),
-    ('es', 'Spanish'),
-    ('fr', 'French'),
-    ('bg', 'Bulgarian'),
-    ('cs', 'Czech'),
-    ('da', 'Danish'),
-    ('el', 'Greek'),
-    ('et', 'Estonian'),
-    ('fi', 'Finnish'),
-    ('ga', 'Irish'),
-    ('hr', 'Croatian'),
-    ('hu', 'Hungarian'),
-    ('lt', 'Lithuanian'),
-    ('lv', 'Latvian'),
-    ('mt', 'Maltese'),
-    ('nl', 'Dutch'),
-    ('pl', 'Polish'),
-    ('pt', 'Portuguese'),
-    ('ro', 'Romanian'),
-    ('sk', 'Slovak'),
-    ('sl', 'Slovenian'),
-    ('sv', 'Swedish'),
+    ('en', _('English')),
+    ('it', _('Italian')),
+    ('de', _('German')),
+    ('es', _('Spanish')),
+    ('fr', _('French')),
+    ('bg', _('Bulgarian')),
+    ('cs', _('Czech')),
+    ('da', _('Danish')),
+    ('el', _('Greek')),
+    ('et', _('Estonian')),
+    ('fi', _('Finnish')),
+    ('ga', _('Irish')),
+    ('hr', _('Croatian')),
+    ('hu', _('Hungarian')),
+    ('lt', _('Lithuanian')),
+    ('lv', _('Latvian')),
+    ('mt', _('Maltese')),
+    ('nl', _('Dutch')),
+    ('pl', _('Polish')),
+    ('pt', _('Portuguese')),
+    ('ro', _('Romanian')),
+    ('sk', _('Slovak')),
+    ('sl', _('Slovenian')),
+    ('sv', _('Swedish')),
 )
-EURO_LANGUAGE_CODES = [l[0] for l in EURO_LANGUAGES]
+EURO_LANGUAGES_CODES = [l[0] for l in EURO_LANGUAGES]
+EURO_LANGUAGES_DICT = OrderedDict(EURO_LANGUAGES)

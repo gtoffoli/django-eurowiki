@@ -316,9 +316,16 @@ class Country(Item):
     def labels(self):
         return settings.EU_COUNTRY_LABELS.get(self.id, {})
 
-    # def properties(self):
     def properties(self, keys=[], exclude_keys=['label',], language=None, edit=False):
         return super(Country, self).properties(keys=settings.EU_COUNTRY_PROPERTIES, exclude_keys=exclude_keys, language=language, edit=edit)
+
+    def non_empty(self):
+        generator = self.graph.objects(subject=self.uriref)
+        try:
+            next(generator)
+            return True
+        except:
+            return False
 
     def lineages(self, request, graph_identifier=None):
         return super(Country, self).lineages(request, graph_identifier=graph_identifier)

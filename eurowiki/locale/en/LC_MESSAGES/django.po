@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-23 23:54+0200\n"
+"POT-Creation-Date: 2021-01-05 16:58+0100\n"
 "PO-Revision-Date: 2020-07-07 20:07+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -46,124 +46,357 @@ msgstr ""
 msgid "day of year"
 msgstr ""
 
-#: .\forms.py:25
+#: .\forms.py:26
 msgid "existing graph node"
 msgstr ""
 
-#: .\forms.py:26
+#: .\forms.py:27
 msgid "new graph node"
 msgstr ""
 
-#: .\forms.py:27
+#: .\forms.py:28
 msgid "linked external node"
 msgstr ""
 
-#: .\forms.py:35
+#: .\forms.py:36
 msgid "subject"
 msgstr ""
 
-#: .\forms.py:36
+#: .\forms.py:37
 msgid "statement class"
 msgstr ""
 
-#: .\forms.py:37
+#: .\forms.py:38
 msgid "predicate"
 msgstr ""
 
-#: .\forms.py:38
+#: .\forms.py:39
 msgid "object type"
 msgstr ""
 
-#: .\forms.py:39 .\views.py:522 .\views.py:524
+#: .\forms.py:40 .\views.py:558 .\views.py:560
 msgid "object"
 msgstr ""
 
-#: .\forms.py:40
+#: .\forms.py:41
 msgid "data type"
 msgstr ""
 
-#: .\forms.py:41
+#: .\forms.py:42
 msgid "literal value"
 msgstr ""
 
-#: .\forms.py:42
+#: .\forms.py:43
 msgid "string language"
 msgstr ""
 
-#: .\forms.py:43
+#: .\forms.py:44
 msgid "context"
 msgstr ""
 
-#: .\forms.py:51 .\models.py:76
+#: .\forms.py:52 .\models.py:81
 msgid "title"
 msgstr ""
 
-#: .\forms.py:52
+#: .\forms.py:53
 msgid "short description"
 msgstr ""
 
-#: .\forms.py:53
+#: .\forms.py:54
 msgid "SPARQL query text"
 msgstr ""
 
-#: .\models.py:49
+#: .\forms.py:58
+msgid "show results"
+msgstr ""
+
+#: .\forms.py:59
+msgid "export results to CSV file"
+msgstr ""
+
+#: .\forms.py:76
+msgid "languages"
+msgstr ""
+
+#: .\forms.py:77
+msgid "set languages priority"
+msgstr ""
+
+#: .\forms.py:80
+msgid "columns"
+msgstr ""
+
+#: .\forms.py:81
+msgid "select colums to display"
+msgstr ""
+
+#: .\forms.py:84
+msgid "show/export results"
+msgstr ""
+
+#: .\models.py:54
 msgid "deleted"
 msgstr ""
 
-#: .\models.py:51
+#: .\models.py:56
 msgid "comments enabled"
 msgstr ""
 
-#: .\models.py:52
+#: .\models.py:57
 msgid "Allows comments if checked."
 msgstr ""
 
-#: .\models.py:77 .\templates\query.html:40
+#: .\models.py:82 .\templates\query.html:100
 msgid "description"
 msgstr ""
 
-#: .\models.py:78
+#: .\models.py:83
 msgid "query text"
 msgstr ""
 
-#: .\models.py:81
+#: .\models.py:86
 msgid "last modified"
 msgstr ""
 
-#: .\models.py:82
+#: .\models.py:87
 msgid "last editor"
 msgstr ""
 
-#: .\models.py:85
+#: .\models.py:90
 msgid "SPARQL query definition"
 msgstr ""
 
-#: .\models.py:86
+#: .\models.py:91
 msgid "SPARQL query definitions"
 msgstr ""
 
-#: .\models.py:100 .\templates\eurowiki_base.html:74
+#: .\models.py:105 .\templates\_main_menu.html:9 .\templates\query.html:4
+#: .\templates\query.html:56
 msgid "query"
 msgstr ""
 
-#: .\models.py:101
+#: .\models.py:106
 msgid "query result"
 msgstr ""
 
-#: .\models.py:103
+#: .\models.py:108
 msgid "execution time"
 msgstr ""
 
-#: .\models.py:104
+#: .\models.py:109
 msgid "executor"
 msgstr ""
 
-#: .\models.py:107
+#: .\models.py:112
 msgid "SPARQL query execution"
 msgstr ""
 
-#: .\models.py:108
+#: .\models.py:113
 msgid "SPARQL query executions"
+msgstr ""
+
+#: .\resources.py:228
+msgid "Austria"
+msgstr ""
+
+#: .\resources.py:229
+msgid "Belgium"
+msgstr ""
+
+#: .\resources.py:230
+msgid "Bulgaria"
+msgstr ""
+
+#: .\resources.py:231
+msgid "Croatia"
+msgstr ""
+
+#: .\resources.py:232
+msgid "Republic of Cyprus"
+msgstr ""
+
+#: .\resources.py:233
+msgid "Czech Republic"
+msgstr ""
+
+#: .\resources.py:234
+msgid "Denmark"
+msgstr ""
+
+#: .\resources.py:235
+msgid "Estonia"
+msgstr ""
+
+#: .\resources.py:236
+msgid "Finland"
+msgstr ""
+
+#: .\resources.py:237
+msgid "France"
+msgstr ""
+
+#: .\resources.py:238
+msgid "Germany"
+msgstr ""
+
+#: .\resources.py:239
+msgid "Greece"
+msgstr ""
+
+#: .\resources.py:240
+msgid "Ireland"
+msgstr ""
+
+#: .\resources.py:241
+msgid "Italy"
+msgstr ""
+
+#: .\resources.py:242
+msgid "Latvia"
+msgstr ""
+
+#: .\resources.py:243
+msgid "Lithuania"
+msgstr ""
+
+#: .\resources.py:244
+msgid "Luxembourg"
+msgstr ""
+
+#: .\resources.py:245
+msgid "Malta"
+msgstr ""
+
+#: .\resources.py:246
+msgid "Netherlands"
+msgstr ""
+
+#: .\resources.py:247
+msgid "Poland"
+msgstr ""
+
+#: .\resources.py:248
+msgid "Portugal"
+msgstr ""
+
+#: .\resources.py:249
+msgid "Romania"
+msgstr ""
+
+#: .\resources.py:250
+msgid "Slovakia"
+msgstr ""
+
+#: .\resources.py:251
+msgid "Slovenia"
+msgstr ""
+
+#: .\resources.py:252
+msgid "Spain"
+msgstr ""
+
+#: .\resources.py:253
+msgid "Sweden"
+msgstr ""
+
+#: .\resources.py:254
+msgid "Hungary"
+msgstr ""
+
+#: .\resources.py:262
+msgid "English"
+msgstr ""
+
+#: .\resources.py:263
+msgid "Italian"
+msgstr ""
+
+#: .\resources.py:264
+msgid "German"
+msgstr ""
+
+#: .\resources.py:265
+msgid "Spanish"
+msgstr ""
+
+#: .\resources.py:266
+msgid "French"
+msgstr ""
+
+#: .\resources.py:267
+msgid "Bulgarian"
+msgstr ""
+
+#: .\resources.py:268
+msgid "Czech"
+msgstr ""
+
+#: .\resources.py:269
+msgid "Danish"
+msgstr ""
+
+#: .\resources.py:270
+msgid "Greek"
+msgstr ""
+
+#: .\resources.py:271
+msgid "Estonian"
+msgstr ""
+
+#: .\resources.py:272
+msgid "Finnish"
+msgstr ""
+
+#: .\resources.py:273
+msgid "Irish"
+msgstr ""
+
+#: .\resources.py:274
+msgid "Croatian"
+msgstr ""
+
+#: .\resources.py:275
+msgid "Hungarian"
+msgstr ""
+
+#: .\resources.py:276
+msgid "Lithuanian"
+msgstr ""
+
+#: .\resources.py:277
+msgid "Latvian"
+msgstr ""
+
+#: .\resources.py:278
+msgid "Maltese"
+msgstr ""
+
+#: .\resources.py:279
+msgid "Dutch"
+msgstr ""
+
+#: .\resources.py:280
+msgid "Polish"
+msgstr ""
+
+#: .\resources.py:281
+msgid "Portuguese"
+msgstr ""
+
+#: .\resources.py:282
+msgid "Romanian"
+msgstr ""
+
+#: .\resources.py:283
+msgid "Slovak"
+msgstr ""
+
+#: .\resources.py:284
+msgid "Slovenian"
+msgstr ""
+
+#: .\resources.py:285
+msgid "Swedish"
 msgstr ""
 
 #: .\search_indexes.py:61
@@ -178,10 +411,9 @@ msgstr ""
 #: .\templates\_breadcrumb.html:26 .\templates\_breadcrumb.html:30
 #: .\templates\_breadcrumb.html:41 .\templates\_breadcrumb.html:51
 #: .\templates\_breadcrumb.html:54 .\templates\_breadcrumb.html:59
-#: .\templates\_breadcrumb.html:68 .\templates\_props_subtree.html:38
-#: .\templates\country.html:63 .\templates\country.html:121
-#: .\templates\edit_item.html:60 .\templates\eurowiki_base.html:152
-#: .\templates\item.html:61
+#: .\templates\_breadcrumb.html:68 .\templates\_props_subtree.html:26
+#: .\templates\_single_statement.html:10 .\templates\edit_item.html:61
+#: .\templates\eurowiki_base.html:146 .\templates\item.html:41
 msgid "view"
 msgstr ""
 
@@ -192,9 +424,9 @@ msgstr ""
 
 #: .\templates\_breadcrumb.html:26 .\templates\_breadcrumb.html:30
 #: .\templates\_breadcrumb.html:41 .\templates\_breadcrumb.html:54
-#: .\templates\_breadcrumb.html:59 .\templates\_props_subtree.html:38
-#: .\templates\country.html:63 .\templates\country.html:121
-#: .\templates\edit_item.html:60 .\templates\item.html:61
+#: .\templates\_breadcrumb.html:59 .\templates\_props_subtree.html:26
+#: .\templates\_single_statement.html:10 .\templates\edit_item.html:61
+#: .\templates\item.html:41
 msgid "item"
 msgstr ""
 
@@ -204,28 +436,45 @@ msgid "edit"
 msgstr ""
 
 #: .\templates\_breadcrumb.html:43 .\templates\_breadcrumb.html:61
-#: .\templates\_breadcrumb.html:70 .\templates\country.html:159
-#: .\templates\edit_item.html:91 .\templates\edit_statement.html:5
-#: .\templates\edit_statement.html:14 .\templates\item.html:89
+#: .\templates\_breadcrumb.html:70 .\templates\country.html:44
+#: .\templates\edit_item.html:80 .\templates\edit_statement.html:5
+#: .\templates\edit_statement.html:14 .\templates\item.html:141
 msgid "add"
 msgstr ""
 
 #: .\templates\_breadcrumb.html:43 .\templates\_breadcrumb.html:61
-#: .\templates\_breadcrumb.html:70 .\templates\country.html:159
-#: .\templates\edit_item.html:91 .\templates\edit_statement.html:5
-#: .\templates\edit_statement.html:14 .\templates\item.html:89
+#: .\templates\_breadcrumb.html:70 .\templates\country.html:44
+#: .\templates\edit_item.html:80 .\templates\edit_statement.html:5
+#: .\templates\edit_statement.html:14 .\templates\item.html:141
 msgid "statement"
+msgstr ""
+
+#: .\templates\_comments.html:5
+msgid "comments"
 msgstr ""
 
 #: .\templates\_comments.html:5
 msgid "see/add comments to this property"
 msgstr ""
 
-#: .\templates\_props_subtree.html:36 .\templates\country.html:61
-#: .\templates\country.html:119 .\templates\edit_item.html:12
-#: .\templates\edit_item.html:60 .\templates\item.html:13
-#: .\templates\item.html:61
+#: .\templates\_main_menu.html:12
+msgid "contributions"
+msgstr ""
+
+#: .\templates\_main_menu.html:15
+msgid "help"
+msgstr ""
+
+#: .\templates\_props_subtree.html:24 .\templates\_single_statement.html:8
+#: .\templates\edit_item.html:12 .\templates\edit_item.html:61
+#: .\templates\item.html:14 .\templates\item.html:41
 msgid "edit the properties of this item"
+msgstr ""
+
+#: .\templates\_single_statement.html:6 .\templates\edit_item.html:29
+#: .\templates\edit_item.html:36 .\templates\edit_item.html:38
+#: .\templates\edit_item.html:56
+msgid "remove this property"
 msgstr ""
 
 #: .\templates\account\login.html:7 .\templates\account\login.html:32
@@ -245,6 +494,10 @@ msgstr ""
 msgid "Forgot Password?"
 msgstr ""
 
+#: .\templates\autocomplete.html:4
+msgid "label or description"
+msgstr ""
+
 #: .\templates\autocomplete.html:14
 msgid "no item"
 msgstr ""
@@ -253,71 +506,72 @@ msgstr ""
 msgid "view countries"
 msgstr ""
 
-#: .\templates\country.html:59 .\templates\country.html:117
-#: .\templates\edit_item.html:28 .\templates\edit_item.html:35
-#: .\templates\edit_item.html:37 .\templates\edit_item.html:55
-msgid "remove this property"
-msgstr ""
-
-#: .\templates\country.html:190
+#: .\templates\country.html:216 .\templates\edit_item.html:103
+#: .\templates\query.html:190 .\templates\query.html:220
 msgid "Warning! ID attribute: a value is missing"
 msgstr ""
 
-#: .\templates\country.html:195
+#: .\templates\country.html:221 .\templates\edit_item.html:108
 msgid "do you really want to remove this item"
 msgstr ""
 
-#: .\templates\country.html:198
+#: .\templates\country.html:224 .\templates\edit_item.html:111
+#: .\templates\query.html:198
 msgid "Yes"
 msgstr ""
 
-#: .\templates\country.html:202
+#: .\templates\country.html:228 .\templates\edit_item.html:115
+#: .\templates\query.html:202
 msgid "No"
 msgstr ""
 
-#: .\templates\edit_item.html:89 .\templates\edit_statement.html:22
-#: .\templates\query.html:18 .\templates\query.html:29
+#: .\templates\edit_item.html:78 .\templates\edit_statement.html:22
+#: .\templates\query.html:80 .\templates\query.html:90
 msgid "save"
 msgstr ""
 
-#: .\templates\edit_item.html:90 .\templates\query.html:19
-#: .\templates\query.html:30
+#: .\templates\edit_item.html:79 .\templates\query.html:81
+#: .\templates\query.html:91
 msgid "save & continue"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:98
+#: .\templates\eurowiki_base.html:89
 msgid "Log out"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:102
+#: .\templates\eurowiki_base.html:93
 msgid "Log in"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:135
+#: .\templates\eurowiki_base.html:126
 msgid "filter for"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:151
-msgid "uncheck"
+#: .\templates\eurowiki_base.html:145
+msgid "check"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:166
+#: .\templates\eurowiki_base.html:145
+msgid "clear"
+msgstr ""
+
+#: .\templates\eurowiki_base.html:161
 msgid "built by"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:166
+#: .\templates\eurowiki_base.html:161
 msgid "with"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:166
+#: .\templates\eurowiki_base.html:161
 msgid "and"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:180
-msgid "Search ... (at least 3 characters)"
+#: .\templates\eurowiki_base.html:175
+msgid "Search ... (at least 3 chars)"
 msgstr ""
 
-#: .\templates\eurowiki_base.html:199
+#: .\templates\eurowiki_base.html:194
 msgid "Select at least 1 country"
 msgstr ""
 
@@ -339,89 +593,118 @@ msgstr ""
 msgid "Uri statements"
 msgstr ""
 
-#: .\templates\query.html:7
-msgid "running query"
+#: .\templates\query.html:62
+msgid "execution results"
 msgstr ""
 
-#: .\templates\query.html:14
+#: .\templates\query.html:69
+msgid "No result"
+msgstr ""
+
+#: .\templates\query.html:75 .\templates\query.html:104
 msgid "edit query"
 msgstr ""
 
-#: .\templates\query.html:20 .\templates\query.html:31
+#: .\templates\query.html:82 .\templates\query.html:92
 msgid "cancel"
 msgstr ""
 
-#: .\templates\query.html:25
+#: .\templates\query.html:86
 msgid "define new query"
 msgstr ""
 
-#: .\templates\query.html:38
-msgid "definition of query"
+#: .\templates\query.html:98
+msgid "query definition"
 msgstr ""
 
-#: .\templates\query.html:41
+#: .\templates\query.html:101
 msgid "SPARQL text"
 msgstr ""
 
-#: .\templates\query.html:45
-msgid "saved query definitions"
-msgstr ""
-
-#: .\templates\query.html:51
-msgid "execute query"
-msgstr ""
-
-#: .\templates\query.html:52
-msgid "view definition"
-msgstr ""
-
-#: .\templates\query.html:53
+#: .\templates\query.html:104
 msgid "show edit view"
 msgstr ""
 
-#: .\templates\query.html:54
+#: .\templates\query.html:105
+msgid "list saved queries"
+msgstr ""
+
+#: .\templates\query.html:109
+msgid "saved query definitions"
+msgstr ""
+
+#: .\templates\query.html:117
+msgid "view definition"
+msgstr ""
+
+#: .\templates\query.html:128
 msgid "delete query definition"
 msgstr ""
 
-#: .\templates\query.html:60
-msgid "No query defined yet"
-msgstr ""
-
-#: .\templates\query.html:65
+#: .\templates\query.html:137
 msgid "add query"
 msgstr ""
 
-#: .\templates\query.html:71
-msgid "list all saved queries"
+#: .\templates\query.html:142
+msgid "No query defined yet"
 msgstr ""
 
-#: .\templates\statement_comments.html:17
-#: .\templates\statement_comments.html:19
+#: .\templates\query.html:148
+msgid "query execution"
+msgstr ""
+
+#: .\templates\query.html:154
+msgid "move up selected option(s)"
+msgstr ""
+
+#: .\templates\query.html:162
+msgid ""
+"the choice of the top N languages impact queries with $L1, .. $LN parameters"
+msgstr ""
+
+#: .\templates\query.html:162
+msgid "you can select and move up options"
+msgstr ""
+
+#: .\templates\query.html:163
+msgid "the tab-separated-values (TSV) format is used, in fact"
+msgstr ""
+
+#: .\templates\query.html:164
+msgid "run query"
+msgstr ""
+
+#: .\templates\query.html:195
+msgid "do you really want to remove this query"
+msgstr ""
+
+#: .\templates\statement_comments.html:5
+#: .\templates\statement_comments.html:28
 msgid "Comments"
 msgstr ""
 
-#: .\templates\statement_comments.html:17
-msgid "disable"
-msgstr ""
-
-#: .\templates\statement_comments.html:17
-msgid "enable"
-msgstr ""
-
-#: .\templates\statement_comments.html:40
+#: .\templates\statement_comments.html:38
 msgctxt "on date"
 msgid "on"
 msgstr ""
 
-#: .\templates\statement_comments.html:54
-#: .\templates\statement_comments.html:60
+#: .\templates\statement_comments.html:52
+#: .\templates\statement_comments.html:58
 msgid "Comments are closed."
 msgstr ""
 
-#: .\templates\statement_comments.html:58
+#: .\templates\statement_comments.html:56
 msgid "No comments yet."
 msgstr ""
 
-#: .\templates\statement_comments.html:75
+#: .\templates\statement_comments.html:73
 msgid "Add comment"
+msgstr ""
+
+#: .\views.py:46
+msgid "No homepage is present yet."
+msgstr ""
+
+#: .\views.py:57 .\views.py:64
+msgid "The page you are looking for is not yet present."
 msgstr ""

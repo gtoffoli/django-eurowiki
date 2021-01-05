@@ -3,87 +3,169 @@
 
 {% block head_title %}{% trans "query"|capfirst %}{% endblock head_title %}
 
+{% block extra_style_head %}
+<style>
+.my_form_inline {
+}
+.my_form_inline .my_form-group {
+  margin-right: 14px;
+  display: inline-block;
+  vertical-align: top;
+}
+.my_form_inline .my_form-group label,
+.my_form_inline .my_form-group select { vertical-align: top;}
+
+ul#id_output_mode {
+	list-style-type: none;
+	text-align: left;
+}
+</style>
+{% endblock extra_style_head %}
+
+{% block extra_script_head %}
+<script type="text/javascript">
+/* see https://www.tomred.net/css-html-js/reorder-option-elements-of-an-html-select.html */
+function moveUp(selectId) {
+	var selectList = document.getElementById(selectId);
+	var selectOptions = selectList.getElementsByTagName('option');
+	for (var i = 1; i < selectOptions.length; i++) {
+		var opt = selectOptions[i];
+		if (opt.selected) {
+			selectList.removeChild(opt);
+			selectList.insertBefore(opt, selectOptions[i - 1]);
+		}
+    }
+}
+function selectTop(selectId) {
+	var selectList = document.getElementById(selectId);
+	var selectOptions = selectList.getElementsByTagName('option');
+	for (var i = 0; i < selectOptions.length; i++) {
+		var opt = selectOptions[i];
+		if (i < 2)
+			selectOptions[i].selected=true;
+		else
+			selectOptions[i].selected=false;
+    }
+}
+</script>{% endblock extra_script_head %}
+
 {% block body %}
 
-{% if query and query_result %}
+{% if query %}
   <div class="text-center p-1 mb-2">
-	<div><span class="h5">{% trans "running query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst }}</span></div>
+	<div><span class="h5">{% trans "query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst }}</span></div>
 	<div>{{ query.description|capfirst }}</div>
   </div>
-  {% if not dataframe.empty %}
+{% endif %}
+{% if query and query_result %}
+  <div class="text-center p-1 mb-2">
+	<div><span class="h5">{% trans "execution results"|capfirst %}</span></div>
+  </div>
+  {% if dataframe %}
 	<div class="table-responsive">
 	{{ query_result|safe }}
-	</div>
-	<div class="d-flex justify-content-center mt-2 mb-2">
-		<a class="btn btn-light" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}">{% trans "export result"|capfirst %}</a>
 	</div>
   {% else %}
   <div>{% trans "No result" %}</div>
   {% endif %}
-{% elif form %}
+{% endif %}
+{% if edit_form %}
 	{% if query %}
 	<div class="text-center p-1 mb-2">
-	    <span class="h5">{% trans "edit query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst }}</span>
-  </div>
+	    <span class="h5">{% trans "edit query"|capfirst %}</span>
+    </div>
 	<form action="/query/" method="post">{% csrf_token %}
-		{{ form|crispy}}
+		{{ edit_form|crispy}}
 		<div class="d-flex justify-content-center pt-4 mb-2">
-		    <button type="submit" class="btn btn-light " name="save" value="{% trans "save"|capfirst %}">{% trans "save"|capfirst %}</button>
-		    <button type="submit" class="btn btn-light ml-2" name="save_continue" value="{% trans "save & continue"|capfirst %}">{% trans "save & continue"|capfirst %}</button>
+		    <button type="submit" class="btn btn-light " name="save" value="save">{% trans "save"|capfirst %}</button>
+		    <button type="submit" class="btn btn-light ml-2" name="save_continue" value="save_continue">{% trans "save & continue"|capfirst %}</button>
 		    <a class="btn btn-light ml-2" href="/query/{{ query.id }}/">{% trans "cancel"|capfirst %}</a>
 		</div>
 	</form>
 	{% else %}
 	<div class="text-center p-1 mb-2"><span class="h4">{% trans "define new query"|capfirst %}</span></div>
 	<form action="/query/" method="post">{% csrf_token %}
-		{{ form|crispy}}
+		{{ edit_form|crispy}}
 		<div class="d-flex justify-content-center pt-4 mb-2">
-		    <button type="submit" class="btn btn-light" name="save" value="{% trans "save"|capfirst %}">{% trans "save"|capfirst %}</button>
-		    <button type="submit" class="btn btn-light ml-2" name="save_continue" value="{% trans "save & continue"|capfirst %}">{% trans "save & continue"|capfirst %}</button>
+		    <button type="submit" class="btn btn-light" name="save" value="save">{% trans "save"|capfirst %}</button>
+		    <button type="submit" class="btn btn-light ml-2" name="save_continue" value="save_continue">{% trans "save & continue"|capfirst %}</button>
 		    <a class="btn btn-light ml-2" href="/query/">{% trans "cancel"|capfirst %}</a>
 		</div>
 		</form>
 	{% endif %}
-{% elif query %}
-   <div class="text-center p-1 mb-2"><span class="h5">{% trans "definition of query"|capfirst %}:</span><span class="h4"> {{ query.title|capfirst}}</span></div>
+{% endif %}
+{% if query and not edit_form %}
+    <div class="text-center p-1 mb-2"><span class="h5">{% trans "query definition"|capfirst %}</span></div>
 	<dl>
 	<dt>{% trans "description"|capfirst %}</dt> <dd>{{ query.description }}</dd>
 	<dt>{% trans "SPARQL text"|capfirst %}</dt> <dd><pre>{{ query.text }}</pre></dd>
 	</dl>
-{% else %}
+    <div class="text-center">
+       {% if can_edit %}<a class="btn btn-light" href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}">{% trans "edit query"|capfirst %}</a>{% endif %}
+       <a class="btn btn-light" href="/query/">{% trans "list saved queries"|capfirst %}</a>
+    </div>
+{% endif %}
+{% if not query and not edit_form %}
 	<div class="text-center p-1 mb-2"><span class="h4">{% trans "saved query definitions"|capfirst %}</span></div>
 	{% if queries.count %}
 		<ul class="list-unstyled">
 		{% for query in queries %}
 			<li class="mb-3">
-			    <div class="row flex-xl-nowrap align-items-center">
-			        <div class="col-12 col-md-8 col-xl-8"><h5 class="mb-0">{{ query.title }}</h5><p>{{ query.description }}</p></div>
+			<div class="row flex-xl-nowrap align-items-center">
+			  <div class="col-12 col-md-8 col-xl-8">
+			    <h6 class="mb-0">
+			    <a href="/query/{{ query.id }}/" title="{% trans "view definition" %}">{{ query.title }}</a>
+			    </h6>
+			    <p>{{ query.description }}</p>
+			  </div>
               <div class="col-12 col-md-4 col-xl-4 text-center">
+{% comment %}
                 <a class="btn" href="/query/{{ query.id }}/run/" title="{% trans "execute query" %}"><i class="fa fa-play"></i></a>
-		            <a class="btn ml-2" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}"><i class="fa fa-download"></i></a>
-		            <a class="btn ml-2" href="/query/{{ query.id }}/" title="{% trans "view definition" %}"><i class="fa fa-eye"></i></a>
-		            {% if can_edit %}<a class="btn ml-2" href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit"></i></a>{% endif %}
-		            {% if can_delete %}<a class="btn ml-2 deleteQuery" id="/query/{{ query.id }}/delete/" style="color:red" href="#" title="{% trans "delete query definition" %}"><i class="fa fa-times-circle"></i></a>{% endif %}
+	            <a class="btn ml-2" href="/query/{{ query.id }}/export/" title="{% trans "execute query and export result" %}"><i class="fa fa-download"></i></a>
+	            {% if can_edit %}<a class="btn ml-2" href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit"></i></a>{% endif %}
+	            <a class="btn ml-2" href="/query/{{ query.id }}/" title="{% trans "view definition" %}"><i class="fa fa-eye"></i></a>
+{% endcomment %}
+	            {% if can_delete %}<a class="btn ml-2 deleteQuery" id="/query/{{ query.id }}/delete/" style="color:red" href="#" title="{% trans "delete query definition" %}"><i class="fa fa-times-circle"></i></a>{% endif %}
               </div>
-          </div>
+              </div>
 			</li>
 		{% endfor %}
 		</ul>
-
+		{% if can_edit %}
+		  <div class="text-center p-1 mb-2">
+			<form action="" method="post">{% csrf_token %}
+				<button type="submit" class="btn btn-light" name="new_query" value="add">{% trans "add query"|capfirst %}</button>
+			</form>	
+		  </div>
+		{% endif %}
 	{% else %}
 		<div>{% trans "No query defined yet" %}</div>
 	{% endif %}
-  {% if can_edit %}
-  <div class="d-flex justify-content-center pt-3 mb-2">
-	<form action="" method="post">{% csrf_token %}
-			<button type="submit" class="btn btn-light" name="new_query" value="{% trans "add query"|capfirst %}">{% trans "add query"|capfirst %}</button>
-	</form>	
-  </div>
-	{% endif %}
-
 {% endif %}
 {% if query %}
-	<div class="text-center mt-4 mb-2"><a class="btn btn-light" href="/query/">{% trans "list all saved queries"|capfirst %}</a></div>
+  <div class="text-center p-1 mb-2">
+	{% if not edit_form %}
+      <div class="text-center p-1 mb-2"><span class="h5">{% trans "query execution"|capfirst %}</span></div>
+      <form action="/query/run/" method="post" class="my_form_inline">{% csrf_token %}
+        {% for field in query_exec_form.hidden_fields %}{{ field }}{% endfor %}
+		<fieldset class="my-fieldset">
+        {% for field in query_exec_form.visible_fields %}
+		  {% if field.name == 'languages' %}
+            <div class="my_form-group marginB10" style="vertical-align: bottom; height: 120px; line-height: 120px;"><a class=optionUp id="optionUp" href="#" title="{% trans "move up selected option(s)" %}" style="display: inline-block; vertical-align: top;"><i class="fa fa-arrow-up" style="vertical-align: middle;"></i></a></div>
+		  {% endif %}
+		  <div class="my_form-group marginB10"><label>{{ field.label|capfirst }}</label><br>
+		  {{ field }}
+		  <br><small>{{ field.help_text }}</small></div> &nbsp;
+        {% endfor %}
+		</fieldset>
+	    <div style="text-align: center;"><small>
+			(*) {% trans "the choice of the top N languages impact queries with $L1, .. $LN parameters"|capfirst %}: {% trans "you can select and move up options" %}<br/>
+	    	(**) {% trans "the tab-separated-values (TSV) format is used, in fact"|capfirst %}</small></div>
+		<button class="btn btn-light" name="exec" value="exec" onclick="selectTop('select_languages'); this.form.submit();">{% trans "run query"|capfirst %}</b>
+	  </form>
+	  </div>
+    {% endif %}
+  </div>
 {% endif %}
 
 {% endblock body %}
@@ -128,6 +210,17 @@
              }
              
           });
+        });
+
+        $('a.optionUp').on('click', function(event){
+            event.preventDefault();
+            this_id = $(this).attr('id');
+            console.log (this_id);
+            if (!this_id) {
+              alert ('{% trans "Warning! ID attribute: a value is missing" %}');
+              return false
+            }
+            moveUp('select_languages');
         });
     });
 </script>

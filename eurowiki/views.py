@@ -25,8 +25,8 @@ from rdflib_django.utils import get_named_graph, get_conjunctive_graph
 
 from .models import StatementExtension, SparqlQuery
 from .classes import Country, Item, Predicate, StatementProxy
-from .forms import StatementForm, QueryForm
-from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES
+from .forms import StatementForm, QueryForm, QueryExecForm, apply_language_priorities
+from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES, LANGUAGE_CHOICES
 from .sparql import run_query, query_result_to_dataframe, dataframe_to_html, dataframe_to_csv, get_query_variables
 from .utils import is_bnode_id, node_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
@@ -77,7 +77,7 @@ def list_namespaces(request):
     return render(request, 'list_namespaces.html', {'namespaces': namespaces})
 
 def list_uri_statements(request):
-    lang = get_language()
+    lang = get_language()[:2]
     statements = URIStatement.objects.all().order_by('context', 'subject', 'predicate')
     statements = sorted(statements, key=lambda s: settings.ORDERED_PREDICATE_KEYS.index(id_from_uriref(s.predicate)))
     statement_dicts = [{'graph': friend_graph(s.context), 'subject': friend_uri(s.subject, lang=lang), 'predicate': friend_uri(s.predicate, lang=lang), 'object': friend_uri(s.object, lang=lang)}
@@ -85,14 +85,14 @@ def list_uri_statements(request):
     return render(request, 'list_uri_statements.html', {'statement_dicts': statement_dicts})
 
 def list_literal_statements(request):
-    lang = get_language()
+    lang = get_language()[:2]
     statements = LiteralStatement.objects.all().order_by('context', 'subject', 'predicate')
     statement_dicts = [{'graph': friend_graph(s.context), 'subject': friend_uri(s.subject, lang=lang), 'predicate': friend_uri(s.predicate, lang=lang), 'object': str(s.object)}
                        for s in statements]
     return render(request, 'list_literal_statements.html', {'statement_dicts': statement_dicts})
 
 def list_statements(request, graph_identifier=None):
-    lang = get_language()
+    lang = get_language()[:2]
     if graph_identifier:
         graph = get_named_graph(graph_identifier)
     else:
@@ -592,16 +592,29 @@ class Query(View):
     form_class = QueryForm
     template_name = 'query.html'
 
-    def get(self, request, query_id='', edit_query_id='', run_query_id='', export_query_id='', delete_query_id=''):
+    def get(self, request, query_id='', edit_query_id='', run_query_id='', delete_query_id='', query_exec_form = None, languages = None, columns=None, output_mode='show'):
+        if languages:
+            l1 = languages[0]
+            l2 = languages[1]
+        else:
+            languages = settings.LANGUAGE_CODES[:2]
+            l1 = get_language()[:2]
+            if languages[0]==l1:
+                l2 = languages[1]
+            else:
+                l2 = languages[0]
+                languages[0] = l1
+                languages[1] = l2
         data_dict = {}
-        run_query_id = run_query_id or export_query_id
         if run_query_id:
-            query = get_object_or_404(SparqlQuery, pk=run_query_id)
-            data_dict['query'] = query
-            query_result = run_query(query.text)
-            # dataframe = query_result_to_dataframe(query_result)
-            dataframe = query_result_to_dataframe(query_result, columns=get_query_variables(query.text))
-            if export_query_id:
+            query_id = run_query_id
+            query = get_object_or_404(SparqlQuery, pk=query_id)
+            query_text = query.text.replace('$L1', l1).replace('$L2', l2)
+            variables = get_query_variables(query_text)
+            columns = columns or variables
+            query_result = run_query(query_text)
+            dataframe = query_result_to_dataframe(query_result, columns, variables)
+            if output_mode=='export':
                 query_result = dataframe_to_csv(dataframe)
                 response = HttpResponse(query_result)
                 mimetype = 'application/vnd.ms-excel'
@@ -612,15 +625,16 @@ class Query(View):
                 return response
             query_result = dataframe_to_html(dataframe)
             data_dict['query_result'] = query_result
-            data_dict['dataframe'] = dataframe
+            data_dict['dataframe'] = not dataframe.empty
         elif query_id:
             query = get_object_or_404(SparqlQuery, pk=query_id)
-            data_dict['query'] = query
+            query_text = query.text.replace('$L1', l1).replace('$L2', l2)
+            variables = get_query_variables(query_text)
         elif edit_query_id:
             query = get_object_or_404(SparqlQuery, pk=edit_query_id)
             data_dict['query'] = query
             form = self.form_class(instance=query)
-            data_dict['form'] = form
+            data_dict['edit_form'] = form
         elif delete_query_id:
             query = get_object_or_404(SparqlQuery, pk=delete_query_id)
             query.delete()
@@ -629,6 +643,17 @@ class Query(View):
             queries = SparqlQuery.objects.all().order_by('title')
             data_dict['queries'] = queries
             query = queries and queries[0] or None
+        if query_id or run_query_id:
+            data_dict['query'] = query
+            if run_query_id:
+                if languages:
+                    query_exec_form.fields['languages'].choices = apply_language_priorities(LANGUAGE_CHOICES, languages)
+                # query_exec_form.fields['columns'].choices = [[c, c] for c in columns]
+            else:
+                query_exec_form = QueryExecForm()
+                query_exec_form.initial = {'query': query_id, 'languages': languages, 'columns': variables, 'output_mode': output_mode}
+            query_exec_form.fields['columns'].choices = [[c, c] for c in variables]
+            data_dict['query_exec_form'] = query_exec_form
         data_dict['can_edit'] = query and query.can_edit(request)
         data_dict['can_delete'] = query and query.can_delete(request)
         return render(request, self.template_name, data_dict)
@@ -638,6 +663,7 @@ class Query(View):
         post = request.POST
         if post.get('new_query', ''):
             form = self.form_class()
+            data_dict['edit_form'] = form
         elif post.get('save', '') or post.get('save_continue', ''):
             query_id = request.POST.get('id')
             if query_id:
@@ -653,7 +679,24 @@ class Query(View):
                     return HttpResponseRedirect('/query/')
             else:
                 print (form.errors)
-        data_dict['form'] = form
+            data_dict['edit_form'] = form
+        elif post.get('exec', ''):
+            post = request.POST
+            query_exec_form = QueryExecForm(post)
+            query_id = post.get('query', '')
+            query = get_object_or_404(SparqlQuery, pk=query_id)
+            columns = get_query_variables(query.text)
+            query_exec_form.fields['columns'].choices = [[c, c] for c in columns]
+            if query_exec_form.is_valid():
+                data = query_exec_form.cleaned_data
+                query_id = data['query']
+                query = get_object_or_404(SparqlQuery, pk=query_id)
+                languages = data['languages']
+                columns = data['columns']
+                output_mode = data['output_mode']
+                return self.get(request, run_query_id=query_id, query_exec_form=query_exec_form, languages=languages, columns=columns, output_mode=output_mode)
+            else:
+                print (query_exec_form.errors)
         return render(request, self.template_name, data_dict)
 
 def old_item_autocomplete(request):
