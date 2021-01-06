@@ -27,7 +27,8 @@ from .models import StatementExtension, SparqlQuery
 from .classes import Country, Item, Predicate, StatementProxy
 from .forms import StatementForm, QueryForm, QueryExecForm, apply_language_priorities
 from .forms import LITERAL_PREDICATE_CHOICES, ITEM_PREDICATE_CHOICES, COUNTRY_PREDICATE_CHOICES, LANGUAGE_CHOICES
-from .sparql import run_query, query_result_to_dataframe, dataframe_to_html, dataframe_to_csv, get_query_variables
+from .sparql import run_query, query_result_to_dataframe, dataframe_to_html, dataframe_to_csv
+from .sparql import get_query_variables, get_language_parameters
 from .utils import is_bnode_id, node_id, make_node, remove_node, make_uriref, id_from_uriref, friend_uri, friend_graph
 
 def eu_countries(language=settings.LANGUAGE_CODE):
@@ -645,6 +646,7 @@ class Query(View):
             query = queries and queries[0] or None
         if query_id or run_query_id:
             data_dict['query'] = query
+            data_dict['language_parameters'] = get_language_parameters(query.text)
             if run_query_id:
                 if languages:
                     query_exec_form.fields['languages'].choices = apply_language_priorities(LANGUAGE_CHOICES, languages)

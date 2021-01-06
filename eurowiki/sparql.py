@@ -42,8 +42,8 @@ def dataframe_to_csv(df, sep='\t', index=False):
     txt = df.to_csv(sep=sep, index=index)
     return txt
 
-def get_query_variables(query):
-    tokens = query.split()
+def get_query_variables(text):
+    tokens = text.split()
     variables = []
     select = False
     coalesce = 0
@@ -62,3 +62,10 @@ def get_query_variables(query):
         elif select and not coalesce and token.startswith('?'):
             variables.append(token.replace('?',''))
     return variables
+
+def get_language_parameters(text):
+    parameters = []
+    for p in ['$L1', '$L2', 'L3']:
+        if text.count(p):
+            parameters.append(p)
+    return parameters

@@ -150,17 +150,21 @@ function selectTop(selectId) {
         {% for field in query_exec_form.hidden_fields %}{{ field }}{% endfor %}
 		<fieldset class="my-fieldset">
         {% for field in query_exec_form.visible_fields %}
-		  {% if field.name == 'languages' %}
-            <div class="my_form-group marginB10" style="vertical-align: bottom; height: 120px; line-height: 120px;"><a class=optionUp id="optionUp" href="#" title="{% trans "move up selected option(s)" %}" style="display: inline-block; vertical-align: top;"><i class="fa fa-arrow-up" style="vertical-align: middle;"></i></a></div>
-		  {% endif %}
-		  <div class="my_form-group marginB10"><label>{{ field.label|capfirst }}</label><br>
-		  {{ field }}
-		  <br><small>{{ field.help_text }}</small></div> &nbsp;
+		  {% if field.name != 'languages' or language_parameters %}
+		    {% if field.name == 'languages' %}
+              <div class="my_form-group marginB10"><a class="optionUp btn btn-light" id="optionUp" href="javascript: moveUp('select_languages');" title="{% trans "move up selected option(s)" %}"  style="margin-top: 4em;"><i class="fa fa-arrow-up" style="vertical-align: middle;"></i></a></div>
+	        {% endif %}
+		    <div class="my_form-group marginB10"><label>{{ field.label|capfirst }}</label><br>
+		    {{ field }}
+		    <br><small>{{ field.help_text }}</small></div> &nbsp;
+	      {% endif %}
         {% endfor %}
 		</fieldset>
 	    <div style="text-align: center;"><small>
+		  {% if language_parameters %}
 			(*) {% trans "the choice of the top N languages impact queries with $L1, .. $LN parameters"|capfirst %}: {% trans "you can select and move up options" %}<br/>
-	    	(**) {% trans "the tab-separated-values (TSV) format is used, in fact"|capfirst %}</small></div>
+	      {% endif %}
+	      (**) {% trans "the tab-separated-values (TSV) format is used, in fact"|capfirst %}</small></div>
 		<button class="btn btn-light" name="exec" value="exec" onclick="selectTop('select_languages'); this.form.submit();">{% trans "run query"|capfirst %}</b>
 	  </form>
 	  </div>
@@ -211,8 +215,9 @@ function selectTop(selectId) {
              
           });
         });
-
+/*
         $('a.optionUp').on('click', function(event){
+        	alert('optionUp');
             event.preventDefault();
             this_id = $(this).attr('id');
             console.log (this_id);
@@ -222,6 +227,7 @@ function selectTop(selectId) {
             }
             moveUp('select_languages');
         });
+*/
     });
 </script>
 {% endif %}
