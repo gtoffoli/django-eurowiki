@@ -29,7 +29,8 @@ RDF_PREFIX_ITEMS = RDF_PREFIXES.items()
 RDFS_LABEL = RDF_PREFIXES['rdfs']+'label'
 RDFS_COMMENT = RDF_PREFIXES['rdfs']+'comment'
 RDFS_MEMBER = RDF_PREFIXES['rdfs']+'member'
-RDF_BAG =  RDF_PREFIXES['rdf']+'Bag'
+RDFS_SEEALSO = RDF_PREFIXES['rdfs']+'seeAlso'
+RDF_BAG = RDF_PREFIXES['rdf']+'Bag'
 
 URI_LABEL_CODES = {
     "wd": 'Q', # wikidata items
@@ -140,6 +141,7 @@ PREDICATE_LABELS =  OrderedDict([
     ('P248', {'en': 'source', 'it': 'fonte',}), # (statement) source, fonte (dell'affermazione)
     ('P948', {'en': 'page banner', 'it': 'banner di pagina',}), #
     ('comment', {'en': 'comment', 'it': 'commento',}), #
+    ('seeAlso', {'en': 'see also', 'it': 'vedi anche',}), #
 ])
 PREDICATE_LABELS_KEYS = list(PREDICATE_LABELS.keys())
 
@@ -199,14 +201,14 @@ OTHER_EXTERNAL_RESOURCES = {
 }
 
 EW_TREE = OrderedDict([
-    ('P85', ('P1476', 'PUE1', 'PUE2', 'PUE17', 'PUE3', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national anthem: title, text auth., composer, ...
-    ('P163', ('P18', 'PUE2', 'PUE17', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828', 'PUE9', 'P854', 'P248', 'comment',),), # national flag: descr., img, prop., delib., date, ...
-    ('P237', ('P18', 'PUE2', 'PUE17', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national emblem: descr., img, prop., delib., date, ...
-    ('P1546', ('P1541', 'PUE1', 'PUE2', 'PUE17', 'PUE18', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), #national motto: text
-    ('PUE6', ('PUE2', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national monuments
-    ('P832', ('PUE2', 'PUE17', 'P837', 'PUE16', 'PUE4', 'PUE5', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment',),), # national (holi)days: title, day,  prop., delib., date, ...
-    ('P38', ('PUE2', 'P170', 'PUE3', 'P790', 'P571', 'P580', 'PUE4', 'P828', 'PUE7', 'PUE8', 'PUE9', 'P854', 'P248', 'PUE15', 'comment',),), # currency and coinage
-    ('P92', ('P953', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P580', 'PUE9', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248', 'comment',),), # national constitution
+    ('P85', ('P1476', 'PUE1', 'PUE2', 'PUE17', 'PUE3', 'P953', 'P676', 'P86', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment', 'seeAlso',),), # national anthem: title, text auth., composer, ...
+    ('P163', ('P18', 'PUE2', 'PUE17', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828', 'PUE9', 'P854', 'P248', 'comment', 'seeAlso',),), # national flag: descr., img, prop., delib., date, ...
+    ('P237', ('P18', 'PUE2', 'PUE17', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment', 'seeAlso',),), # national emblem: descr., img, prop., delib., date, ...
+    ('P1546', ('P1541', 'PUE1', 'PUE2', 'PUE17', 'PUE18', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment', 'seeAlso',),), #national motto: text
+    ('PUE6', ('PUE2', 'P170', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE7', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment', 'seeAlso',),), # national monuments
+    ('P832', ('PUE2', 'PUE17', 'P837', 'PUE16', 'PUE4', 'PUE5', 'PUE3', 'P790', 'PUE8', 'P571', 'P828','PUE9', 'P854', 'P248', 'comment', 'seeAlso',),), # national (holi)days: title, day,  prop., delib., date, ...
+    ('P38', ('PUE2', 'P170', 'PUE3', 'P790', 'P571', 'P580', 'PUE4', 'P828', 'PUE7', 'PUE8', 'PUE9', 'P854', 'P248', 'PUE15', 'comment', 'seeAlso',),), # currency and coinage
+    ('P92', ('P953', 'PUE2', 'PUE3', 'P790', 'PUE4', 'PUE5', 'PUE8', 'P571', 'P580', 'PUE9', 'PUE11', 'PUE12',  'PUE13', 'PUE14', 'P854', 'P248', 'comment', 'seeAlso',),), # national constitution
     # ('Bag', ('', 'P832',),), # container of members (monuments and days)
 ])
 EW_TREE_KEYS = list(EW_TREE.keys())

@@ -102,7 +102,6 @@ function selectTop(selectId) {
 	</dl>
     <div class="text-center">
        {% if can_edit %}<a class="btn btn-light" href="/query/{{ query.id }}/edit/" title="{% trans "show edit view" %}">{% trans "edit query"|capfirst %}</a>{% endif %}
-       <a class="btn btn-light" href="/query/">{% trans "list saved queries"|capfirst %}</a>
     </div>
 {% endif %}
 {% if not query and not edit_form %}
@@ -152,9 +151,9 @@ function selectTop(selectId) {
         {% for field in query_exec_form.visible_fields %}
 		  {% if field.name != 'languages' or language_parameters %}
 		    {% if field.name == 'languages' %}
-              <div class="my_form-group marginB10"><a class="optionUp btn btn-light" id="optionUp" href="javascript: moveUp('select_languages');" title="{% trans "move up selected option(s)" %}"  style="margin-top: 4em;"><i class="fa fa-arrow-up" style="vertical-align: middle;"></i></a></div>
+              <div class="my_form-group"><a class="optionUp btn btn-light" id="optionUp" href="javascript: moveUp('select_languages');" title="{% trans "move up selected option(s)" %}"  style="margin-top: 4em;"><i class="fa fa-arrow-up" style="vertical-align: middle;"></i></a></div>
 	        {% endif %}
-		    <div class="my_form-group marginB10"><label>{{ field.label|capfirst }}</label><br>
+		    <div class="my_form-group"><label>{{ field.label|capfirst }}</label><br>
 		    {{ field }}
 		    <br><small>{{ field.help_text }}</small></div> &nbsp;
 	      {% endif %}
@@ -169,6 +168,9 @@ function selectTop(selectId) {
 	  </form>
 	  </div>
     {% endif %}
+    <div class="text-center">
+       <a class="btn btn-light" href="/query/">{% trans "list saved queries"|capfirst %}</a>
+    </div>
   </div>
 {% endif %}
 

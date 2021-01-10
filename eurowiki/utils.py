@@ -38,7 +38,7 @@ def make_uriref(value, prefix=None):
             prefix = 'ewt'
         elif value.startswith('P'):
             prefix = 'wdt'
-        elif value in ['label', 'comment',]:
+        elif value in ['label', 'comment', 'seeAlso']:
             prefix = 'rdfs'         
     if prefix:
         base = settings.RDF_PREFIXES[prefix]
