@@ -122,7 +122,7 @@
                             </div>
 {% endcomment %}
                             <div class="d-flex justify-content-end mb-2">
-                                <select class="small" name="filter_prop">
+                                <select class="small" name="filter_prop"  title="{% trans "no filter means 'view all'" %}">
                                     <option value ="">{% trans "filter for"|capfirst %}</option>
                                     {% for p in COUNTRY_PREDICATES %}
                                     <option value ="{{p.0}}" {% if filter_predicate == p.0 %}selected{% endif %}>{{p.1|capfirst}}</option>
@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end mt-2">
-                                <button name="uncheck" class="btn uncheck"><i class="fa fa-square-o"></i> <small>{% trans "check" %}/{% trans "clear" %}</small></button>
+                                <button name="uncheck" class="btn uncheck" title="{% trans "no selection means 'select all'" %}"><i class="fa fa-square-o"></i> <small>{% trans "check" %}/{% trans "clear" %}</small></button>
                                 <button type="submit" class="btn"><i class="fa fa-eye"></i> <small>{% trans "view" %}</small></button>
                             </div>
                         </form>

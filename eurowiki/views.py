@@ -50,6 +50,13 @@ def homepage(request):
 def search(request):
     return render(request, 'search.html')
 
+def comparison(request):
+    try:
+        page_content = FlatPage.objects.get(url='/eurowiki_comparison/').content
+    except:
+        page_content = _("The page you are looking for is not yet present.")
+    return render(request, 'help.html', {'page_content': page_content})
+
 # forum: https://www.commonspaces.eu/forum/c/project-forums/university-4-europe-european-national-identities-profiles-towards-euroforge/
 def contributions(request):
     try:

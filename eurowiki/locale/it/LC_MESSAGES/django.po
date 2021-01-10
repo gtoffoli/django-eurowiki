@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-05 16:58+0100\n"
+"POT-Creation-Date: 2021-01-10 11:16+0100\n"
 "PO-Revision-Date: 2020-07-07 20:07+0200\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: \n"
@@ -76,7 +76,7 @@ msgstr "predicato"
 msgid "object type"
 msgstr "tipo di oggetto"
 
-#: .\forms.py:40 .\views.py:558 .\views.py:560
+#: .\forms.py:40 .\views.py:566 .\views.py:568
 msgid "object"
 msgstr "oggetto"
 
@@ -197,207 +197,207 @@ msgstr "esecuzioni della query SPARQL"
 msgid "SPARQL query executions"
 msgstr "esecuzioni di query SPARQL"
 
-#: .\resources.py:228
+#: .\resources.py:230
 msgid "Austria"
 msgstr "Austria"
 
-#: .\resources.py:229
+#: .\resources.py:231
 msgid "Belgium"
 msgstr "Belgio"
 
-#: .\resources.py:230
+#: .\resources.py:232
 msgid "Bulgaria"
 msgstr "Bulgaria"
 
-#: .\resources.py:231
+#: .\resources.py:233
 msgid "Croatia"
 msgstr "Croazia"
 
-#: .\resources.py:232
+#: .\resources.py:234
 msgid "Republic of Cyprus"
 msgstr "Cipro"
 
-#: .\resources.py:233
+#: .\resources.py:235
 msgid "Czech Republic"
 msgstr "Repubblica Ceca"
 
-#: .\resources.py:234
+#: .\resources.py:236
 msgid "Denmark"
 msgstr "Danimarca"
 
-#: .\resources.py:235
+#: .\resources.py:237
 msgid "Estonia"
 msgstr "Estonia"
 
-#: .\resources.py:236
+#: .\resources.py:238
 msgid "Finland"
 msgstr "Finlandia"
 
-#: .\resources.py:237
+#: .\resources.py:239
 msgid "France"
 msgstr "Francia"
 
-#: .\resources.py:238
+#: .\resources.py:240
 msgid "Germany"
 msgstr "Germania"
 
-#: .\resources.py:239
+#: .\resources.py:241
 msgid "Greece"
 msgstr "Grecia"
 
-#: .\resources.py:240
+#: .\resources.py:242
 msgid "Ireland"
 msgstr "Irlanda"
 
-#: .\resources.py:241
+#: .\resources.py:243
 msgid "Italy"
 msgstr "Italia"
 
-#: .\resources.py:242
+#: .\resources.py:244
 msgid "Latvia"
 msgstr "Lettonia"
 
-#: .\resources.py:243
+#: .\resources.py:245
 msgid "Lithuania"
 msgstr "Lituania"
 
-#: .\resources.py:244
+#: .\resources.py:246
 msgid "Luxembourg"
 msgstr "Lussemburgo"
 
-#: .\resources.py:245
+#: .\resources.py:247
 msgid "Malta"
 msgstr "Malta"
 
-#: .\resources.py:246
+#: .\resources.py:248
 msgid "Netherlands"
 msgstr "Olanda"
 
-#: .\resources.py:247
+#: .\resources.py:249
 msgid "Poland"
 msgstr "Polonia"
 
-#: .\resources.py:248
+#: .\resources.py:250
 msgid "Portugal"
 msgstr "Portogallo"
 
-#: .\resources.py:249
+#: .\resources.py:251
 msgid "Romania"
 msgstr "Romania"
 
-#: .\resources.py:250
+#: .\resources.py:252
 msgid "Slovakia"
 msgstr "Slovacchia"
 
-#: .\resources.py:251
+#: .\resources.py:253
 msgid "Slovenia"
 msgstr "Slovenia"
 
-#: .\resources.py:252
+#: .\resources.py:254
 msgid "Spain"
 msgstr "Spagna"
 
-#: .\resources.py:253
+#: .\resources.py:255
 msgid "Sweden"
 msgstr "Svezia"
 
-#: .\resources.py:254
+#: .\resources.py:256
 msgid "Hungary"
 msgstr "Ungheria"
 
-#: .\resources.py:262
+#: .\resources.py:264
 msgid "English"
 msgstr "Inglese"
 
-#: .\resources.py:263
+#: .\resources.py:265
 msgid "Italian"
 msgstr "Italiano"
 
-#: .\resources.py:264
+#: .\resources.py:266
 msgid "German"
 msgstr "Tedesco"
 
-#: .\resources.py:265
+#: .\resources.py:267
 msgid "Spanish"
 msgstr "Spagnolo"
 
-#: .\resources.py:266
+#: .\resources.py:268
 msgid "French"
 msgstr "Francese"
 
-#: .\resources.py:267
+#: .\resources.py:269
 msgid "Bulgarian"
 msgstr "Bulgaro"
 
-#: .\resources.py:268
+#: .\resources.py:270
 msgid "Czech"
 msgstr "Ceco"
 
-#: .\resources.py:269
+#: .\resources.py:271
 msgid "Danish"
 msgstr "Danese"
 
-#: .\resources.py:270
+#: .\resources.py:272
 msgid "Greek"
 msgstr "Greco"
 
-#: .\resources.py:271
+#: .\resources.py:273
 msgid "Estonian"
 msgstr "Estone"
 
-#: .\resources.py:272
+#: .\resources.py:274
 msgid "Finnish"
 msgstr "Finlandese"
 
-#: .\resources.py:273
+#: .\resources.py:275
 msgid "Irish"
 msgstr "Irlandese"
 
-#: .\resources.py:274
+#: .\resources.py:276
 msgid "Croatian"
 msgstr "Croato"
 
-#: .\resources.py:275
+#: .\resources.py:277
 msgid "Hungarian"
 msgstr "Ungherese"
 
-#: .\resources.py:276
+#: .\resources.py:278
 msgid "Lithuanian"
 msgstr "Lituano"
 
-#: .\resources.py:277
+#: .\resources.py:279
 msgid "Latvian"
 msgstr "Lettone"
 
-#: .\resources.py:278
+#: .\resources.py:280
 msgid "Maltese"
 msgstr "Maltese"
 
-#: .\resources.py:279
+#: .\resources.py:281
 msgid "Dutch"
 msgstr "Olandese"
 
-#: .\resources.py:280
+#: .\resources.py:282
 msgid "Polish"
 msgstr "Polacco"
 
-#: .\resources.py:281
+#: .\resources.py:283
 msgid "Portuguese"
 msgstr "Portoghese"
 
-#: .\resources.py:282
+#: .\resources.py:284
 msgid "Romanian"
 msgstr "Rumeno"
 
-#: .\resources.py:283
+#: .\resources.py:285
 msgid "Slovak"
 msgstr "Slovacco"
 
-#: .\resources.py:284
+#: .\resources.py:286
 msgid "Slovenian"
 msgstr "Sloveno"
 
-#: .\resources.py:285
+#: .\resources.py:287
 msgid "Swedish"
 msgstr "Svedese"
 
@@ -460,10 +460,14 @@ msgid "see/add comments to this property"
 msgstr "vedi/aggiungi commenti a questa proprietà"
 
 #: .\templates\_main_menu.html:12
+msgid "comparative analysis"
+msgstr "analisi comparativa"
+
+#: .\templates\_main_menu.html:15
 msgid "contributions"
 msgstr "contributi"
 
-#: .\templates\_main_menu.html:15
+#: .\templates\_main_menu.html:18
 msgid "help"
 msgstr "aiuto"
 
@@ -509,7 +513,7 @@ msgid "view countries"
 msgstr "vedi gli stati"
 
 #: .\templates\country.html:216 .\templates\edit_item.html:103
-#: .\templates\query.html:190 .\templates\query.html:220
+#: .\templates\query.html:196 .\templates\query.html:227
 msgid "Warning! ID attribute: a value is missing"
 msgstr "Attenzione! Attributo ID: manca un valore"
 
@@ -518,12 +522,12 @@ msgid "do you really want to remove this item"
 msgstr "vuoi veramente rimuovere questo item"
 
 #: .\templates\country.html:224 .\templates\edit_item.html:111
-#: .\templates\query.html:198
+#: .\templates\query.html:204
 msgid "Yes"
 msgstr "Sì"
 
 #: .\templates\country.html:228 .\templates\edit_item.html:115
-#: .\templates\query.html:202
+#: .\templates\query.html:208
 msgid "No"
 msgstr "No"
 
@@ -545,9 +549,17 @@ msgstr "Esci"
 msgid "Log in"
 msgstr "Accedi"
 
+#: .\templates\eurowiki_base.html:125
+msgid "no filter means 'view all'"
+msgstr "nessun filtro equivale a 'mostra tutto'"
+
 #: .\templates\eurowiki_base.html:126
 msgid "filter for"
 msgstr "filtro per"
+
+#: .\templates\eurowiki_base.html:145
+msgid "no selection means 'select all'"
+msgstr "nessuna selezione equivale a 'seleziona tutto'"
 
 #: .\templates\eurowiki_base.html:145
 msgid "check"
@@ -627,31 +639,27 @@ msgstr "testo SPARQL"
 msgid "show edit view"
 msgstr "mostra la vista di editing"
 
-#: .\templates\query.html:105
-msgid "list saved queries"
-msgstr "elenca le query memorizzate"
-
-#: .\templates\query.html:109
+#: .\templates\query.html:108
 msgid "saved query definitions"
 msgstr "definizioni di query memorizzate"
 
-#: .\templates\query.html:117
+#: .\templates\query.html:116
 msgid "view definition"
 msgstr "vedi la definizione"
 
-#: .\templates\query.html:128
+#: .\templates\query.html:127
 msgid "delete query definition"
 msgstr "cancella definizione di query"
 
-#: .\templates\query.html:137
+#: .\templates\query.html:136
 msgid "add query"
 msgstr "aggiungi query"
 
-#: .\templates\query.html:142
+#: .\templates\query.html:141
 msgid "No query defined yet"
 msgstr "Non è definita alcuna query"
 
-#: .\templates\query.html:148
+#: .\templates\query.html:147
 msgid "query execution"
 msgstr "esecuzione della query"
 
@@ -659,26 +667,30 @@ msgstr "esecuzione della query"
 msgid "move up selected option(s)"
 msgstr "sposta in alto la/le opzione/i selezionata/e"
 
-#: .\templates\query.html:162
+#: .\templates\query.html:164
 msgid ""
 "the choice of the top N languages impact queries with $L1, .. $LN parameters"
 msgstr ""
 "la scelta delle prime N lingue interessa le query che includono i parametri "
 "$L1, .. $LN"
 
-#: .\templates\query.html:162
+#: .\templates\query.html:164
 msgid "you can select and move up options"
 msgstr "puoi selezionare e spostare in alto le opzioni"
 
-#: .\templates\query.html:163
+#: .\templates\query.html:166
 msgid "the tab-separated-values (TSV) format is used, in fact"
 msgstr "in realtà è usato il formato TSV (tab-separated-values)"
 
-#: .\templates\query.html:164
+#: .\templates\query.html:167
 msgid "run query"
 msgstr "esegui la query"
 
-#: .\templates\query.html:195
+#: .\templates\query.html:172
+msgid "list saved queries"
+msgstr "elenca le query memorizzate"
+
+#: .\templates\query.html:201
 msgid "do you really want to remove this query"
 msgstr "vuoi veramente rimuovere questo item"
 
@@ -705,11 +717,11 @@ msgstr "Ancora nessun commento"
 msgid "Add comment"
 msgstr "Aggiungi un commento"
 
-#: .\views.py:46
+#: .\views.py:47
 msgid "No homepage is present yet."
 msgstr "L'homepage non è presente"
 
-#: .\views.py:57 .\views.py:64
+#: .\views.py:57 .\views.py:65 .\views.py:72
 msgid "The page you are looking for is not yet present."
 msgstr "La pagina che cerchi non è ancora presente"
 

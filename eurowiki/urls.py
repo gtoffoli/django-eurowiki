@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^query/run/$', views.Query.as_view(), name='run_query'),
     url(r'^query/(?P<delete_query_id>[\d-]+)/delete/$', views.Query.as_view(), name='delete_query'),
     url(r'^query/$', views.Query.as_view(), name='queries'),
+    url(r'^comparison/$', views.comparison, name='comparison'),
     url(r'^contributions/$', views.contributions, name='contributions'),
     url(r'^help/$', views.help, name='help'),
     
