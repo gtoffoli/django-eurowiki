@@ -16,6 +16,7 @@ DJANGO_VERSION = django.VERSION[0]
 HAS_DMUC = False
 HAS_MEETING = True
 HAS_SAML2 = False
+HAS_CALENDAR = False
 
 import os
 
@@ -87,11 +88,13 @@ INSTALLED_APPS = [
 	# ...
     'rdflib_django',
     'crispy_forms',
+    'schedule',
     'eurowiki',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -233,7 +236,7 @@ else:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-SITE_ID = 1
+SITE_ID = 2
 # SITE_ID = 2
 SITE_NAME = 'Euroidentities'
 
@@ -324,3 +327,5 @@ DATATRANS_TRANSLATE_MAP = {
 }
 
 from eurowiki.resources import * # EXTERNAL_SOURCES an EXTERNAL_RESOURCES, complementing rdflib store
+
+GOOGLE_DRIVE_URL = "https://www.googleapis.com/drive/v3/files"
