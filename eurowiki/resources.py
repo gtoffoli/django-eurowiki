@@ -4,7 +4,7 @@ It includes definitions complementing the database of rdflib_django.
 Should include only terminology and the core of top-level items.
 """
 
-from django.utils.translation import get_language, ugettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _
 
 DEFAULT_STORE = "http://www.eurowiki.eu"
 

@@ -52,7 +52,7 @@ class LiteralStatementIndex(indexes.SearchIndex, indexes.Indexable):
         return self.get_model().objects.filter(predicate__icontains='label')
 
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django import forms
 from haystack.forms import ModelSearchForm, model_choices
 class eurowikiModelSearchForm(ModelSearchForm):
