@@ -18,6 +18,7 @@ HAS_MEETING = True
 HAS_SAML2 = False
 HAS_CALENDAR = False
 
+import sys
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -236,6 +237,13 @@ else:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
+    import pathlib
+    MEDIA_ROOT = pathlib.Path(MEDIA_ROOT)
+    FILESTORAGE_LOCATION = MEDIA_ROOT / 'document_storage'
+else:
+    FILESTORAGE_LOCATION = os.path.join(MEDIA_ROOT, 'document_storage')
+
 SITE_ID = 2
 # SITE_ID = 2
 SITE_NAME = 'Euroidentities'
@@ -329,3 +337,19 @@ DATATRANS_TRANSLATE_MAP = {
 from eurowiki.resources import * # EXTERNAL_SOURCES an EXTERNAL_RESOURCES, complementing rdflib store
 
 GOOGLE_DRIVE_URL = "https://www.googleapis.com/drive/v3/files"
+
+
+import django.utils.translation
+django.utils.translation.ugettext = django.utils.translation.gettext
+django.utils.translation.ugettext_lazy = django.utils.translation.gettext_lazy
+django.utils.translation.ungettext = django.utils.translation.ngettext
+import django.utils.encoding
+django.utils.encoding.smart_text = django.utils.encoding.smart_str
+django.utils.encoding.force_text = django.utils.encoding.force_str
+import django.conf.urls
+django.conf.urls.url = django.urls.re_path
+
+try:
+    print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
+except:
+    pass
