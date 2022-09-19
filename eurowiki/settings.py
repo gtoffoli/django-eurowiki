@@ -83,8 +83,8 @@ INSTALLED_APPS = [
 
     'commons',
     'roles',
-     'zinnia',
-	 'pybb',
+    'zinnia',
+	'pybb',
     'actstream',
 	# ...
     'rdflib_django',
@@ -329,6 +329,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'relative_urls' : False,
 
 }
+
+ZINNIA_PERMISSION_HANDLER = 'commons.zinnia_adapter.BlogPermissionHandler'
 
 DATATRANS_TRANSLATE_MAP = {
     'flatpage': ('/admin/flatpages/flatpage/%s/', 'pk', 'title', 'commons.forms.FlatPageForm',),
