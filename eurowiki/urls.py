@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^comments/', include('django_comments.urls')),
     url(r'^navigation_autocomplete$', search_indexes.navigation_autocomplete, name='navigation_autocomplete'),
+    url(r'^robots.txt$', views.robots, name='robots'),
 
     url(r'^$', views.homepage, name='homepage'),
     url(r'^query/(?P<query_id>[\d-]+)/$', views.Query.as_view(), name='view_query'),

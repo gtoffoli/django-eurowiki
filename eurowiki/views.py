@@ -40,6 +40,11 @@ def item_from_id(item_code):
     else:
         return Item(id=item_code)
 
+def robots(request):
+    response = render(request, 'robots.txt')
+    response['Content-Type'] = 'text/plain; charset=utf-8'
+    return response
+
 def homepage(request):
     try:
         page_content = FlatPage.objects.get(url='/eurowiki_home/').content

@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /datatrans
+Disallow: /admin
+Disallow: /accounts
+Disallow: /i18n
+Disallow: /query
+Disallow: /countries
+Disallow: /country
+Disallow: /item
+Disallow: /statement
+Crawl-delay: 12
